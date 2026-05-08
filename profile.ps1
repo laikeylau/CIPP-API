@@ -48,7 +48,7 @@ if ($hasAppInsights) {
 # Import core modules
 $SwCoreModules = [System.Diagnostics.Stopwatch]::StartNew()
 $ModulesPath = Join-Path $env:CIPPRootPath 'Modules'
-$Modules = @('CIPPCore', 'CippExtensions', 'AzBobbyTables')
+$Modules = @('CIPPCore', 'CippExtensions', 'AzBobbyTables', 'CippLocalAuth')
 foreach ($Module in $Modules) {
     $SwModule = [System.Diagnostics.Stopwatch]::StartNew()
     try {
