@@ -16,7 +16,10 @@ Function Invoke-ListUserSigninLogs {
     $URI = "https://graph.microsoft.com/beta/auditLogs/signIns?`$filter=(userId eq '$UserID')&`$top=$top&`$orderby=createdDateTime desc"
 
     try {
-        $Result = New-GraphGetRequest -uri $URI -tenantid $TenantFilter -noPagination $true -verbose
+        Write-Host "DEBUG: ListUserSigninLogs - URI: $URI"
+        Write-Host "DEBUG: ListUserSigninLogs - TenantFilter: $TenantFilter"
+        Write-Host "DEBUG: ListUserSigninLogs - Using AsApp=$true"
+        $Result = New-GraphGetRequest -uri $URI -tenantid $TenantFilter -noPagination $true -AsApp $true -verbose
         $StatusCode = [HttpStatusCode]::OK
     } catch {
         $ErrorMessage = Get-CippException -Exception $_

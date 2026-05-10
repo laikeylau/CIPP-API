@@ -14,13 +14,13 @@ function Invoke-ListTransportRules {
     try {
         # If an ID is provided, fetch the specific rule
         if ($RuleId) {
-            $Results = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TransportRule' -cmdParams @{Identity = $RuleId}
+            $Results = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TransportRule' -AsApp -cmdParams @{Identity = $RuleId}
         }
         # Otherwise, use existing logic
         else {
             $Results = if ($TenantFilter -ne 'AllTenants') {
                 # Single tenant functionality
-                New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TransportRule'
+                New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TransportRule' -AsApp
             } else {
                 # AllTenants functionality
                 $Table = Get-CIPPTable -TableName CacheTransportRules
