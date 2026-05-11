@@ -60,7 +60,7 @@ function New-CIPPGraphRetry {
     Write-Information "Retrying Graph API request for URI: $uri | Tenant: $tenantid"
 
     try {
-        # Build the parameter splat for New-GraphPOSTRequest
+        # Build the parameter splat for New-GraphPOSTRequest -AsApp $true
         $GraphParams = @{
             uri           = $uri
             tenantid      = $tenantid
@@ -81,7 +81,7 @@ function New-CIPPGraphRetry {
         if ($returnHeaders) { $GraphParams.returnHeaders = $returnHeaders }
 
         # Execute the Graph request
-        $Result = New-GraphPOSTRequest @GraphParams
+        $Result = New-GraphPOSTRequest @GraphParams -AsApp $true
 
         Write-LogMessage -API 'GraphRetry' -message "Successfully retried Graph request for URI: $uri | Tenant: $tenantid" -Sev 'Info' -tenant $tenantid
 

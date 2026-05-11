@@ -176,7 +176,7 @@ function Add-CIPPW32ScriptApplication {
 
         # Wait for script to be committed
         do {
-            $ScriptState = New-GraphGetRequest -Uri "$Baseuri/$($NewApp.id)/microsoft.graph.win32LobApp/contentVersions/1/scripts/$InstallScriptId" -tenantid $TenantFilter
+            $ScriptState = New-GraphGetRequest -Uri "$Baseuri/$($NewApp.id)/microsoft.graph.win32LobApp/contentVersions/1/scripts/$InstallScriptId" -tenantid $TenantFilter -AsApp $true
             if ($ScriptState.state -like '*fail*') {
                 throw "Failed to commit install script: $($ScriptState.state)"
             }
@@ -200,7 +200,7 @@ function Add-CIPPW32ScriptApplication {
 
         # Wait for script to be committed
         do {
-            $ScriptState = New-GraphGetRequest -Uri "$Baseuri/$($NewApp.id)/microsoft.graph.win32LobApp/contentVersions/1/scripts/$UninstallScriptId" -tenantid $TenantFilter
+            $ScriptState = New-GraphGetRequest -Uri "$Baseuri/$($NewApp.id)/microsoft.graph.win32LobApp/contentVersions/1/scripts/$UninstallScriptId" -tenantid $TenantFilter -AsApp $true
             if ($ScriptState.state -like '*fail*') {
                 throw "Failed to commit uninstall script: $($ScriptState.state)"
             }

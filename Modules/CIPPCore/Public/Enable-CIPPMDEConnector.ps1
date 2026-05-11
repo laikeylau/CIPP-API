@@ -66,7 +66,7 @@ function Enable-CIPPMDEConnector {
 
     # Check current connector state
     try {
-        $ConnectorState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter
+        $ConnectorState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter -AsApp $true
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'MDEConnector' -tenant $TenantFilter -message "Failed to retrieve MDE connector state. Error: $($ErrorMessage.NormalizedError)" -Sev Error -LogData $ErrorMessage
@@ -85,7 +85,7 @@ function Enable-CIPPMDEConnector {
     # Build a prioritized endpoint list based on tenant country
     $PrioritizedEndpoints = [System.Collections.Generic.List[string]]::new()
     try {
-        $OrgInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -tenantid $TenantFilter
+        $OrgInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -tenantid $TenantFilter -AsApp $true
         $CountryCode = $OrgInfo.countryLetterCode
         if ($CountryCode -and $RegionPriority.ContainsKey($CountryCode)) {
             $PrefixHints = $RegionPriority[$CountryCode]
@@ -119,7 +119,7 @@ function Enable-CIPPMDEConnector {
         $ProvisionUri = "https://$endpoint/api/cloud/portal/onboarding/intune/provision"
         try {
             Write-Information "Attempting MDE provisioning for $TenantFilter via $endpoint"
-            $null = New-GraphPOSTRequest -uri $ProvisionUri -tenantid $TenantFilter -body $ProvisionBody -scope $ProvisionScope
+            $null = New-GraphPOSTRequest -uri $ProvisionUri -tenantid $TenantFilter -body $ProvisionBody -scope $ProvisionScope -AsApp $true
             $SuccessfulEndpoint = $endpoint
             Write-LogMessage -API 'MDEConnector' -tenant $TenantFilter -message "MDE Intune connector provisioned successfully via $endpoint" -Sev Info
             break
@@ -137,7 +137,7 @@ function Enable-CIPPMDEConnector {
 
     # Verify the connector state after provisioning
     try {
-        $UpdatedState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter
+        $UpdatedState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter -AsApp $true
     } catch {
         $UpdatedState = $null
     }

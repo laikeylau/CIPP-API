@@ -37,7 +37,7 @@ function Invoke-CIPPStandardGuestInvite {
     param($Tenant, $Settings)
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the GuestInvite state for $Tenant. Error: $ErrorMessage" -Sev Error

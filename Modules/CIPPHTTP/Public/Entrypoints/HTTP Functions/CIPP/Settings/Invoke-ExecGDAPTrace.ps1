@@ -132,7 +132,7 @@ function Invoke-ExecGDAPTrace {
         $BaseUri = 'https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships'
         $FilterValue = "status eq 'active' and customer/tenantId eq '$CustomerTenantId'"
         $RelationshipsUri = "$($BaseUri)?`$filter=$($FilterValue)"
-        $Relationships = New-GraphGetRequest -uri $RelationshipsUri -tenantid $env:TenantID -NoAuthCheck $true
+        $Relationships = New-GraphGetRequest -uri $RelationshipsUri -tenantid $env:TenantID -NoAuthCheck $true -AsApp $true
 
         # If no active relationships exist, return early with an informative message
         if (-not $Relationships -or $Relationships.Count -eq 0) {
@@ -161,7 +161,7 @@ function Invoke-ExecGDAPTrace {
         $User = $null
         try {
             # Filter didn't work, try direct lookup by UPN (works if UPN is unique identifier)
-            $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UPN" -tenantid $env:TenantID -NoAuthCheck $true
+            $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UPN" -tenantid $env:TenantID -NoAuthCheck $true -AsApp $true
         } catch {
             Write-LogMessage -Headers $Headers -API $APIName -message "Could not find user $UPN in partner tenant: $($_.Exception.Message)" -sev 'Warning'
         }
@@ -369,7 +369,7 @@ function Invoke-ExecGDAPTrace {
             # Get access assignments (mapped security groups) for this relationship
             $AccessAssignments = @()
             try {
-                $AccessAssignments = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$RelationshipId/accessAssignments" -tenantid $env:TenantID -NoAuthCheck $true
+                $AccessAssignments = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$RelationshipId/accessAssignments" -tenantid $env:TenantID -NoAuthCheck $true -AsApp $true
 
                 # Handle case where response might be a single object instead of array
                 if ($AccessAssignments -and -not ($AccessAssignments -is [System.Array])) {

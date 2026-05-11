@@ -33,7 +33,7 @@ function Invoke-ExecModifyContactPerms {
             $UserId = [guid]$Username
         } catch {
             # If not a GUID, assume it's a UPN and look up the ID via Graph
-            $UserId = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Username)" -tenantid $TenantFilter).id
+            $UserId = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Username)" -tenantid $TenantFilter -AsApp $true).id
             Write-LogMessage -headers $Headers -API $APIName -message "Retrieved user ID: $UserId" -Sev 'Debug'
         }
     } catch {

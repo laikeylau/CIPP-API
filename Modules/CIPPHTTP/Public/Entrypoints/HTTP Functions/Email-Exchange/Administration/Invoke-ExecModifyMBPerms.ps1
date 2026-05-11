@@ -63,12 +63,12 @@ Function Invoke-ExecModifyMBPerms {
         # User lookup with caching for bulk operations
         if (-not $UserLookupCache.ContainsKey($Username)) {
             try {
-                $UserObject = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Username)" -tenantid $TenantFilter
+                $UserObject = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Username)" -tenantid $TenantFilter -AsApp $true
                 $UserLookupCache[$Username] = $UserObject.userPrincipalName
             }
             catch {
                 try {
-                    $UserObject = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$filter=userPrincipalName eq '$Username'" -tenantid $TenantFilter
+                    $UserObject = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$filter=userPrincipalName eq '$Username'" -tenantid $TenantFilter -AsApp $true
                     if ($UserObject.value -and $UserObject.value.Count -gt 0) {
                         $UserLookupCache[$Username] = $UserObject.value[0].userPrincipalName
                     } else {

@@ -25,11 +25,11 @@ function Invoke-ExecCAExclusion {
             $Username = $Users.addedFields.userPrincipalName -join ', '
         } else {
             if ($UserID -match '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$' -and -not $Username) {
-                $Username = (New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/users/$($UserID)" -tenantid $TenantFilter).userPrincipalName
+                $Username = (New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/users/$($UserID)" -tenantid $TenantFilter -AsApp $true).userPrincipalName
             }
         }
 
-        $Policy = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/policies/$($PolicyId)?`$select=id,displayName,conditions" -tenantid $TenantFilter -asApp $true
+        $Policy = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/policies/$($PolicyId)?`$select=id,displayName,conditions" -tenantid $TenantFilter -asApp $true -AsApp $true
 
         if (-not $Policy) {
             throw "Policy with ID $PolicyId not found in tenant $TenantFilter."

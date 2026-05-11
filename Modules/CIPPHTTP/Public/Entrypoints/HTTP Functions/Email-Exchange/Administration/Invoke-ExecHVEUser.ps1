@@ -19,7 +19,7 @@ function Invoke-ExecHVEUser {
     try {
         # Check if Security Defaults are enabled
         try {
-            $SecurityDefaults = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/identitySecurityDefaultsEnforcementPolicy' -tenantid $Tenant
+            $SecurityDefaults = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/identitySecurityDefaultsEnforcementPolicy' -tenantid $Tenant -AsApp $true
             if ($SecurityDefaults.isEnabled -eq $true) {
                 $Results.Add('WARNING: Security Defaults are enabled for this tenant. HVE might not function.')
             }
@@ -43,7 +43,7 @@ function Invoke-ExecHVEUser {
         # Try to exclude from Conditional Access policies that block basic authentication
         try {
             # Get all Conditional Access policies
-            $CAPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/policies' -tenantid $Tenant
+            $CAPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/policies' -tenantid $Tenant -AsApp $true
 
             $BasicAuthPolicies = $CAPolicies | Where-Object {
                 $_.conditions.clientAppTypes -contains 'exchangeActiveSync' -or

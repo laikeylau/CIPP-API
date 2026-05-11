@@ -12,7 +12,7 @@ function Get-CIPPAlertVppTokenExpiry {
     )
     try {
         try {
-            $VppTokens = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/vppTokens' -tenantid $TenantFilter
+            $VppTokens = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/vppTokens' -tenantid $TenantFilter -AsApp $true
             $AlertData = foreach ($Vpp in $VppTokens) {
                 if ($Vpp.state -ne 'valid') {
                     $Message = 'Apple Volume Purchase Program Token is not valid, new token required'

@@ -82,7 +82,7 @@ function Get-CIPPAuditLogContentBundles {
 
     Write-Verbose "GET [ $($GraphQuery.ToString()) ]"
     try {
-        $LogBundles = New-GraphGetRequest -uri $GraphQuery.ToString() -tenantid $TenantFilter -scope 'https://manage.office.com/.default' -IncludeResponseHeaders
+        $LogBundles = New-GraphGetRequest -uri $GraphQuery.ToString() -tenantid $TenantFilter -scope 'https://manage.office.com/.default' -IncludeResponseHeaders -AsApp $true
         $AuditLogContents = $LogBundles | Select-Object contentId, contentUri, contentCreated, contentExpiration, contentType, @{Name = 'TenantFilter'; Expression = { $TenantFilter } }, @{ Name = 'DefaultDomainName'; Expression = { $DefaultDomainName } }
         return $AuditLogContents
     } catch {

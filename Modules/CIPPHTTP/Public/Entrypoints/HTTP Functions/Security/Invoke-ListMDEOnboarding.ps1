@@ -34,7 +34,7 @@ function Invoke-ListMDEOnboarding {
         $ConnectorId = 'fc780465-2017-40d4-a0c5-307022471b92'
         $ConnectorUri = "https://graph.microsoft.com/beta/deviceManagement/mobileThreatDefenseConnectors/$ConnectorId"
         try {
-            $ConnectorState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter
+            $ConnectorState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter -AsApp $true
             $GraphRequest = $ConnectorState | Select-Object -ExcludeProperty '@odata.context'
             $GraphRequest | Add-Member -NotePropertyName 'Tenant' -NotePropertyValue $TenantFilter -Force
         } catch {

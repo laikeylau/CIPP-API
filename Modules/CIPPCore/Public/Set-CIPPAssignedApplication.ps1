@@ -19,7 +19,7 @@ function Set-CIPPAssignedApplication {
         $ResolvedFilterId = $null
         if ($AssignmentFilterName) {
             Write-Host "Looking up assignment filter by name: $AssignmentFilterName"
-            $AllFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter
+            $AllFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter -AsApp $true
             $MatchingFilter = $AllFilters | Where-Object { $_.displayName -like $AssignmentFilterName } | Select-Object -First 1
 
             if ($MatchingFilter) {
@@ -107,7 +107,7 @@ function Set-CIPPAssignedApplication {
                     $resolvedGroupIds = $GroupIds
                 } else {
                     $GroupNames = $GroupName.Split(',')
-                    $resolvedGroupIds = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999&$select=id,displayName' -tenantid $TenantFilter | ForEach-Object {
+                    $resolvedGroupIds = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999&$select=id,displayName' -tenantid $TenantFilter -AsApp $true | ForEach-Object {
                         $Group = $_
                         foreach ($SingleName in $GroupNames) {
                             if ($Group.displayName -like $SingleName) {
@@ -149,7 +149,7 @@ function Set-CIPPAssignedApplication {
         # If we're appending, we need to get existing assignments
         if ($AssignmentMode -eq 'append') {
             try {
-                $ExistingAssignments = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/$($ApplicationId)/assignments" -tenantid $TenantFilter
+                $ExistingAssignments = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/$($ApplicationId)/assignments" -tenantid $TenantFilter -AsApp $true
             } catch {
                 Write-Warning "Unable to retrieve existing assignments for $ApplicationId. Proceeding with new assignments only. Error: $($_.Exception.Message)"
                 $ExistingAssignments = @()
@@ -205,7 +205,7 @@ function Set-CIPPAssignedApplication {
         }
         if ($PSCmdlet.ShouldProcess($GroupName, "Assigning Application $ApplicationId")) {
             Start-Sleep -Seconds 1
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/$($ApplicationId)/assign" -tenantid $TenantFilter -type POST -body ($DefaultAssignmentObject | ConvertTo-Json -Compress -Depth 10)
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/$($ApplicationId)/assign" -tenantid $TenantFilter -type POST -body ($DefaultAssignmentObject | ConvertTo-Json -Compress -Depth 10) -AsApp $true
             Write-LogMessage -headers $Headers -API $APIName -message "Assigned Application $ApplicationId to $($GroupName)" -Sev 'Info' -tenant $TenantFilter
         }
         return "Assigned Application $ApplicationId to $($GroupName)"

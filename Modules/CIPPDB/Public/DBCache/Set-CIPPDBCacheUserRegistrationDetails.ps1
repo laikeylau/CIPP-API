@@ -19,7 +19,7 @@ function Set-CIPPDBCacheUserRegistrationDetails {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching user registration details' -sev Debug
 
-        $UserRegistrationDetails = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/reports/authenticationMethods/userRegistrationDetails' -tenantid $TenantFilter
+        $UserRegistrationDetails = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/reports/authenticationMethods/userRegistrationDetails' -tenantid $TenantFilter -AsApp $true
 
         if ($UserRegistrationDetails) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'UserRegistrationDetails' -Data $UserRegistrationDetails

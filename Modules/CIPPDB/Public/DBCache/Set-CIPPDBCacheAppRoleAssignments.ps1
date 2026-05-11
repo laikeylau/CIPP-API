@@ -20,7 +20,7 @@ function Set-CIPPDBCacheAppRoleAssignments {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching app role assignments' -sev Debug
 
         # Get all service principals first
-        $ServicePrincipals = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/servicePrincipals?$select=id,appId,displayName&$top=999&expand=appRoleAssignments' -tenantid $TenantFilter
+        $ServicePrincipals = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/servicePrincipals?$select=id,appId,displayName&$top=999&expand=appRoleAssignments' -tenantid $TenantFilter -AsApp $true
 
         $AllAppRoleAssignments = [System.Collections.Generic.List[object]]::new()
 

@@ -18,7 +18,7 @@ function Set-CIPPDBCacheCrossTenantAccessPolicy {
 
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching cross-tenant access policy' -sev Debug
-        $CrossTenantPolicy = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/crossTenantAccessPolicy/default' -tenantid $TenantFilter
+        $CrossTenantPolicy = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/crossTenantAccessPolicy/default' -tenantid $TenantFilter -AsApp $true
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'CrossTenantAccessPolicy' -Data @($CrossTenantPolicy)
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'CrossTenantAccessPolicy' -Data @($CrossTenantPolicy) -Count
         $CrossTenantPolicy = $null

@@ -136,7 +136,7 @@ Function Invoke-ExecManageRetentionPolicies {
                 }
 
                 # Check if policy is assigned to mailboxes (do this before bulk processing)
-                $assignedMailboxes = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{ -AsApp
+                $assignedMailboxes = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{
                     Filter = "RetentionPolicy -eq '$PolicyIdentity'"
                     ResultSize = 1
                 } -ErrorAction SilentlyContinue

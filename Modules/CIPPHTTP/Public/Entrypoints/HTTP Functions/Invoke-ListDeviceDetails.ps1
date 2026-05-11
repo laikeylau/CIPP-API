@@ -17,24 +17,24 @@ Function Invoke-ListDeviceDetails {
 
     try {
         if ($DeviceID) {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceID" -Tenantid $TenantFilter
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceID" -Tenantid $TenantFilter -AsApp $true
         } elseif ($DeviceSerial -or $DeviceName) {
             $Found = $False
             if ($DeviceSerial -and $DeviceName) {
-                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$filter=serialnumber eq '$DeviceSerial' and deviceName eq '$DeviceName'" -Tenantid $TenantFilter
+                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$filter=serialnumber eq '$DeviceSerial' and deviceName eq '$DeviceName'" -Tenantid $TenantFilter -AsApp $true
 
                 if (($GraphRequest | Measure-Object).count -eq 1 -and $GraphRequest.'@odata.count' -ne 0 ) {
                     $Found = $True
                 }
             }
             if ($DeviceSerial -and $Found -eq $False) {
-                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$filter=serialnumber eq '$DeviceSerial'" -Tenantid $TenantFilter
+                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$filter=serialnumber eq '$DeviceSerial'" -Tenantid $TenantFilter -AsApp $true
                 if (($GraphRequest | Measure-Object).count -eq 1 -and $GraphRequest.'@odata.count' -ne 0 ) {
                     $Found = $True
                 }
             }
             if ($DeviceName -and $Found -eq $False) {
-                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$filter=deviceName eq '$DeviceName'" -Tenantid $TenantFilter
+                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$filter=deviceName eq '$DeviceName'" -Tenantid $TenantFilter -AsApp $true
                 if (($GraphRequest | Measure-Object).count -eq 1 -and $GraphRequest.'@odata.count' -ne 0 ) {
                     $Found = $True
                 }
@@ -65,7 +65,7 @@ Function Invoke-ListDeviceDetails {
                 }
             )
 
-            $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+            $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
 
             $DeviceGroups = Get-GraphBulkResultByID -Results $BulkResults -ID 'DeviceGroups' -Value
             $CompliancePolicies = Get-GraphBulkResultByID -Results $BulkResults -ID 'CompliancePolicies' -Value

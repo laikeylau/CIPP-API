@@ -33,7 +33,7 @@ function Invoke-CIPPStandardAuthMethodsPolicyMigration {
 
     param($Tenant, $Settings)
     try {
-        $CurrentInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy' -tenantid $Tenant
+        $CurrentInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the AuthMethodsPolicyMigration state for $Tenant. Error: $($ErrorMessage.NormalizedError)" -Sev Error -LogData $ErrorMessage
@@ -57,7 +57,7 @@ function Invoke-CIPPStandardAuthMethodsPolicyMigration {
             Write-LogMessage -API 'Standards' -tenant $tenant -message 'Authentication methods policy migration is already complete.' -sev Info
         } else {
             try {
-                New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy' -tenantid $Tenant -body '{"policyMigrationState": "migrationComplete"}' -type PATCH
+                New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy' -tenantid $Tenant -body '{"policyMigrationState": "migrationComplete"}' -type PATCH -AsApp $true
                 Write-LogMessage -API 'Standards' -tenant $tenant -message 'Authentication methods policy migration completed successfully.' -sev Info
             } catch {
                 $ErrorMessage = Get-CippException -Exception $_

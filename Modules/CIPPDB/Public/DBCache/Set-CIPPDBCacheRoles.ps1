@@ -19,7 +19,7 @@ function Set-CIPPDBCacheRoles {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching directory roles' -sev Debug
 
-        $Roles = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/directoryRoles' -tenantid $TenantFilter
+        $Roles = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/directoryRoles' -tenantid $TenantFilter -AsApp $true
 
         # Build bulk request for role members
         $MemberRequests = $Roles | ForEach-Object {

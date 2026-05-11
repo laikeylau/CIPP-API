@@ -13,7 +13,7 @@ function Set-CIPPSignInState {
             accountEnabled = [bool]$AccountEnabled
         }
         $body = ConvertTo-Json -InputObject $body -Compress -Depth 5
-        $UserDetails = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/users/$($UserID)?`$select=onPremisesSyncEnabled" -noPagination $true -tenantid $TenantFilter -verbose
+        $UserDetails = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/users/$($UserID)?`$select=onPremisesSyncEnabled" -noPagination $true -tenantid $TenantFilter -verbose -AsApp $true
         $null = New-GraphPostRequest -uri "https://graph.microsoft.com/v1.0/users/$($UserID)" -tenantid $TenantFilter -type PATCH -body $body -verbose
         Write-LogMessage -headers $Headers -API $APIName -message "Successfully set account enabled state to $AccountEnabled for $UserID" -Sev 'Info' -tenant $TenantFilter
 

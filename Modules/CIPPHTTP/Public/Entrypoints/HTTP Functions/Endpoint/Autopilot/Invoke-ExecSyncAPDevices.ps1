@@ -13,7 +13,7 @@ Function Invoke-ExecSyncAPDevices {
     Write-LogMessage -Headers $Headers -API $APINAME -message 'Accessed this API' -Sev Debug
 
     try {
-        $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotSettings/sync' -tenantid $TenantFilter
+        $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotSettings/sync' -tenantid $TenantFilter -AsApp $true
         $Results = "Successfully Started Sync for $($TenantFilter)"
         Write-LogMessage -Headers $Headers -API $APINAME -tenant $TenantFilter -message 'Successfully started Autopilot sync' -Sev Info
         $StatusCode = [HttpStatusCode]::OK

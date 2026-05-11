@@ -18,7 +18,7 @@ function Set-CIPPDBCacheDomains {
 
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching domains' -sev Debug
-        $Domains = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/domains' -tenantid $TenantFilter
+        $Domains = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/domains' -tenantid $TenantFilter -AsApp $true
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'Domains' -Data @($Domains)
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'Domains' -Data @($Domains) -Count
         $Domains = $null

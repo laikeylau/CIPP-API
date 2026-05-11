@@ -29,8 +29,7 @@ function Invoke-ListMailboxRestores {
             AsApp     = $true
             }
 
-            $RestoreRequests = (New-ExoRequest @ExoRequest) -AsApp
-            $GraphRequest = $RestoreRequests
+            $RestoreRequests = New-ExoRequest @ExoRequest -AsApp $GraphRequest = $RestoreRequests
         }
 
         $StatusCode = [HttpStatusCode]::OK

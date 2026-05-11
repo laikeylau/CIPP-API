@@ -14,7 +14,7 @@ function Set-CIPPGraphSubscription {
         $body = @{
             'expirationDateTime' = "$RenewalDate"
         } | ConvertTo-Json
-        $null = (New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscriptions' -tenantid $TenantFilter) | ForEach-Object {
+        $null = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscriptions' -tenantid $TenantFilter -AsApp $true | ForEach-Object {
             try {
                 $GraphRequest = New-GraphPostRequest -uri "https://graph.microsoft.com/beta/subscriptions/$($_.id)" -tenantid $TenantFilter -type PATCH -body $body -Verbose
                 $WebhookTable = Get-CIPPTable -TableName webhookTable

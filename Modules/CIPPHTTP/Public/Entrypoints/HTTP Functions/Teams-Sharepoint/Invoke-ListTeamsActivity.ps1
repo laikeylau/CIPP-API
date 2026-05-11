@@ -10,7 +10,7 @@ Function Invoke-ListTeamsActivity {
     # Interact with query parameters or the body of the request.
     $TenantFilter = $Request.Query.tenantFilter
     $type = $request.Query.Type
-    $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/reports/get$($type)Detail(period='D30')" -tenantid $TenantFilter | ConvertFrom-Csv | Select-Object @{ Name = 'UPN'; Expression = { $_.'User Principal Name' } },
+    $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/reports/get$($type)Detail(period='D30')" -tenantid $TenantFilter -AsApp $true | ConvertFrom-Csv | Select-Object @{ Name = 'UPN'; Expression = { $_.'User Principal Name' } },
     @{ Name = 'LastActive'; Expression = { $_.'Last Activity Date' } },
     @{ Name = 'TeamsChat'; Expression = { $_.'Team Chat Message Count' } },
     @{ Name = 'CallCount'; Expression = { $_.'Call Count' } },

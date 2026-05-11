@@ -163,7 +163,7 @@ function Invoke-CIPPStandardDefenderASRPolicy {
             try {
                 # Delete existing drifted policy so the helper can recreate
                 if ($PolicyExists) {
-                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($ExistingPolicy.id)')" -tenantid $Tenant -type DELETE
+                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($ExistingPolicy.id)')" -tenantid $Tenant -type DELETE -AsApp $true
                     Write-LogMessage -API 'Standards' -tenant $Tenant -message 'Deleted drifted Defender ASR Policy for recreation' -sev Info
                 }
 

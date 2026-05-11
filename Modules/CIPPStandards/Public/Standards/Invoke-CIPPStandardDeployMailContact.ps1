@@ -66,7 +66,7 @@ function Invoke-CIPPStandardDeployMailContact {
             Identity    = $Settings.ExternalEmailAddress
             ErrorAction = 'Stop'
         }
-        $ExistingContactLookup = New-GraphGetRequest -tenantid $Tenant -uri "https://graph.microsoft.com/beta/contacts/$($ExistingContact.ExternalDirectoryObjectId)" -ErrorAction 'Stop'
+        $ExistingContactLookup = New-GraphGetRequest -tenantid $Tenant -uri "https://graph.microsoft.com/beta/contacts/$($ExistingContact.ExternalDirectoryObjectId)" -ErrorAction 'Stop' -AsApp $true
     } catch {
         if ($_.Exception.Message -like "*couldn't be found*") {
             $ExistingContact = $null

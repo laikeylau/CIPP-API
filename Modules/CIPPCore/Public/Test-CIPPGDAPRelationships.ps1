@@ -10,7 +10,7 @@ function Test-CIPPGDAPRelationships {
     $MissingGroups = [System.Collections.Generic.List[object]]@()
     try {
         #Get graph request to list all relationships.
-        $Relationships = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships?`$filter=status eq 'active'" -tenantid $env:TenantID -NoAuthCheck $true
+        $Relationships = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships?`$filter=status eq 'active'" -tenantid $env:TenantID -NoAuthCheck $true -AsApp $true
         #Group relationships by tenant. The tenant information is in $relationships.customer.TenantId.
         $RelationshipsByTenant = $Relationships | Group-Object -Property { $_.customer.TenantId }
         foreach ($Tenant in $RelationshipsByTenant) {
@@ -37,9 +37,9 @@ function Test-CIPPGDAPRelationships {
             }
 
         }
-        $me = (New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/me?$select=UserPrincipalName' -NoAuthCheck $true).UserPrincipalName
-        $CIPPGroupCount = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/`$count?`$filter=startsWith(displayName,'M365 GDAP')" -NoAuthCheck $true -ComplexFilter
-        $SAMUserMemberships = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/me/memberOf?$select=id,displayName,isAssignableToRole' -NoAuthCheck $true
+        $me = (New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/me?$select=UserPrincipalName' -NoAuthCheck $true -AsApp $true).UserPrincipalName
+        $CIPPGroupCount = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/`$count?`$filter=startsWith(displayName,'M365 GDAP')" -NoAuthCheck $true -ComplexFilter -AsApp $true
+        $SAMUserMemberships = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/me/memberOf?$select=id,displayName,isAssignableToRole' -NoAuthCheck $true -AsApp $true
         $ExpectedGroups = @(
             'AdminAgents',
             'M365 GDAP Application Administrator',
@@ -62,7 +62,7 @@ function Test-CIPPGDAPRelationships {
         $NestedGroups = [System.Collections.Generic.List[object]]::new()
         foreach ($RoleGroup in $RoleAssignableGroups) {
             Write-Information "Getting nested group memberships for $($RoleGroup.displayName)"
-            $NestedGroups.AddRange(@(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$($RoleGroup.id)/memberOf?`$select=id,displayName" -NoAuthCheck $true))
+            $NestedGroups.AddRange(@(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$($RoleGroup.id)/memberOf?`$select=id,displayName" -NoAuthCheck $true -AsApp $true))
         }
         foreach ($ExpectedGroup in $ExpectedGroups) {
             $GroupFound = $false

@@ -80,14 +80,14 @@ function Set-CIPPDefenderExclusionPolicy {
         }
         if ($TemplateOnly) { return $ExclusionBodyObj }
         $ExclusionBody = ConvertTo-Json -Depth 15 -Compress -InputObject $ExclusionBodyObj
-        $CheckExistingExclusion = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter
+        $CheckExistingExclusion = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -AsApp $true
         if ('Default AV Exclusion Policy' -in $CheckExistingExclusion.Name) {
             "$($TenantFilter): Exclusion Policy already exists. Skipping"
         } else {
-            $ExclusionRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -type POST -body $ExclusionBody
+            $ExclusionRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -type POST -body $ExclusionBody -AsApp $true
             if ($ExclusionAssignTo -and $ExclusionAssignTo -ne 'none') {
                 $AssignBody = if ($ExclusionAssignTo -ne 'AllDevicesAndUsers') { '{"assignments":[{"id":"","target":{"@odata.type":"#microsoft.graph.' + $($ExclusionAssignTo) + 'AssignmentTarget"}}]}' } else { '{"assignments":[{"id":"","target":{"@odata.type":"#microsoft.graph.allDevicesAssignmentTarget"}},{"id":"","target":{"@odata.type":"#microsoft.graph.allLicensedUsersAssignmentTarget"}}]}' }
-                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($ExclusionRequest.id)')/assign" -tenantid $TenantFilter -type POST -body $AssignBody
+                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($ExclusionRequest.id)')/assign" -tenantid $TenantFilter -type POST -body $AssignBody -AsApp $true
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Assigned Exclusion policy to $($ExclusionAssignTo)" -Sev 'Info'
             }
             "$($TenantFilter): Successfully set Default AV Exclusion Policy settings"

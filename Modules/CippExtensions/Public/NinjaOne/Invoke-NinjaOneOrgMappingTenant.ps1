@@ -14,7 +14,7 @@ function Invoke-NinjaOneOrgMappingTenant {
 
     $TenantFilter = $Tenant.customerId
 
-    $M365DevicesRaw = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/managedDevices' -Tenantid $tenantfilter
+    $M365DevicesRaw = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/managedDevices' -Tenantid $tenantfilter -AsApp $true
 
     $M365Devices = foreach ($Device in $M365DevicesRaw) {
         [pscustomobject]@{

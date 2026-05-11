@@ -11,7 +11,7 @@ function Invoke-ListAdminPortalLicenses {
     $TenantFilter = $Request.Query.tenantFilter
 
     try {
-        $AdminPortalLicenses = New-GraphGetRequest -scope 'https://admin.microsoft.com/.default' -TenantID $TenantFilter -Uri 'https://admin.microsoft.com/fd/m365licensing/v3/licensedProducts?allotmentSourceOwnerType=User&allotmentSourceType=LowFrictionTrial&allotmentSourceState=Active,Deleted,Suspended,Lockout,Warning&displayNameLanguage=en-GB'
+        $AdminPortalLicenses = New-GraphGetRequest -scope 'https://admin.microsoft.com/.default' -TenantID $TenantFilter -Uri 'https://admin.microsoft.com/fd/m365licensing/v3/licensedProducts?allotmentSourceOwnerType=User&allotmentSourceType=LowFrictionTrial&allotmentSourceState=Active,Deleted,Suspended,Lockout,Warning&displayNameLanguage=en-GB' -AsApp $true
 
     } catch {
         Write-Warning 'Failed to get Admin Portal Licenses'

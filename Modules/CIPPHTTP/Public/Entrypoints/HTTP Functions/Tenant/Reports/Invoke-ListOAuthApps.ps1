@@ -29,8 +29,8 @@ Function Invoke-ListOAuthApps {
         }
 
         # Live data - single tenant only
-        $ServicePrincipals = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/servicePrincipals?`$select=id,displayName,appid&`$top=999" -tenantid $TenantFilter
-        $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/oauth2PermissionGrants?$top=999' -tenantid $TenantFilter | ForEach-Object {
+        $ServicePrincipals = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/servicePrincipals?`$select=id,displayName,appid&`$top=999" -tenantid $TenantFilter -AsApp $true
+        $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/oauth2PermissionGrants?$top=999' -tenantid $TenantFilter -AsApp $true | ForEach-Object {
             $CurrentServicePrincipal = ($ServicePrincipals | Where-Object -Property id -EQ $_.clientId)
             [PSCustomObject]@{
                 Name          = $CurrentServicePrincipal.displayName

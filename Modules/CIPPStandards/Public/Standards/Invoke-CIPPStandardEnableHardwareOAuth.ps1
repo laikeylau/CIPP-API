@@ -32,7 +32,7 @@ function Invoke-CIPPStandardEnableHardwareOAuth {
     param($Tenant, $Settings)
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authenticationmethodspolicy/authenticationMethodConfigurations/HardwareOath' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authenticationmethodspolicy/authenticationMethodConfigurations/HardwareOath' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the EnableHardwareOAuth state for $Tenant. Error: $ErrorMessage" -Sev Error

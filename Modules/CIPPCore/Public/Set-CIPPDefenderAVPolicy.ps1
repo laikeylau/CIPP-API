@@ -176,10 +176,10 @@ function Set-CIPPDefenderAVPolicy {
     } else {
         $PolBody = ConvertTo-Json -Depth 10 -Compress -InputObject $PolBodyObj
 
-        $PolicyRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -type POST -body $PolBody
+        $PolicyRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -type POST -body $PolBody -AsApp $true
         if ($PolicySettings.AssignTo -ne 'None') {
             $AssignBody = if ($PolicySettings.AssignTo -ne 'AllDevicesAndUsers') { '{"assignments":[{"id":"","target":{"@odata.type":"#microsoft.graph.' + $($PolicySettings.AssignTo) + 'AssignmentTarget"}}]}' } else { '{"assignments":[{"id":"","target":{"@odata.type":"#microsoft.graph.allDevicesAssignmentTarget"}},{"id":"","target":{"@odata.type":"#microsoft.graph.allLicensedUsersAssignmentTarget"}}]}' }
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($PolicyRequest.id)')/assign" -tenantid $TenantFilter -type POST -body $AssignBody
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($PolicyRequest.id)')/assign" -tenantid $TenantFilter -type POST -body $AssignBody -AsApp $true
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Assigned AV policy to $($PolicySettings.AssignTo)" -Sev 'Info'
         }
         "$($TenantFilter): Successfully set Default AV Policy settings"

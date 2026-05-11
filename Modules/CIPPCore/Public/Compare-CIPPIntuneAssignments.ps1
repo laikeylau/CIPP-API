@@ -76,7 +76,7 @@ function Compare-CIPPIntuneAssignments {
         # For custom groups, resolve names to IDs and compare
         $IncludeGroupMatch = $true
         if ($ExpectedAssignTo -eq 'customGroup' -and $ExpectedCustomGroup) {
-            $AllGroupsCache = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter
+            $AllGroupsCache = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter -AsApp $true
             $ExpectedGroupIds = @(
                 $ExpectedCustomGroup.Split(',').Trim() | ForEach-Object {
                     $name = $_
@@ -92,7 +92,7 @@ function Compare-CIPPIntuneAssignments {
         $ExcludeGroupMatch = $true
         if ($ExpectedExcludeGroup) {
             if (-not $AllGroupsCache) {
-                $AllGroupsCache = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter
+                $AllGroupsCache = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter -AsApp $true
             }
             $ExpectedExcludeIds = @(
                 $ExpectedExcludeGroup.Split(',').Trim() | ForEach-Object {
@@ -119,7 +119,7 @@ function Compare-CIPPIntuneAssignments {
             if ($ExistingFilterIds.Count -eq 0) {
                 $FilterMatch = $false
             } else {
-                $AllFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter
+                $AllFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter -AsApp $true
                 $ExpectedFilter = $AllFilters | Where-Object { $_.displayName -like $ExpectedAssignmentFilter } | Select-Object -First 1
                 $FilterMatch = $ExpectedFilter -and ($ExpectedFilter.id -in $ExistingFilterIds)
             }

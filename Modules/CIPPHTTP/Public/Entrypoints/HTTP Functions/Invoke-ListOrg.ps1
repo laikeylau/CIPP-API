@@ -12,7 +12,7 @@ Function Invoke-ListOrg {
     if ($TenantFilter -eq 'AllTenants') {
         $GraphRequest = @()
     } else {
-        $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -tenantid $TenantFilter
+        $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -tenantid $TenantFilter -AsApp $true
     }
 
     return [HttpResponseContext]@{

@@ -43,7 +43,7 @@ function Get-CIPPAlertVulnerabilities {
     }
 
     try {
-        $VulnerabilityRequest = New-GraphGetRequest -tenantid $TenantFilter -uri 'https://api.securitycenter.microsoft.com/api/machines/SoftwareVulnerabilitiesByMachine' -scope 'https://api.securitycenter.microsoft.com/.default'
+        $VulnerabilityRequest = New-GraphGetRequest -tenantid $TenantFilter -uri 'https://api.securitycenter.microsoft.com/api/machines/SoftwareVulnerabilitiesByMachine' -scope 'https://api.securitycenter.microsoft.com/.default' -AsApp $true
 
         if ($VulnerabilityRequest) {
             $AlertData = [System.Collections.Generic.List[PSCustomObject]]::new()

@@ -18,7 +18,7 @@ function Invoke-CIPPOffboardingJob {
         Write-Information "Starting offboarding job for $Username in tenant $TenantFilter"
 
         # Get user information needed for various tasks
-        $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Username)?`$select=id,displayName,onPremisesSyncEnabled,onPremisesImmutableId" -tenantid $TenantFilter
+        $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Username)?`$select=id,displayName,onPremisesSyncEnabled,onPremisesImmutableId" -tenantid $TenantFilter -AsApp $true
         $UserID = $User.id
         $DisplayName = $User.displayName
 

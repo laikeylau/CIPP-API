@@ -35,7 +35,7 @@ function Invoke-CIPPStandardallowOAuthTokens {
     #$Rerun -Type Standard -Tenant $Tenant -API 'AddDKIM' -Settings $Settings
 
     try {
-        $CurrentState = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/softwareOath' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/softwareOath' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the allowOTPTokens state for $Tenant. Error: $ErrorMessage" -Sev Error

@@ -6,7 +6,7 @@ function Invoke-CippPartnerWebhookProcessing {
 
     try {
         if ($Data.AuditUri) {
-            $AuditLog = New-GraphGetRequest -uri $Data.AuditUri -tenantid $env:TenantID -NoAuthCheck $true -scope 'https://api.partnercenter.microsoft.com/.default'
+            $AuditLog = New-GraphGetRequest -uri $Data.AuditUri -tenantid $env:TenantID -NoAuthCheck $true -scope 'https://api.partnercenter.microsoft.com/.default' -AsApp $true
         }
 
         switch ($Data.EventName) {

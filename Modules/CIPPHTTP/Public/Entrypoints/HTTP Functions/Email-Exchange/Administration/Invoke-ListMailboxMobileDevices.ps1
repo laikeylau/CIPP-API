@@ -18,7 +18,7 @@ Function Invoke-ListMailboxMobileDevices {
     $base64IdentityParam = [Convert]::ToBase64String($Bytes)
 
     try {
-        $GraphRequest = New-GraphGetRequest -uri "https://outlook.office365.com:443/adminapi/beta/$($TenantFilter)/mailbox('$($base64IdentityParam)')/MobileDevice/Exchange.GetMobileDeviceStatistics()/?IsEncoded=True" -Tenantid $TenantFilter -scope ExchangeOnline | Select-Object @{ Name = 'clientType'; Expression = { $_.ClientType } },
+        $GraphRequest = New-GraphGetRequest -uri "https://outlook.office365.com:443/adminapi/beta/$($TenantFilter)/mailbox('$($base64IdentityParam)')/MobileDevice/Exchange.GetMobileDeviceStatistics()/?IsEncoded=True" -Tenantid $TenantFilter -scope ExchangeOnline -AsApp $true | Select-Object @{ Name = 'clientType'; Expression = { $_.ClientType } },
         @{ Name = 'clientVersion'; Expression = { $_.ClientVersion } },
         @{ Name = 'deviceAccessState'; Expression = { $_.DeviceAccessState } },
         @{ Name = 'deviceFriendlyName'; Expression = { if ([string]::IsNullOrEmpty($_.DeviceFriendlyName)) { 'Unknown' }else { $_.DeviceFriendlyName } } },

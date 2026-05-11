@@ -33,7 +33,7 @@ function Invoke-ListIntunePolicy {
 
         if ($ID) {
             if ($URLName -ieq 'ConfigurationPolicies' -or $URLName -ieq 'configurationPolicies') {
-                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$ID')?`$expand=settings" -tenantid $TenantFilter
+                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$ID')?`$expand=settings" -tenantid $TenantFilter -AsApp $true
 
                 if ($IncludeSettingDefinitions -and $GraphRequest.settings) {
                     $DefinitionRequests = [System.Collections.Generic.List[object]]::new()
@@ -54,7 +54,7 @@ function Invoke-ListIntunePolicy {
                     }
 
                     if ($DefinitionRequests.Count -gt 0) {
-                        $DefinitionResults = New-GraphBulkRequest -Requests @($DefinitionRequests) -tenantid $TenantFilter
+                        $DefinitionResults = New-GraphBulkRequest -Requests @($DefinitionRequests) -tenantid $TenantFilter -AsApp $true
                         foreach ($DefinitionResult in $DefinitionResults) {
                             $SettingId = $SettingIdMap[$DefinitionResult.id]
                             $Setting = $GraphRequest.settings | Where-Object { $_.id -eq $SettingId } | Select-Object -First 1
@@ -66,7 +66,7 @@ function Invoke-ListIntunePolicy {
                     }
                 }
             } else {
-                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($URLName)('$ID')" -tenantid $TenantFilter
+                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($URLName)('$ID')" -tenantid $TenantFilter -AsApp $true
             }
         } else {
             $BulkRequests = [PSCustomObject]@(
@@ -117,7 +117,7 @@ function Invoke-ListIntunePolicy {
                 }
             )
 
-            $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+            $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
 
             # Extract groups for resolving assignment names
             $Groups = ($BulkResults | Where-Object { $_.id -eq 'Groups' }).body.value

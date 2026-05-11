@@ -49,14 +49,14 @@ function Invoke-CIPPStandardAddDMARCToMOERA {
 
     # Get all fallback domains (onmicrosoft.com domains) and check if the DMARC record is set correctly
     try {
-        $DomainsResponse = New-GraphGetRequest -TenantID $Tenant -Uri 'https://graph.microsoft.com/beta/domains'
+        $DomainsResponse = New-GraphGetRequest -TenantID $Tenant -Uri 'https://graph.microsoft.com/beta/domains' -AsApp $true
         Write-Warning ($DomainsResponse | ConvertTo-Json -Depth 5)
         $Domains = @($DomainsResponse | Where-Object { $_.id -like '*.onmicrosoft.com' } | ForEach-Object { $_.id })
         Write-Information "Detected $($Domains.Count) MOERA domains: $($Domains -join ', ')"
 
         $CurrentInfo = foreach ($Domain in $Domains) {
             # Get current DNS records that matches _dmarc hostname and TXT type
-            $RecordsResponse = New-GraphGetRequest -TenantID $Tenant -Uri "https://graph.microsoft.com/beta/domains/$($Domain)/serviceConfigurationRecords"
+            $RecordsResponse = New-GraphGetRequest -TenantID $Tenant -Uri "https://graph.microsoft.com/beta/domains/$($Domain)/serviceConfigurationRecords" -AsApp $true
             $AllRecords = @($RecordsResponse)
             $CurrentRecords = $AllRecords | Where-Object {
                 $_.recordType -ieq 'Txt' -and ($_.label -ieq '_dmarc' -or $_.label -ieq "_dmarc.$($Domain)")

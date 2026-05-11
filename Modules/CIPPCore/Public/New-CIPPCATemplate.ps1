@@ -21,12 +21,12 @@ function New-CIPPCATemplate {
     if ($preloadedUsers) {
         $users = $preloadedUsers
     } else {
-        $users = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$top=999&`$select=displayName,id" -tenantid $TenantFilter)
+        $users = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$top=999&`$select=displayName,id" -tenantid $TenantFilter -AsApp $true)
     }
     if ($preloadedGroups) {
         $groups = $preloadedGroups
     } else {
-        $groups = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups?`$top=999&`$select=displayName,id" -tenantid $TenantFilter)
+        $groups = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups?`$top=999&`$select=displayName,id" -tenantid $TenantFilter -AsApp $true)
     }
 
     $namedLocations = $null
@@ -34,7 +34,7 @@ function New-CIPPCATemplate {
         $namedLocations = $preloadedLocations
     } else {
         if ($JSON.conditions.locations.includeLocations -or $JSON.conditions.locations.excludeLocations) {
-            $namedLocations = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations?$top=999' -tenantid $TenantFilter
+            $namedLocations = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations?$top=999' -tenantid $TenantFilter -AsApp $true
         }
     }
 

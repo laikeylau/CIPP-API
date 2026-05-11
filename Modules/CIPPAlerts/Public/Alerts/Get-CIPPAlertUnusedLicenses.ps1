@@ -14,7 +14,7 @@ function Get-CIPPAlertUnusedLicenses {
     try {
         $LicenseTable = Get-CIPPTable -TableName ExcludedLicenses
         $ExcludedSkuList = Get-CIPPAzDataTableEntity @LicenseTable
-        $AlertData = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscribedSkus' -tenantid $TenantFilter | ForEach-Object {
+        $AlertData = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscribedSkus' -tenantid $TenantFilter -AsApp $true | ForEach-Object {
             $SkuId = $_
             foreach ($sku in $SkuId) {
                 if ($sku.skuId -in $ExcludedSkuList.GUID) { continue }

@@ -20,7 +20,7 @@ function Set-CIPPDBCacheDetectedApps {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching detected apps' -sev Debug
 
         # Step 1: Get first page with noPaginate to avoid sequential chase, and read @odata.count
-        $FirstPageResult = New-GraphBulkRequest -Requests @(
+        $FirstPageResult = New-GraphBulkRequest -Requests @( -AsApp $true
             [PSCustomObject]@{
                 id     = 'detectedApps-0'
                 method = 'GET'
@@ -47,7 +47,7 @@ function Set-CIPPDBCacheDetectedApps {
             }
             Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message "Fetching $($SkipRequests.Count) remaining pages in bulk" -sev Debug
 
-            # New-GraphBulkRequest auto-batches into groups of 20, NoPaginateIds prevents chasing empty nextLinks
+            # New-GraphBulkRequest auto-batches into groups of 20, NoPaginateIds prevents chasing empty nextLinks -AsApp $true
             $SkipResults = New-GraphBulkRequest -Requests @($SkipRequests) -tenantid $TenantFilter -NoPaginateIds @($SkipRequests.id)
 
             foreach ($Result in $SkipResults) {
@@ -76,7 +76,7 @@ function Set-CIPPDBCacheDetectedApps {
 
         if ($DeviceRequests) {
             Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message "Fetching devices for $($DetectedApps.Count) detected apps" -sev Debug
-            $DeviceResults = New-GraphBulkRequest -Requests @($DeviceRequests) -tenantid $TenantFilter
+            $DeviceResults = New-GraphBulkRequest -Requests @($DeviceRequests) -tenantid $TenantFilter -AsApp $true
 
             # Add devices to each detected app object
             $DetectedAppsWithDevices = foreach ($App in $DetectedApps) {

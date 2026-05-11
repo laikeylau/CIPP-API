@@ -52,7 +52,7 @@ function Invoke-ExecListAppId {
             }
         )
 
-        $BulkResponse = New-GraphBulkRequest -Requests $BulkRequests -tenantid $env:TenantID -NoAuthCheck $true
+        $BulkResponse = New-GraphBulkRequest -Requests $BulkRequests -tenantid $env:TenantID -NoAuthCheck $true -AsApp $true
         $OrgResponse = $BulkResponse | Where-Object { $_.id -eq 'organization' }
         $MeResponse = $BulkResponse | Where-Object { $_.id -eq 'me' }
         $AppResponse = $BulkResponse | Where-Object { $_.id -eq 'application' }

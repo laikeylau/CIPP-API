@@ -50,7 +50,7 @@ function Push-BPACollectData {
                             $paramsField[$_.PSObject.properties.name] = $_.PSObject.properties.value
                         }
                     }
-                    $FieldInfo = New-GraphGetRequest @paramsField | Where-Object $filterscript | Select-Object $field.ExtractFields
+                    $FieldInfo = New-GraphGetRequest @paramsField -AsApp $true | Where-Object $filterscript | Select-Object $field.ExtractFields
                 }
                 'Exchange' {
                     Write-Host "Trying to execute $($field.Command) for $($TenantName.displayName) with GUID $($TenantName.customerId)"

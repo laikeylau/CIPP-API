@@ -36,7 +36,7 @@ function Set-CIPPUserJITAdminProperties {
 
         $Json = ConvertTo-Json -Depth 5 -InputObject $Body
         Write-Information $Json
-        New-GraphPOSTRequest -type PATCH -Uri "https://graph.microsoft.com/beta/users/$UserId" -Body $Json -tenantid $TenantFilter | Out-Null
+        New-GraphPOSTRequest -type PATCH -Uri "https://graph.microsoft.com/beta/users/$UserId" -Body $Json -tenantid $TenantFilter -AsApp $true | Out-Null
     } catch {
         Write-Information "Error setting JIT Admin properties: $($_.Exception.Message) - $($_.InvocationInfo.PositionMessage)"
     }

@@ -11,11 +11,11 @@ function Invoke-ListAutopilotconfig {
     $TenantFilter = $Request.Query.TenantFilter
     try {
         if ($Request.Query.type -eq 'ApProfile') {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles?`$expand=assignments" -tenantid $TenantFilter
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles?`$expand=assignments" -tenantid $TenantFilter -AsApp $true
         }
 
         if ($Request.Query.type -eq 'ESP') {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations?`$expand=assignments" -tenantid $TenantFilter |
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations?`$expand=assignments" -tenantid $TenantFilter -AsApp $true |
                 Where-Object -Property '@odata.type' -EQ '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration'
         }
         $StatusCode = [HttpStatusCode]::OK

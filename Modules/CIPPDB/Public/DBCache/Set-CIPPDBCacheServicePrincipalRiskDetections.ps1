@@ -20,7 +20,7 @@ function Set-CIPPDBCacheServicePrincipalRiskDetections {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching service principal risk detections from Identity Protection' -sev Debug
 
         # Requires Workload Identity Premium licensing
-        $ServicePrincipalRiskDetections = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identityProtection/servicePrincipalRiskDetections' -tenantid $TenantFilter
+        $ServicePrincipalRiskDetections = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identityProtection/servicePrincipalRiskDetections' -tenantid $TenantFilter -AsApp $true
 
         if ($ServicePrincipalRiskDetections) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ServicePrincipalRiskDetections' -Data $ServicePrincipalRiskDetections

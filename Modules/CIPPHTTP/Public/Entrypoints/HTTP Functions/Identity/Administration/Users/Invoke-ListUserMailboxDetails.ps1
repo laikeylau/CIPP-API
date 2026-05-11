@@ -59,7 +59,7 @@ function Invoke-ListUserMailboxDetails {
                 }
             }
         )
-        $usernames = New-GraphGetRequest -tenantid $TenantFilter -uri 'https://graph.microsoft.com/beta/users?$select=id,userPrincipalName,displayName,mailNickname&$top=999'
+        $usernames = New-GraphGetRequest -tenantid $TenantFilter -uri 'https://graph.microsoft.com/beta/users?$select=id,userPrincipalName,displayName,mailNickname&$top=999' -AsApp $true
         $Results = New-ExoBulkRequest -TenantId $TenantFilter -CmdletArray $Requests -returnWithCommand $true -Anchor $username
         Write-Host "First line of usernames is $($usernames[0] | ConvertTo-Json)"
 
@@ -72,7 +72,7 @@ function Invoke-ListUserMailboxDetails {
         $BlockedSender = $Results.'Get-BlockedSenderAddress'
         $PermsRequest2 = $Results.'Get-RecipientPermission'
 
-        $StatsRequest = New-GraphGetRequest -uri "https://outlook.office365.com/adminapi/beta/$($TenantFilter)/Mailbox('$($UserID)')/Exchange.GetMailboxStatistics()" -Tenantid $TenantFilter -scope ExchangeOnline -noPagination $true
+        $StatsRequest = New-GraphGetRequest -uri "https://outlook.office365.com/adminapi/beta/$($TenantFilter)/Mailbox('$($UserID)')/Exchange.GetMailboxStatistics()" -Tenantid $TenantFilter -scope ExchangeOnline -noPagination $true -AsApp $true
 
 
         # Handle ArchiveEnabled and AutoExpandingArchiveEnabled
@@ -169,7 +169,7 @@ function Invoke-ListUserMailboxDetails {
                     $filterQuery = "displayName eq '$escapedAddress' or mailNickname eq '$escapedNickname'"
                     $contactUri = "https://graph.microsoft.com/beta/contacts?`$filter=$filterQuery&`$select=displayName,mail,mailNickname"
 
-                    $matchedContacts = New-GraphGetRequest -tenantid $TenantFilter -uri $contactUri
+                    $matchedContacts = New-GraphGetRequest -tenantid $TenantFilter -uri $contactUri -AsApp $true
 
                     if ($matchedContacts -and $matchedContacts.Count -gt 0) {
                         $ForwardingAddress = $matchedContacts[0].mail

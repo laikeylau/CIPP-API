@@ -21,7 +21,7 @@ function Push-ExecJITAdminListAllTenants {
                 url    = "users?`$count=true&`$select=id,accountEnabled,displayName,userPrincipalName,$($Schema.id)&`$filter=$($Schema.id)/jitAdminEnabled eq true or $($Schema.id)/jitAdminEnabled eq false&`$top=999"
             })
 
-        $BulkResults = New-GraphBulkRequest -tenantid $DomainName -Requests $BulkRequests
+        $BulkResults = New-GraphBulkRequest -tenantid $DomainName -Requests $BulkRequests -AsApp $true
         $Users = ($BulkResults | Where-Object { $_.id -eq 'users' }).body.value | Where-Object { $_.id }
 
         if ($Users) {
@@ -36,7 +36,7 @@ function Push-ExecJITAdminListAllTenants {
             }
             # Ensure $BulkRequests is not empty or null before making the bulk request
             if ($BulkRequests -and $BulkRequests.Count -gt 0) {
-                $RoleResults = New-GraphBulkRequest -tenantid $DomainName -Requests @($BulkRequests)
+                $RoleResults = New-GraphBulkRequest -tenantid $DomainName -Requests @($BulkRequests -AsApp $true)
 
                 # Format the data
                 $Results = $Users | ForEach-Object {

@@ -21,7 +21,7 @@ function Set-CIPPAuthenticationPolicy {
     $State = if ($Enabled) { 'enabled' } else { 'disabled' }
     # Get current state of the called authentication method and Set state of authentication method to input state
     try {
-        $CurrentInfo = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/policies/authenticationmethodspolicy/authenticationMethodConfigurations/$AuthenticationMethodId" -tenantid $Tenant
+        $CurrentInfo = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/policies/authenticationmethodspolicy/authenticationMethodConfigurations/$AuthenticationMethodId" -tenantid $Tenant -AsApp $true
         $CurrentInfo.state = $State
     } catch {
         $ErrorMessage = Get-CippException -Exception $_

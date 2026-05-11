@@ -13,11 +13,11 @@ function Get-CIPPAlertSecDefaultsDisabled {
 
     try {
         # Check if Security Defaults is disabled
-        $SecDefaults = (New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/identitySecurityDefaultsEnforcementPolicy' -tenantid $TenantFilter)
+        $SecDefaults = (New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/identitySecurityDefaultsEnforcementPolicy' -tenantid $TenantFilter -AsApp $true)
 
         if ($SecDefaults.isEnabled -eq $false) {
             # Security Defaults is disabled, now check if there are any CA policies
-            $CAPolicies = (New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies' -tenantid $TenantFilter)
+            $CAPolicies = (New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies' -tenantid $TenantFilter -AsApp $true)
 
             if (!$CAPolicies -or $CAPolicies.Count -eq 0) {
                 # Security Defaults is off AND no CA policies exist

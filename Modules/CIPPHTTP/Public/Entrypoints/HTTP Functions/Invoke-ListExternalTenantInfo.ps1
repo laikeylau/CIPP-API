@@ -21,7 +21,7 @@ function Invoke-ListExternalTenantInfo {
             $TenantId = $OpenIdConfig.token_endpoint.Split('/')[3]
 
             if ($TenantId) {
-                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/findTenantInformationByTenantId(tenantId='$TenantId')" -NoAuthCheck $true -tenantid $env:TenantID
+                $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/findTenantInformationByTenantId(tenantId='$TenantId')" -NoAuthCheck $true -tenantid $env:TenantID -AsApp $true
 
 
                 # New API call to retrieve branding details

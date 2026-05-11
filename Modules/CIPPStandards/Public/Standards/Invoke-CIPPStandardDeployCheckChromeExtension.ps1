@@ -364,7 +364,7 @@ exit 0
         # Check for existing Win32 app
         ##########################################################################
         $Baseuri = 'https://graph.microsoft.com/beta/deviceAppManagement/mobileApps'
-        $ExistingApps = New-GraphGetRequest -Uri "$Baseuri`?`$filter=displayName eq '$AppDisplayName'&`$select=id,displayName,description" -tenantid $Tenant | Where-Object {
+        $ExistingApps = New-GraphGetRequest -Uri "$Baseuri`?`$filter=displayName eq '$AppDisplayName'&`$select=id,displayName,description" -tenantid $Tenant -AsApp $true | Where-Object {
             $_.'@odata.type' -eq '#microsoft.graph.win32LobApp'
         }
         $AppExists = ($null -ne $ExistingApps -and @($ExistingApps).Count -gt 0)
@@ -374,7 +374,7 @@ exit 0
             if ($Settings.customGroup) { $AssignTo = $Settings.customGroup }
 
             # Clean up legacy OMA-URI configuration policies from the old approach
-            $LegacyPolicies = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$select=id,displayName' -tenantid $Tenant | Where-Object {
+            $LegacyPolicies = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations?$select=id,displayName' -tenantid $Tenant -AsApp $true | Where-Object {
                 $_.displayName -in $LegacyPolicyNames
             }
             if ($LegacyPolicies) {

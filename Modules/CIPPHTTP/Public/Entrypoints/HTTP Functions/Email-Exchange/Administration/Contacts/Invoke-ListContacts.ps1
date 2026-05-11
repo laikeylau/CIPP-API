@@ -112,7 +112,7 @@ function Invoke-ListContacts {
             } | Select-Object -Property City, Company, Department, DisplayName, FirstName, LastName, IsDirSynced, Guid, WindowsEmailAddress
 
             # Add Graph ID to each contact based on email match
-            $GraphContacts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/contacts' -tenantid $TenantFilter
+            $GraphContacts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/contacts' -tenantid $TenantFilter -AsApp $true
             foreach ($contact in $ContactResponse) {
                 $GraphMatch = $GraphContacts | Where-Object { $_.mail -eq $contact.WindowsEmailAddress }
                 if ($GraphMatch) {

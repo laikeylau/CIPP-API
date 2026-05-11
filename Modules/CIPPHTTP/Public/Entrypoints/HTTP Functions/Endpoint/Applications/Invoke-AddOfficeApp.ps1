@@ -17,7 +17,7 @@ function Invoke-AddOfficeApp {
 
     $Results = foreach ($Tenant in $Tenants) {
         try {
-            $ExistingO365 = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceAppManagement/mobileApps' -tenantid $Tenant | Where-Object { $_.displayName -eq 'Microsoft 365 Apps for Windows 10 and later' }
+            $ExistingO365 = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceAppManagement/mobileApps' -tenantid $Tenant -AsApp $true | Where-Object { $_.displayName -eq 'Microsoft 365 Apps for Windows 10 and later' }
             if (!$ExistingO365) {
                 # Check if custom XML is provided
                 if ($Request.Body.useCustomXml -and $Request.Body.customXml) {
@@ -95,7 +95,7 @@ function Invoke-AddOfficeApp {
             Write-LogMessage -headers $Headers -API $APIName -tenant $($Tenant) -message "Added Office profile to $($Tenant)" -Sev 'Info'
             if ($AssignTo) {
                 $AssignO365 = if ($AssignTo -ne 'AllDevicesAndUsers') { '{"mobileAppAssignments":[{"@odata.type":"#microsoft.graph.mobileAppAssignment","target":{"@odata.type":"#microsoft.graph.' + $($AssignTo) + 'AssignmentTarget"},"intent":"Required"}]}' } else { '{"mobileAppAssignments":[{"@odata.type":"#microsoft.graph.mobileAppAssignment","target":{"@odata.type":"#microsoft.graph.allDevicesAssignmentTarget"},"intent":"Required"},{"@odata.type":"#microsoft.graph.mobileAppAssignment","target":{"@odata.type":"#microsoft.graph.allLicensedUsersAssignmentTarget"},"intent":"Required"}]}' }           Write-Host ($AssignO365)
-                New-GraphPOSTRequest -Uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/$($OfficeAppID.id)/assign" -tenantid $Tenant -Body $AssignO365 -type POST
+                New-GraphPOSTRequest -Uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps/$($OfficeAppID.id)/assign" -tenantid $Tenant -Body $AssignO365 -type POST -AsApp $true
                 Write-LogMessage -headers $Headers -API $APIName -tenant $($Tenant) -message "Assigned Office to $AssignTo" -Sev 'Info'
             }
             "Successfully added Office App for $($Tenant)"

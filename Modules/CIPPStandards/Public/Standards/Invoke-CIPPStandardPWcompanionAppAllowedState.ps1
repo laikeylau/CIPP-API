@@ -34,7 +34,7 @@ function Invoke-CIPPStandardPWcompanionAppAllowedState {
     param($Tenant, $Settings)
 
     try {
-        $AuthenticatorFeaturesState = (New-GraphGetRequest -tenantid $Tenant -Uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/microsoftAuthenticator')
+        $AuthenticatorFeaturesState = (New-GraphGetRequest -tenantid $Tenant -Uri 'https://graph.microsoft.com/beta/policies/authenticationMethodsPolicy/authenticationMethodConfigurations/microsoftAuthenticator' -AsApp $true)
     }
     catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

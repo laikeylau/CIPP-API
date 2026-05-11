@@ -18,10 +18,10 @@ function Invoke-ListAssignmentFilters {
     try {
         if ($FilterId) {
             # Get specific filter
-            $AssignmentFilters = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/assignmentFilters/$($FilterId)" -tenantid $TenantFilter
+            $AssignmentFilters = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/assignmentFilters/$($FilterId)" -tenantid $TenantFilter -AsApp $true
         } else {
             # Get all filters
-            $AssignmentFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter
+            $AssignmentFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter -AsApp $true
         }
 
         $StatusCode = [HttpStatusCode]::OK

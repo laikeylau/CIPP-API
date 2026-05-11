@@ -20,7 +20,7 @@ function Set-CIPPDBCacheIntuneAppProtectionPolicies {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Intune App Protection Policies' -sev Debug
 
         # iOS Managed App Protection Policies
-        $IosPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections?$expand=assignments' -tenantid $TenantFilter
+        $IosPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/iosManagedAppProtections?$expand=assignments' -tenantid $TenantFilter -AsApp $true
         if ($IosPolicies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'IntuneIosAppProtectionPolicies' -Data $IosPolicies
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'IntuneIosAppProtectionPolicies' -Data $IosPolicies -Count
@@ -29,7 +29,7 @@ function Set-CIPPDBCacheIntuneAppProtectionPolicies {
         $IosPolicies = $null
 
         # Android Managed App Protection Policies
-        $AndroidPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections?$expand=assignments' -tenantid $TenantFilter
+        $AndroidPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/androidManagedAppProtections?$expand=assignments' -tenantid $TenantFilter -AsApp $true
         if ($AndroidPolicies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'IntuneAndroidAppProtectionPolicies' -Data $AndroidPolicies
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'IntuneAndroidAppProtectionPolicies' -Data $AndroidPolicies -Count

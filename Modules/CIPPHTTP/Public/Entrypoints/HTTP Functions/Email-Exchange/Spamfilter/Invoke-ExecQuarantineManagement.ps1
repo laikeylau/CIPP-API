@@ -47,7 +47,7 @@ function Invoke-ExecQuarantineManagement {
                     $CurrentSenders = @($CurrentPolicy.AllowedSenders.Sender.Address | Where-Object { $_ })
                     if ($SenderAddress -notin $CurrentSenders) {
                         $UpdatedSenders = @($CurrentSenders + $SenderAddress)
-                        New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-HostedContentFilterPolicy' -cmdParams @{ -AsApp
+                        New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-HostedContentFilterPolicy' -cmdParams @{
                             Identity       = $PolicyName
                             AllowedSenders = $UpdatedSenders
                         }

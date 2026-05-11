@@ -11,7 +11,7 @@ function Push-ExecMdoAlertsListAllTenants {
 
     try {
         # Get MDO alerts using the specific endpoint and filter
-        $Alerts = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/security/alerts_v2?`$filter=serviceSource eq 'microsoftDefenderForOffice365'" -tenantid $domainName
+        $Alerts = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/security/alerts_v2?`$filter=serviceSource eq 'microsoftDefenderForOffice365'" -tenantid $domainName -AsApp $true
 
         foreach ($Alert in $Alerts) {
             $GUID = (New-Guid).Guid

@@ -13,7 +13,7 @@ function Invoke-ExecSyncVPP {
     $TenantFilter = $Request.Body.tenantFilter
     try {
         # Get all VPP tokens and sync them
-        $VppTokens = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/vppTokens' -tenantid $TenantFilter | Where-Object { $_.state -eq 'valid' }
+        $VppTokens = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceAppManagement/vppTokens' -tenantid $TenantFilter -AsApp $true | Where-Object { $_.state -eq 'valid' }
 
         if ($null -eq $VppTokens -or $VppTokens.Count -eq 0) {
             $Result = 'No VPP tokens found'
@@ -21,7 +21,7 @@ function Invoke-ExecSyncVPP {
         } else {
             $SyncCount = 0
             foreach ($Token in $VppTokens) {
-                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/vppTokens/$($Token.id)/syncLicenses" -tenantid $TenantFilter
+                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/vppTokens/$($Token.id)/syncLicenses" -tenantid $TenantFilter -AsApp $true
                 $SyncCount++
             }
             $Result = "Successfully started VPP sync for $SyncCount tokens"

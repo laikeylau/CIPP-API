@@ -10,7 +10,7 @@ function Invoke-ListDefenderTVM {
     $TenantFilter = $Request.Query.tenantFilter
     # Interact with query parameters or the body of the request.
     try {
-        $GraphRequest = New-GraphGetRequest -tenantid $TenantFilter -uri 'https://api.securitycenter.microsoft.com/api/machines/SoftwareVulnerabilitiesByMachine' -scope 'https://api.securitycenter.microsoft.com/.default' | Group-Object cveId
+        $GraphRequest = New-GraphGetRequest -tenantid $TenantFilter -uri 'https://api.securitycenter.microsoft.com/api/machines/SoftwareVulnerabilitiesByMachine' -scope 'https://api.securitycenter.microsoft.com/.default' -AsApp $true | Group-Object cveId
         $GroupObj = foreach ($cve in $GraphRequest) {
             # Start with base properties
             $obj = [ordered]@{

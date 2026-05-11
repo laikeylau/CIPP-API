@@ -16,7 +16,7 @@ Function Invoke-ListServiceHealth {
             Import-Module '.\Modules\CIPPCore'
             $TenantName = $_.displayName
             Write-Host "Processed Service Health for $TenantName via AllTenants"
-            $prop = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/admin/serviceAnnouncement/issues?`$filter=endDateTime eq null" -tenantid $_.defaultDomainName
+            $prop = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/admin/serviceAnnouncement/issues?`$filter=endDateTime eq null" -tenantid $_.defaultDomainName -AsApp $true
             $prop | Add-Member -NotePropertyName 'tenant' -NotePropertyValue $TenantName
             $prop | Add-Member -NotePropertyName 'defaultDomainName' -NotePropertyValue $_.defaultDomainName
             $prop
@@ -24,7 +24,7 @@ Function Invoke-ListServiceHealth {
     } else {
         $TenantName = $Request.Query.displayName
         $DefaultDomainName = $Request.Query.defaultDomainName
-        $ResultHealthSummary = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/admin/serviceAnnouncement/issues?`$filter=endDateTime eq null" -tenantid $TenantFilter
+        $ResultHealthSummary = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/admin/serviceAnnouncement/issues?`$filter=endDateTime eq null" -tenantid $TenantFilter -AsApp $true
         $ResultHealthSummary | Add-Member -NotePropertyName 'tenant' -NotePropertyValue $TenantName
         $ResultHealthSummary | Add-Member -NotePropertyName 'defaultDomainName' -NotePropertyValue $DefaultDomainName
         Write-Host "Processed Service Health for $TenantName"

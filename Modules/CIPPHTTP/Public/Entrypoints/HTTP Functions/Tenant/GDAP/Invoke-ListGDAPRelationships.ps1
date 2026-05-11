@@ -16,13 +16,13 @@ function Invoke-ListGDAPRelationships {
     try {
         if ($Id) {
             $Uri = "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$Id"
-            $Results = New-GraphGetRequest -Uri $Uri -tenantid $env:TenantID -NoAuthCheck $true -NoPagination $true -ComplexFilter
+            $Results = New-GraphGetRequest -Uri $Uri -tenantid $env:TenantID -NoAuthCheck $true -NoPagination $true -ComplexFilter -AsApp $true
         } else {
             $Uri = "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships?`$top=$Top"
             if ($Filter) {
                 $Uri = "$Uri&`$filter=$Filter"
             }
-            $Results = New-GraphGetRequest -Uri $Uri -tenantid $env:TenantID -NoAuthCheck $true -ComplexFilter
+            $Results = New-GraphGetRequest -Uri $Uri -tenantid $env:TenantID -NoAuthCheck $true -ComplexFilter -AsApp $true
         }
 
         $Body = @{

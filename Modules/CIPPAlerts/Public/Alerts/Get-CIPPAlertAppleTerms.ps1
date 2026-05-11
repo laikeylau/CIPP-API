@@ -19,7 +19,7 @@ function Get-CIPPAlertAppleTerms {
 
     try {
         Write-Host "Checking Apple Terms for $($TenantFilter)"
-        $AppleTerms = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/depOnboardingSettings' -tenantid $TenantFilter
+        $AppleTerms = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/depOnboardingSettings' -tenantid $TenantFilter -AsApp $true
     } catch {
         return
     }

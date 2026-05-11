@@ -19,7 +19,7 @@ function Get-CIPPOmaSettingDecryptedValue {
     The tenant ID to query
 
     .EXAMPLE
-    $policy = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$id" -tenantid $tenant
+    $policy = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations/$id" -tenantid $tenant -AsApp $true
     $decryptedPolicy = Get-CIPPOmaSettingDecryptedValue -DeviceConfiguration $policy -DeviceConfigurationId $id -TenantFilter $tenant
 
     .FUNCTIONALITY
@@ -61,7 +61,7 @@ function Get-CIPPOmaSettingDecryptedValue {
                     $plaintextUri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationId')/getOmaSettingPlainTextValue(secretReferenceValueId='$($omaSetting.secretReferenceValueId)')"
                     Write-Verbose "Calling Graph API: $plaintextUri"
 
-                    $plaintextResponse = New-GraphGetRequest -uri $plaintextUri -tenantid $TenantFilter
+                    $plaintextResponse = New-GraphGetRequest -uri $plaintextUri -tenantid $TenantFilter -AsApp $true
 
                     # The API returns the plaintext value in the 'value' property
                     if ($plaintextResponse) {

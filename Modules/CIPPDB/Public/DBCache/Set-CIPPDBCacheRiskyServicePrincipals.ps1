@@ -20,7 +20,7 @@ function Set-CIPPDBCacheRiskyServicePrincipals {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching risky service principals from Identity Protection' -sev Debug
 
         # Requires Workload Identity Premium licensing
-        $RiskyServicePrincipals = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identityProtection/riskyServicePrincipals' -tenantid $TenantFilter
+        $RiskyServicePrincipals = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identityProtection/riskyServicePrincipals' -tenantid $TenantFilter -AsApp $true
 
         if ($RiskyServicePrincipals) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'RiskyServicePrincipals' -Data $RiskyServicePrincipals

@@ -36,7 +36,7 @@ function Invoke-RemoveIntuneScript {
             default { $null }
         }
 
-        $null = New-GraphPOSTRequest -uri $URI -type DELETE -tenantid $TenantFilter
+        $null = New-GraphPOSTRequest -uri $URI -type DELETE -tenantid $TenantFilter -AsApp $true
         $Result = "Deleted $($ScriptType) script $($DisplayName) with ID: $($ID)"
         Write-LogMessage -headers $Headers -API $APINAME -tenant $Tenant -message $Result -Sev 'Info'
         $StatusCode = [HttpStatusCode]::OK

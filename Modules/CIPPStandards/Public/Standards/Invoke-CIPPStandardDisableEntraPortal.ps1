@@ -12,7 +12,7 @@ function Invoke-CIPPStandardDisableEntraPortal {
     param($Tenant, $Settings)
     #This standard is still unlisted due to MS fixing some permissions. This will be added to the list once it is fixed.
     try {
-        $CurrentInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/admin/entra/uxSetting' -tenantid $Tenant
+        $CurrentInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/admin/entra/uxSetting' -tenantid $Tenant -AsApp $true
     }
     catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
@@ -24,7 +24,7 @@ function Invoke-CIPPStandardDisableEntraPortal {
         if ($CurrentInfo.restrictNonAdminAccess) {
             Write-LogMessage -API 'Standards' -tenant $tenant -message 'Disable user access to Entra Portal is already enabled.' -sev Info
         } else {
-            New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/admin/entra/uxSetting' -tenantid $Tenant -body '{"restrictNonAdminAccess":true}' -type PATCH
+            New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/admin/entra/uxSetting' -tenantid $Tenant -body '{"restrictNonAdminAccess":true}' -type PATCH -AsApp $true
         }
     }
 

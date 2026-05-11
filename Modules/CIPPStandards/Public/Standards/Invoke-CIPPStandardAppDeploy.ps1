@@ -198,7 +198,7 @@ function Invoke-CIPPStandardAppDeploy {
                             Write-LogMessage -API 'Standards' -tenant $tenant -message "Application with name '$($TemplateData.AppName)' already exists in tenant $Tenant" -sev Info
 
                             # get existing application
-                            $App = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/applications(appId='$($ExistingApp.appId)')" -tenantid $Tenant
+                            $App = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/applications(appId='$($ExistingApp.appId)')" -tenantid $Tenant -AsApp $true
 
                             # compare permissions
                             $ExistingPermissions = $App.requiredResourceAccess | ConvertTo-Json -Depth 10

@@ -49,7 +49,7 @@ function Invoke-CippWebhookProcessing {
                 }
             }
             'becremediate' {
-                $Username = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Data.UserId)" -tenantid $TenantFilter).UserPrincipalName
+                $Username = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($Data.UserId)" -tenantid $TenantFilter -AsApp $true).UserPrincipalName
                 try {
                     Set-CIPPResetPassword -UserID $Username -tenantFilter $TenantFilter -APIName 'Alert Engine' -Headers 'Alert Engine'
                 } catch {

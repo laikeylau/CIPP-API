@@ -11,7 +11,7 @@ function Invoke-ListTeamsVoice {
     $TenantFilter = $Request.Query.tenantFilter
     $TenantId = (Get-Tenants -TenantFilter $TenantFilter).customerId
     try {
-        $Users = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$top=999&`$select=id,userPrincipalName,displayName" -tenantid $TenantFilter)
+        $Users = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$top=999&`$select=id,userPrincipalName,displayName" -tenantid $TenantFilter -AsApp $true)
         $Skip = 0
         $GraphRequest = do {
             Write-Host "Getting page $Skip"

@@ -17,7 +17,7 @@ function Invoke-ExecEditMailboxPermissions {
     $Username = $request.body.userID
     $Tenantfilter = $request.body.tenantfilter
     if ($username -eq $null) { exit }
-    $userid = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($username)" -tenantid $Tenantfilter).id
+    $userid = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($username)" -tenantid $Tenantfilter -AsApp $true).id
     $Results = [System.Collections.ArrayList]@()
 
     $RemoveFullAccess = ($Request.body.RemoveFullAccess).value

@@ -26,7 +26,7 @@ function Set-CIPPDBCacheCopilotReadinessActivity {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Copilot readiness activity' -sev Debug
 
         $TenantId = (Get-Tenants -TenantFilter $TenantFilter).customerId
-        $ReadinessData = New-GraphGetRequest -uri "https://reports.office.com/odataux/getCopilotReadinessActivityUserDetail?tenantId=$TenantId" -tenantid $TenantFilter -scope 'https://reports.office.com/.default'
+        $ReadinessData = New-GraphGetRequest -uri "https://reports.office.com/odataux/getCopilotReadinessActivityUserDetail?tenantId=$TenantId" -tenantid $TenantFilter -scope 'https://reports.office.com/.default' -AsApp $true
 
         # Flatten to one row per user using the 30-day period window, matching the MS admin report view
         $FlattenedData = foreach ($User in $ReadinessData) {

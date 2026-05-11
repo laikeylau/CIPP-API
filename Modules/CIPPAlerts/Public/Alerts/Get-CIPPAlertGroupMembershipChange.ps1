@@ -16,7 +16,7 @@ function Get-CIPPAlertGroupMembershipChange {
         if (!$MonitoredGroups) { return $true }
 
         $OneHourAgo = (Get-Date).AddHours(-3).ToString('yyyy-MM-ddTHH:mm:ssZ')
-        $AuditLogs = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?`$filter=activityDateTime ge $OneHourAgo and (activityDisplayName eq 'Add member to group' or activityDisplayName eq 'Remove member from group')" -tenantid $TenantFilter
+        $AuditLogs = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?`$filter=activityDateTime ge $OneHourAgo and (activityDisplayName eq 'Add member to group' or activityDisplayName eq 'Remove member from group')" -tenantid $TenantFilter -AsApp $true
 
         $AlertData = foreach ($Log in $AuditLogs) {
             $Member = ($Log.targetResources | Where-Object { $_.type -in @('User', 'ServicePrincipal', 'Group') })[0]

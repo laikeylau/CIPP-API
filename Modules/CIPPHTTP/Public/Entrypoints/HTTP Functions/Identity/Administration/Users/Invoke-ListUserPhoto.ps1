@@ -21,7 +21,7 @@ Function Invoke-ListUserPhoto {
         }
     )
 
-    $ImageData = New-GraphBulkRequest -Requests $Requests -tenantid $tenantFilter -NoAuthCheck $true
+    $ImageData = New-GraphBulkRequest -Requests $Requests -tenantid $tenantFilter -NoAuthCheck $true -AsApp $true
     #convert body from base64 to byte array
     $Body = [Convert]::FromBase64String($ImageData.body)
 

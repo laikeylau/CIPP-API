@@ -27,7 +27,7 @@ function Set-CIPPDBCachePIMSettings {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching PIM settings' -sev Debug
 
         try {
-            $PIMRoleSettings = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/roleManagementPolicyAssignments?$top=999' -tenantid $TenantFilter
+            $PIMRoleSettings = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/roleManagementPolicyAssignments?$top=999' -tenantid $TenantFilter -AsApp $true
 
             if ($PIMRoleSettings) {
                 Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'PIMRoleSettings' -Data $PIMRoleSettings
@@ -40,7 +40,7 @@ function Set-CIPPDBCachePIMSettings {
         }
 
         try {
-            $PIMAssignments = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/roleManagement/directory/roleEligibilityScheduleInstances?$top=999' -tenantid $TenantFilter
+            $PIMAssignments = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/roleManagement/directory/roleEligibilityScheduleInstances?$top=999' -tenantid $TenantFilter -AsApp $true
 
             if ($PIMAssignments) {
                 Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'PIMAssignments' -Data $PIMAssignments

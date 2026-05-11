@@ -140,7 +140,7 @@ function New-CIPPSharepointSite {
             'odata-version' = '4.0'
         }
         try {
-            $Results = New-GraphPOSTRequest -scope "$($SharePointInfo.AdminUrl)/.default" -uri "$($SharePointInfo.AdminUrl)/_api/SPSiteManager/create" -body (ConvertTo-Json -Depth 10 -InputObject $body) -tenantid $TenantFilter -AddedHeaders $AddedHeaders
+            $Results = New-GraphPOSTRequest -scope "$($SharePointInfo.AdminUrl)/.default" -uri "$($SharePointInfo.AdminUrl)/_api/SPSiteManager/create" -body (ConvertTo-Json -Depth 10 -InputObject $body) -tenantid $TenantFilter -AddedHeaders $AddedHeaders -AsApp $true
         } catch {
             $ErrorMessage = Get-CippException -Exception $_
             $Result = "Failed to create new SharePoint site $SiteName with URL $SiteUrl. Error: $($ErrorMessage.NormalizedError)"

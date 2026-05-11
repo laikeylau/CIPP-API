@@ -86,7 +86,7 @@ function Invoke-CIPPStandardCustomBannedPasswordList {
 
     # Get existing directory settings for password rules
     try {
-        $ExistingSettings = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/settings' -tenantid $Tenant | Where-Object { $_.templateId -eq $PasswordRuleTemplateId }
+        $ExistingSettings = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/settings' -tenantid $Tenant -AsApp $true | Where-Object { $_.templateId -eq $PasswordRuleTemplateId }
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'Standards' -tenant $Tenant -message "Failed to get existing Custom Banned Password List: $($ErrorMessage.NormalizedError)" -sev Error -LogData $ErrorMessage

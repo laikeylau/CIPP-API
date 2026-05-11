@@ -45,7 +45,7 @@ function Invoke-CIPPStandardintuneDeviceRetirementDays {
     } #we're done.
 
     try {
-        $CurrentInfo = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/managedDeviceCleanupRules' -tenantid $Tenant)
+        $CurrentInfo = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/managedDeviceCleanupRules' -tenantid $Tenant -AsApp $true)
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the intuneDeviceRetirementDays state for $Tenant. Error: $ErrorMessage" -Sev Error

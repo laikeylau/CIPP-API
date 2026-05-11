@@ -59,7 +59,7 @@ Function Invoke-ExecSetSecurityIncident {
             $AssignBody += '}'
 
             $ResponseBody = [pscustomobject]@{'Results' = $BodyBuild }
-            New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/security/incidents/$IncidentFilter" -type PATCH -tenantid $TenantFilter -body $AssignBody -asApp $true
+            New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/security/incidents/$IncidentFilter" -type PATCH -tenantid $TenantFilter -body $AssignBody -asApp $true -AsApp $true
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Update incident $IncidentFilter with values $AssignBody" -Sev 'Info'
         } else {
             $ResponseBody = [pscustomobject]@{'Results' = "Refused to update incident $IncidentFilter with values $AssignBody because it is redirected to another incident" }

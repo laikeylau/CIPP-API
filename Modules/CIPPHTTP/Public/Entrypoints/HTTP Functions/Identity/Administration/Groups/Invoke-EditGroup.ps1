@@ -18,7 +18,7 @@ function Invoke-EditGroup {
     # groupName is used in the Add to Group user action, displayName is used in the Edit Group page
     $GroupName = $UserObj.groupName ?? $UserObj.displayName ?? $UserObj.groupId.addedFields.groupName
     $GroupId = $UserObj.groupId.value ?? $UserObj.groupId
-    $OrgGroup = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$($GroupId)" -tenantid $UserObj.tenantFilter
+    $OrgGroup = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$($GroupId)" -tenantid $UserObj.tenantFilter -AsApp $true
 
     $AddMembers = $UserObj.AddMember
 
@@ -58,7 +58,7 @@ function Invoke-EditGroup {
             Write-Host "body: $($PatchObj | ConvertTo-Json -Depth 10 -Compress)" -ForegroundColor Yellow
             if ($UserObj.membershipRules) { $PatchObj | Add-Member -MemberType NoteProperty -Name 'membershipRule' -Value $UserObj.membershipRules -Force }
             try {
-                $null = New-GraphPOSTRequest -type PATCH -uri "https://graph.microsoft.com/beta/groups/$($GroupId)" -tenantid $UserObj.tenantFilter -body ($PatchObj | ConvertTo-Json -Depth 10 -Compress)
+                $null = New-GraphPOSTRequest -type PATCH -uri "https://graph.microsoft.com/beta/groups/$($GroupId)" -tenantid $UserObj.tenantFilter -body ($PatchObj | ConvertTo-Json -Depth 10 -Compress) -AsApp $true
                 $Results.Add("Success - Edited group properties for $($GroupName) group. It might take some time to reflect the changes.")
                 Write-LogMessage -headers $Headers -API $APIName -tenant $UserObj.tenantFilter -message "Edited group properties for $($GroupName) group" -Sev 'Info'
 
@@ -82,7 +82,7 @@ function Invoke-EditGroup {
                 $Member = $_.addedFields.userPrincipalName ?? $_.value ?? $_
                 $MemberID = $_.value
                 if (!$MemberID) {
-                    $MemberID = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$Member" -tenantid $TenantId).id
+                    $MemberID = (New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$Member" -tenantid $TenantId -AsApp $true).id
                 }
 
                 if ($GroupType -eq 'Distribution List' -or $GroupType -eq 'Mail-Enabled Security') {
@@ -309,7 +309,7 @@ function Invoke-EditGroup {
     if ($BulkRequests.Count -gt 0) {
         #Write-Warning 'EditUser - Executing Graph Bulk Requests'
         #Write-Information ($BulkRequests | ConvertTo-Json -Depth 10)
-        $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantId -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequests) -asapp $true
+        $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantId -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequests) -asapp $true -AsApp $true
         #Write-Warning 'EditUser - Executing Graph Bulk Requests - Completed'
         #Write-Information ($RawGraphRequest | ConvertTo-Json -Depth 10)
 
@@ -375,7 +375,7 @@ function Invoke-EditGroup {
     if ($GroupType -eq 'Microsoft 365' -and -not [string]::IsNullOrWhiteSpace($UserObj.visibility)) {
         try {
             $VisibilityValue = $UserObj.visibility
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/groups/$($GroupID)" -type PATCH -tenantid $TenantId -body (@{'visibility' = $VisibilityValue } | ConvertTo-Json)
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/groups/$($GroupID)" -type PATCH -tenantid $TenantId -body (@{'visibility' = $VisibilityValue } | ConvertTo-Json) -AsApp $true
 
             $Results.Add("Set group visibility to $VisibilityValue for $($GroupName).")
         } catch {

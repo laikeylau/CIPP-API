@@ -7,7 +7,7 @@ function Get-BreachInfo {
 
     )
     if ($TenantFilter) {
-        $Data = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/domains' -tenantid $TenantFilter | ForEach-Object {
+        $Data = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/domains' -tenantid $TenantFilter -AsApp $true | ForEach-Object {
             Invoke-RestMethod -Uri "https://geoipdb.azurewebsites.net/api/Breach?func=domain&domain=$($_.id)"
         }
         return $Data

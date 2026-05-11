@@ -18,7 +18,7 @@ function Remove-CIPPAutopilotProfile {
                 throw
             }
 
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId" -tenantid $TenantFilter -type DELETE
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId" -tenantid $TenantFilter -type DELETE -AsApp $true
             $Result = "Successfully deleted Autopilot profile '$($DisplayName)'"
             Write-LogMessage -Headers $Headers -API $APIName -tenant $TenantFilter -message $Result -Sev 'Info'
             return $Result
@@ -35,7 +35,7 @@ function Remove-CIPPAutopilotProfile {
                     try {
                         # Use the assignment ID directly as provided by the API
                         $AssignmentId = $Assignment.id
-                        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId/assignments/$AssignmentId" -tenantid $TenantFilter -type DELETE
+                        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId/assignments/$AssignmentId" -tenantid $TenantFilter -type DELETE -AsApp $true
 
                     } catch {
                         # Handle the case where the assignment might reference a deleted group
@@ -43,7 +43,7 @@ function Remove-CIPPAutopilotProfile {
                             if ($Assignment.target -and $Assignment.target.'@odata.type' -eq '#microsoft.graph.groupAssignmentTarget') {
                                 $GroupId = $Assignment.target.groupId
                                 $AlternativeAssignmentId = "${ProfileId}_${GroupId}"
-                                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId/assignments/$AlternativeAssignmentId" -tenantid $TenantFilter -type DELETE
+                                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId/assignments/$AlternativeAssignmentId" -tenantid $TenantFilter -type DELETE -AsApp $true
                             }
                         } catch {
                             throw "Could not remove assignment $AssignmentId"
@@ -52,7 +52,7 @@ function Remove-CIPPAutopilotProfile {
                 }
             }
             # Retry deleting the profile after removing assignments
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId" -tenantid $TenantFilter -type DELETE
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$ProfileId" -tenantid $TenantFilter -type DELETE -AsApp $true
             $Result = "Successfully deleted Autopilot profile '$($DisplayName)' "
             Write-LogMessage -Headers $Headers -API $APIName -tenant $TenantFilter -message $Result -Sev 'Info'
             return $Result

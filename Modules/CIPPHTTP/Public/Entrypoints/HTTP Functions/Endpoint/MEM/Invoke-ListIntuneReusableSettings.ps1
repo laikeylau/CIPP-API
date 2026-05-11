@@ -37,7 +37,7 @@ function Invoke-ListIntuneReusableSettings {
         $selectQuery = '?$select=' + ($selectFields -join ',')
         $uri = if ($SettingId) { "$baseUri/$SettingId$selectQuery" } else { "$baseUri$selectQuery" }
 
-        $Settings = New-GraphGetRequest -uri $uri -tenantid $TenantFilter
+        $Settings = New-GraphGetRequest -uri $uri -tenantid $TenantFilter -AsApp $true
         if (-not $Settings) { $Settings = @() }
 
         $Settings = @($Settings) | Where-Object { $_ } | ForEach-Object {

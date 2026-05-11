@@ -23,8 +23,8 @@ Function Invoke-ListUserDevices {
         }
     }
     try {
-        $EPMDevices = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UserID/managedDevices" -Tenantid $TenantFilter
-        $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UserID/ownedDevices?`$top=999" -Tenantid $TenantFilter | Select-Object @{ Name = 'ID'; Expression = { $_.'id' } },
+        $EPMDevices = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UserID/managedDevices" -Tenantid $TenantFilter -AsApp $true
+        $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UserID/ownedDevices?`$top=999" -Tenantid $TenantFilter -AsApp $true | Select-Object @{ Name = 'ID'; Expression = { $_.'id' } },
         @{ Name = 'accountEnabled'; Expression = { $_.'accountEnabled' } },
         @{ Name = 'approximateLastSignInDateTime'; Expression = { $_.'approximateLastSignInDateTime' | Out-String } },
         @{ Name = 'createdDateTime'; Expression = { $_.'createdDateTime' | Out-String } },

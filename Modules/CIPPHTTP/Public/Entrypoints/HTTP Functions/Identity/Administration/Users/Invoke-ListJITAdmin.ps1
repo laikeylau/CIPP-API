@@ -24,7 +24,7 @@
                 url    = "users?`$count=true&`$select=id,accountEnabled,displayName,userPrincipalName,$($Schema.id)&`$filter=$($Schema.id)/jitAdminEnabled eq true or $($Schema.id)/jitAdminEnabled eq false&`$top=999"
             })
 
-        $BulkResults = New-GraphBulkRequest -tenantid $TenantFilter -Requests $BulkRequests
+        $BulkResults = New-GraphBulkRequest -tenantid $TenantFilter -Requests $BulkRequests -AsApp $true
         $Users = ($BulkResults | Where-Object { $_.id -eq 'users' }).body.value | Where-Object { $_.id }
 
         $BulkRequests.Clear()
@@ -35,7 +35,7 @@
                     url    = "users/$($User.id)/memberOf?`$select=id,displayName"
                 })
         }
-        $RoleResults = New-GraphBulkRequest -tenantid $TenantFilter -Requests @($BulkRequests)
+        $RoleResults = New-GraphBulkRequest -tenantid $TenantFilter -Requests @($BulkRequests) -AsApp $true
         # Write-Information ($RoleResults | ConvertTo-Json -Depth 10 )
         $Results = $Users | ForEach-Object {
             $MemberOf = ($RoleResults | Where-Object -Property id -EQ $_.id).body.value | Select-Object displayName, id

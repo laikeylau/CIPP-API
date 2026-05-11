@@ -29,7 +29,7 @@
             }
         )
 
-        $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+        $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
 
         # Extract results
         $Groups = ($BulkResults | Where-Object { $_.id -eq 'Groups' }).body.value

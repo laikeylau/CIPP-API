@@ -40,7 +40,7 @@ function Invoke-CIPPStandardFormsPhishingProtection {
     $Uri = 'https://graph.microsoft.com/beta/admin/forms/settings'
 
     try {
-        $CurrentState = (New-GraphGetRequest -Uri $Uri -tenantid $Tenant).isInOrgFormsPhishingScanEnabled
+        $CurrentState = (New-GraphGetRequest -Uri $Uri -tenantid $Tenant -AsApp $true).isInOrgFormsPhishingScanEnabled
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'Standards' -tenant $Tenant -message "Could not get current Forms settings. Error: $($ErrorMessage.NormalizedError)" -sev Error -LogData $ErrorMessage
@@ -61,7 +61,7 @@ function Invoke-CIPPStandardFormsPhishingProtection {
                 $null = New-GraphPostRequest -Uri $Uri -Body $Body -TenantID $Tenant -Type PATCH
 
                 # Refresh the current state after enabling
-                $CurrentState = New-GraphGetRequest -Uri $Uri -tenantid $Tenant
+                $CurrentState = New-GraphGetRequest -Uri $Uri -tenantid $Tenant -AsApp $true
                 Write-LogMessage -API 'Standards' -tenant $Tenant -message 'Successfully enabled Forms internal phishing protection.' -sev Info
             } catch {
                 $ErrorMessage = Get-CippException -Exception $_

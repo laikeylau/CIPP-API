@@ -303,7 +303,7 @@ function Sync-CippExtensionData {
         if ($SingleGraphQueries) {
             foreach ($SingleGraphQuery in $SingleGraphQueries) {
                 $Request = $SingleGraphQuery.graphRequest
-                $Data = New-GraphGetRequest @Request -tenantid $TenantFilter
+                $Data = New-GraphGetRequest @Request -tenantid $TenantFilter -AsApp $true
                 $Entity = @{
                     PartitionKey = $TenantFilter
                     SyncType     = $SyncType

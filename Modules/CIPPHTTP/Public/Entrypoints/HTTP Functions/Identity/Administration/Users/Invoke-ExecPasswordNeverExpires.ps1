@@ -22,7 +22,7 @@ function Invoke-ExecPasswordNeverExpires {
     if ([string]::IsNullOrWhiteSpace($UserId)) { exit }
     try {
         $Body = ConvertTo-Json -InputObject @{ passwordPolicies = $PasswordPolicy } -Depth 5 -Compress
-        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/users/$UserId" -tenantid $TenantFilter -Body $Body -type PATCH
+        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/users/$UserId" -tenantid $TenantFilter -Body $Body -type PATCH -AsApp $true
         $Result = "Successfully set PasswordPolicy for user $UserPrincipalName to $PasswordPolicyName"
         Write-LogMessage -headers $Headers -API $APIName -message $Result -Sev Info
         $StatusCode = [HttpStatusCode]::OK

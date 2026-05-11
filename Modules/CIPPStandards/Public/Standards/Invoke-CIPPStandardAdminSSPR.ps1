@@ -58,7 +58,7 @@
     }
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'Standards' -tenant $Tenant -message "Could not get the AdminSSPR state for $Tenant. Error: $($ErrorMessage.NormalizedError)" -sev Error -LogData $ErrorMessage
@@ -81,7 +81,7 @@
         } else {
             try {
                 $Body = @{ allowedToUseSSPR = $DesiredValue } | ConvertTo-Json -Compress -Depth 10
-                $null = New-GraphPOSTRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant -Type PATCH -Body $Body
+                $null = New-GraphPOSTRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant -Type PATCH -Body $Body -AsApp $true
                 Write-LogMessage -API 'Standards' -tenant $Tenant -message "Successfully set administrator SSPR to $DesiredLabel." -sev Info
 
                 $CurrentState.allowedToUseSSPR = $DesiredValue

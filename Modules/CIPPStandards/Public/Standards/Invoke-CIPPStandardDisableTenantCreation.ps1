@@ -38,7 +38,7 @@ function Invoke-CIPPStandardDisableTenantCreation {
     param($Tenant, $Settings)
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the DisableTenantCreation state for $Tenant. Error: $ErrorMessage" -Sev Error
@@ -57,7 +57,7 @@ function Invoke-CIPPStandardDisableTenantCreation {
                     Type     = 'PATCH'
                     Body     = '{"defaultUserRolePermissions":{"allowedToCreateTenants":false}}'
                 }
-                New-GraphPOSTRequest @GraphRequest
+                New-GraphPOSTRequest @GraphRequest -AsApp $true
                 Write-LogMessage -API 'Standards' -tenant $Tenant -message 'Successfully disabled users from creating tenants.' -sev Info
             } catch {
                 $ErrorMessage = Get-CippException -Exception $_

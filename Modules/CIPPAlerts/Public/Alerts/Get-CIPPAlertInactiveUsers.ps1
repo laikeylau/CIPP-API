@@ -37,7 +37,7 @@ function Get-CIPPAlertInactiveUsers {
                 "https://graph.microsoft.com/beta/users?`$select=id,UserPrincipalName,signInActivity,mail,userType,accountEnabled,assignedLicenses"
             }
 
-            $GraphRequest = New-GraphGetRequest -uri $Uri -tenantid $TenantFilter | Where-Object { $_.userType -eq 'Member' }
+            $GraphRequest = New-GraphGetRequest -uri $Uri -tenantid $TenantFilter -AsApp $true | Where-Object { $_.userType -eq 'Member' }
 
             $AlertData = foreach ($user in $GraphRequest) {
                 $lastInteractive = $user.signInActivity.lastSignInDateTime

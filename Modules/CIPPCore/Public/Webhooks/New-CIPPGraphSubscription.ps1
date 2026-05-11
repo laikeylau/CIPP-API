@@ -44,7 +44,7 @@ function New-CIPPGraphSubscription {
             try {
                 $Uri = 'https://api.partnercenter.microsoft.com/webhooks/v1/registration'
                 try {
-                    $Existing = New-GraphGetRequest -NoAuthCheck $true -uri $Uri -tenantid $env:TenantID -scope 'https://api.partnercenter.microsoft.com/.default'
+                    $Existing = New-GraphGetRequest -NoAuthCheck $true -uri $Uri -tenantid $env:TenantID -scope 'https://api.partnercenter.microsoft.com/.default' -AsApp $true
                 } catch { $Existing = $false }
                 if (!$Existing -or $Existing.webhookUrl -ne $MatchedWebhook.WebhookNotificationUrl -or $EventCompare) {
                     if ($Existing.WebhookUrl) {
@@ -56,7 +56,7 @@ function New-CIPPGraphSubscription {
                     }
 
                     $Uri = 'https://api.partnercenter.microsoft.com/webhooks/v1/registration'
-                    $GraphRequest = New-GraphPOSTRequest -uri $Uri -type $Method -tenantid $env:TenantID -scope 'https://api.partnercenter.microsoft.com/.default' -body ($Body | ConvertTo-Json) -NoAuthCheck $true
+                    $GraphRequest = New-GraphPOSTRequest -uri $Uri -type $Method -tenantid $env:TenantID -scope 'https://api.partnercenter.microsoft.com/.default' -body ($Body | ConvertTo-Json) -AsApp $true -NoAuthCheck $true
 
                     $WebhookRow = @{
                         PartitionKey           = [string]$CIPPID
@@ -127,7 +127,7 @@ function New-CIPPGraphSubscription {
 
                 foreach ($Dup in $Duplicates) {
                     try {
-                        New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/subscriptions/$($Dup.id)" -tenantid $TenantFilter -type DELETE
+                        New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/subscriptions/$($Dup.id)" -tenantid $TenantFilter -type DELETE -AsApp $true
                         Write-LogMessage -headers $Headers -API $APIName -message "Deleted duplicate Graph Webhook subscription $($Dup.id) for $($TenantFilter)" -Sev 'Warning' -tenant $TenantFilter
                     } catch {
                         Write-LogMessage -headers $Headers -API $APIName -message "Failed to delete duplicate Graph Webhook subscription $($Dup.id): $($_.Exception.Message)" -Sev 'Warning' -tenant $TenantFilter

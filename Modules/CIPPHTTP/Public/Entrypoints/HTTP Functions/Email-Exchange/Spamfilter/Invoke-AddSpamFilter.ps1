@@ -20,7 +20,7 @@ Function Invoke-AddSpamFilter {
     $Result = foreach ($TenantFilter in $tenants) {
         try {
             $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-HostedContentFilterPolicy' -cmdParams $RequestParams -AsApp
-            $Domains = (New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AcceptedDomain').name -AsApp
+            $Domains = (New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AcceptedDomain' -AsApp).name
             $ruleparams = @{
                 'name'                      = "$($RequestParams.name)"
                 'hostedcontentfilterpolicy' = "$($RequestParams.name)"

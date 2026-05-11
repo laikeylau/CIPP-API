@@ -21,7 +21,7 @@ Function Invoke-ExecSetSecurityAlert {
     $AssignBody = '{"status":"' + $Status + '","vendorInformation":{"provider":"' + $Provider + '","vendor":"' + $Vendor + '"}}'
 
     try {
-        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/security/alerts/$AlertFilter" -type PATCH -tenantid $TenantFilter -body $AssignBody
+        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/security/alerts/$AlertFilter" -type PATCH -tenantid $TenantFilter -body $AssignBody -AsApp $true
         $Result = "Set alert $AlertFilter to status $Status"
         Write-LogMessage -headers $Headers -API $APIName -tenant $($TenantFilter) -message $Result -Sev 'Info'
         $StatusCode = [HttpStatusCode]::OK

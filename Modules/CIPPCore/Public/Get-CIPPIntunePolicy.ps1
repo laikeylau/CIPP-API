@@ -29,7 +29,7 @@ function Get-CIPPIntunePolicy {
                         method = 'GET'
                     }
                 )
-                $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $tenantFilter
+                $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $tenantFilter -AsApp $true
 
                 $androidPolicies = ($BulkResults | Where-Object { $_.id -eq 'AndroidPolicies' }).body.value
                 $iOSPolicies = ($BulkResults | Where-Object { $_.id -eq 'iOSPolicies' }).body.value

@@ -24,7 +24,7 @@ function Invoke-AddTenant {
             Write-Information "Checking $Domain"
             try {
 
-                $null = New-GraphPOSTRequest -type HEAD -uri $DomainCheckUri -scope 'https://api.partnercenter.microsoft.com/.default' -NoAuthCheck $true -AddedHeaders $Headers
+                $null = New-GraphPOSTRequest -type HEAD -uri $DomainCheckUri -scope 'https://api.partnercenter.microsoft.com/.default' -NoAuthCheck $true -AddedHeaders $Headers -AsApp $true
 
                 $Body = @{
                     Success = $false
@@ -40,7 +40,7 @@ function Invoke-AddTenant {
         'GetOrganizationProfile' {
             $OrganizationProfileUri = 'https://api.partnercenter.microsoft.com/v1/profiles/organization'
             try {
-                $OrgResponse = New-GraphGetRequest -uri $OrganizationProfileUri -scope 'https://api.partnercenter.microsoft.com/.default' -NoAuthCheck $true -AddedHeaders $Headers
+                $OrgResponse = New-GraphGetRequest -uri $OrganizationProfileUri -scope 'https://api.partnercenter.microsoft.com/.default' -NoAuthCheck $true -AddedHeaders $Headers -AsApp $true
                 # remove the first character from the response and then convert from JSON
                 if (!$OrgResponse.id -and $OrgResponse -notmatch '^{') {
                     $OrgResponse = $OrgResponse.Substring(1) | ConvertFrom-Json
@@ -61,14 +61,14 @@ function Invoke-AddTenant {
         }
         'AddTenant' {
             # Get organization profile from graph.microsoft.com
-            $Org = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -NoAuthCheck $true
+            $Org = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -NoAuthCheck $true -AsApp $true
 
             $CanCreateCustomers = $false
             $PartnerType = $Org.partnerTenantType
             if ($PartnerType -eq 'valueAddedResellerPartnerDelegatedAdmin') {
                 # Tier 2 CSP - Get MPN id from partner center
                 $PartnerCenterUri = 'https://api.partnercenter.microsoft.com/accountenrollments/v1/accountexternalresourcekeys?accountIds={0}&keyType=mpnId' -f $env:TenantID
-                $MPNId = New-GraphGetRequest -uri $PartnerCenterUri -scope 'https://api.partnercenter.microsoft.com/.default' -NoAuthCheck $true
+                $MPNId = New-GraphGetRequest -uri $PartnerCenterUri -scope 'https://api.partnercenter.microsoft.com/.default' -NoAuthCheck $true -AsApp $true
                 $AssociatedPartnerId = $MpnId.items[0].keyValue
                 Write-Host "Tier 2 CSP - Associated Partner ID: $AssociatedPartnerId"
                 $CanCreateCustomers = $true
@@ -135,7 +135,7 @@ function Invoke-AddTenant {
                 try {
                     # not doing this yet
 
-                    #$Response = New-GraphPOSTRequest -type POST -uri $CustomerCreationUri -scope 'https://api.partnercenter.microsoft.com/.default' -Body ($Payload | ConvertTo-Json -Depth 10) -NoAuthCheck $true -AddedHeaders $Headers
+                    #$Response = New-GraphPOSTRequest -type POST -uri $CustomerCreationUri -scope 'https://api.partnercenter.microsoft.com/.default' -Body ($Payload -AsApp $true | ConvertTo-Json -Depth 10) -NoAuthCheck $true -AddedHeaders $Headers
 
                     # Sample response
                     $Response = @{
@@ -177,7 +177,7 @@ function Invoke-AddTenant {
 
             $AddressValidationUri = 'https://api.partnercenter.microsoft.com/v1/validations/address'
             try {
-                $Response = New-GraphPOSTRequest -type POST -uri $AddressValidationUri -scope 'https://api.partnercenter.microsoft.com/.default' -Body ($AddressPayload | ConvertTo-Json -Depth 10) -NoAuthCheck $true
+                $Response = New-GraphPOSTRequest -type POST -uri $AddressValidationUri -scope 'https://api.partnercenter.microsoft.com/.default' -Body ($AddressPayload | ConvertTo-Json -Depth 10) -NoAuthCheck $true -AsApp $true
 
                 return @{
                     Status             = 'Success'

@@ -24,7 +24,7 @@ function Get-CIPPAlertSmtpAuthSuccess {
         $uri = "https://graph.microsoft.com/v1.0/auditLogs/signIns?`$filter=createdDateTime ge $startDateTimeString and createdDateTime le $endDateTimeString and (clientAppUsed eq 'Authenticated SMTP' or clientAppUsed eq 'SMTP') and status/errorCode eq 0"
 
         # Call Graph API for the given tenant
-        $SignIns = New-GraphGetRequest -uri $uri -tenantid $TenantFilter
+        $SignIns = New-GraphGetRequest -uri $uri -tenantid $TenantFilter -AsApp $true
 
         # Select only the properties you care about
         $AlertData = $SignIns | Select-Object userPrincipalName, createdDateTime, clientAppUsed, ipAddress, status, @{Name = 'Tenant'; Expression = { $TenantFilter } }

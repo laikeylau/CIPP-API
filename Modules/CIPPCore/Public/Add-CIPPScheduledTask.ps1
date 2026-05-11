@@ -253,7 +253,7 @@ function Add-CIPPScheduledTask {
                     }
 
                     try {
-                        $null = New-GraphDeltaQuery @DeltaQuery
+                        $null = New-GraphDeltaQuery @DeltaQuery -AsApp $true
                         Write-Information "Created delta query for resource $($Resource)"
                     } catch {
                         Write-Warning "Failed to create delta query for resource $($Resource): $($_.Exception.Message)"

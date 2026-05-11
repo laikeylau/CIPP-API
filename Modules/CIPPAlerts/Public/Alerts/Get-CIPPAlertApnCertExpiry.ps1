@@ -12,7 +12,7 @@ function Get-CIPPAlertApnCertExpiry {
     )
 
     try {
-        $Apn = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/applePushNotificationCertificate' -tenantid $TenantFilter
+        $Apn = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/applePushNotificationCertificate' -tenantid $TenantFilter -AsApp $true
         $AlertData = if ($Apn.expirationDateTime -lt (Get-Date).AddDays(30) -and $Apn.expirationDateTime -gt (Get-Date).AddDays(-7)) {
             $Apn | Select-Object -Property appleIdentifier, expirationDateTime
         }

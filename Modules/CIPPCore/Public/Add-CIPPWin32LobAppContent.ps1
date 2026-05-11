@@ -95,7 +95,7 @@ function Add-CIPPWin32LobAppContent {
 
     # Wait for Azure Storage URI
     do {
-        $AzFileUri = New-GraphGetRequest -Uri "$BaseUri/$AppId/microsoft.graph.win32lobapp/contentVersions/1/files/$($ContentReq.id)" -tenantid $TenantFilter
+        $AzFileUri = New-GraphGetRequest -Uri "$BaseUri/$AppId/microsoft.graph.win32lobapp/contentVersions/1/files/$($ContentReq.id)" -tenantid $TenantFilter -AsApp $true
         if ($AzFileUri.uploadState -like '*fail*') {
             throw "Failed to get Azure Storage URI. Upload state: $($AzFileUri.uploadState)"
         }
@@ -134,7 +134,7 @@ function Add-CIPPWin32LobAppContent {
 
     # Wait for commit to complete
     do {
-        $CommitStateReq = New-GraphGetRequest -Uri "$BaseUri/$AppId/microsoft.graph.win32lobapp/contentVersions/1/files/$($ContentReq.id)" -tenantid $TenantFilter
+        $CommitStateReq = New-GraphGetRequest -Uri "$BaseUri/$AppId/microsoft.graph.win32lobapp/contentVersions/1/files/$($ContentReq.id)" -tenantid $TenantFilter -AsApp $true
         if ($CommitStateReq.uploadState -like '*fail*') {
             $errorMsg = "Commit failed. Upload state: $($CommitStateReq.uploadState)"
             if ($Headers) {

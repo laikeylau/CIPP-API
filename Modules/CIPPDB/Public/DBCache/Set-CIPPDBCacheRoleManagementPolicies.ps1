@@ -18,7 +18,7 @@ function Set-CIPPDBCacheRoleManagementPolicies {
 
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching role management policies' -sev Debug
-        $RoleManagementPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/roleManagementPolicies' -tenantid $TenantFilter
+        $RoleManagementPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/roleManagementPolicies' -tenantid $TenantFilter -AsApp $true
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'RoleManagementPolicies' -Data @($RoleManagementPolicies)
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'RoleManagementPolicies' -Data @($RoleManagementPolicies) -Count
         $RoleManagementPolicies = $null

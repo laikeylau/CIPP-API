@@ -12,7 +12,7 @@ Function Invoke-ListSharepointSettings {
 
     # Interact with query parameters or the body of the request.
     $Tenant = $Request.Query.tenantFilter
-    $Request = New-GraphGetRequest -tenantid $Tenant -Uri 'https://graph.microsoft.com/beta/admin/sharepoint/settings'
+    $Request = New-GraphGetRequest -tenantid $Tenant -Uri 'https://graph.microsoft.com/beta/admin/sharepoint/settings' -AsApp $true
 
     return ([HttpResponseContext]@{
             StatusCode = [HttpStatusCode]::OK

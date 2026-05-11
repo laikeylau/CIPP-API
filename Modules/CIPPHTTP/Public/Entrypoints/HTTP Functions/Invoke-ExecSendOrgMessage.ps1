@@ -98,7 +98,7 @@ Function Invoke-ExecSendOrgMessage {
         $tmpbody = ConvertTo-Json -Depth 15 -Compress -InputObject $object
         Write-Host $tmpbody
 
-        $GraphRequest = New-GraphPOSTRequest -noauthcheck $true -type 'POST' -uri 'https://graph.microsoft.com/beta/deviceManagement/organizationalMessageDetails' -tenantid $tenantfilter -body $tmpbody
+        $GraphRequest = New-GraphPOSTRequest -noauthcheck $true -type 'POST' -uri 'https://graph.microsoft.com/beta/deviceManagement/organizationalMessageDetails' -tenantid $tenantfilter -body $tmpbody -AsApp $true
         $StatusCode = [HttpStatusCode]::OK
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

@@ -72,7 +72,7 @@ function Get-CIPPAlertIntunePolicyConflicts {
 
     if ($Config.IncludePolicies) {
         try {
-            $ManagedDevices = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$select=id,deviceName,userPrincipalName&`$expand=deviceConfigurationStates(`$select=displayName,state,settingStates)" -tenantid $TenantFilter
+            $ManagedDevices = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices?`$select=id,deviceName,userPrincipalName&`$expand=deviceConfigurationStates(`$select=displayName,state,settingStates)" -tenantid $TenantFilter -AsApp $true
 
             foreach ($Device in $ManagedDevices) {
                 $PolicyStates = $Device.deviceConfigurationStates | Where-Object { $_.state -and ($AlertableStatuses -contains $_.state) }
@@ -97,7 +97,7 @@ function Get-CIPPAlertIntunePolicyConflicts {
 
     if ($Config.IncludeApplications) {
         try {
-            $Applications = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps?`$select=id,displayName&`$expand=deviceStatuses(`$select=installState,deviceName,userPrincipalName,deviceId)" -tenantid $TenantFilter
+            $Applications = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/mobileApps?`$select=id,displayName&`$expand=deviceStatuses(`$select=installState,deviceName,userPrincipalName,deviceId)" -tenantid $TenantFilter -AsApp $true
 
             foreach ($App in $Applications) {
                 $BadStatuses = $App.deviceStatuses | Where-Object {

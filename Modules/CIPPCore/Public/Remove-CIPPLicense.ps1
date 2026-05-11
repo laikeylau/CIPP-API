@@ -34,8 +34,8 @@ function Remove-CIPPLicense {
     } else {
         try {
             $ConvertTable = [System.IO.File]::ReadAllText((Join-Path $env:CIPPRootPath 'Config\ConversionTable.csv')) | ConvertFrom-Csv
-            $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($userid)" -tenantid $tenantFilter
-            $GroupMemberships = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($userid)/memberOf/microsoft.graph.group?`$select=id,displayName,assignedLicenses" -tenantid $tenantFilter
+            $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($userid)" -tenantid $tenantFilter -AsApp $true
+            $GroupMemberships = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($userid)/memberOf/microsoft.graph.group?`$select=id,displayName,assignedLicenses" -tenantid $tenantFilter -AsApp $true
             $LicenseGroups = $GroupMemberships | Where-Object { ($_.assignedLicenses | Measure-Object).Count -gt 0 }
 
             if ($LicenseGroups) {
@@ -68,7 +68,7 @@ function Remove-CIPPLicense {
             if (!$username) { $username = $User.userPrincipalName }
 
             # Re-fetch user to get current license state after group removals
-            $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($userid)?`$select=id,displayName,userPrincipalName,assignedLicenses,licenseAssignmentStates" -tenantid $tenantFilter
+            $User = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$($userid)?`$select=id,displayName,userPrincipalName,assignedLicenses,licenseAssignmentStates" -tenantid $tenantFilter -AsApp $true
 
             # Separate directly-assigned vs group-inherited licenses
             $DirectLicenseSkuIds = @(($User.licenseAssignmentStates | Where-Object { $null -eq $_.assignedByGroup -and $_.state -eq 'Active' }).skuId | Select-Object -Unique)

@@ -37,7 +37,7 @@ function Get-CIPPAlertLicenseAssignmentErrors {
 
     try {
         # Get all users with license assignment states from Graph API
-        $Users = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$select=id,userPrincipalName,displayName,licenseAssignmentStates&`$top=999" -tenantid $TenantFilter
+        $Users = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users?`$select=id,userPrincipalName,displayName,licenseAssignmentStates&`$top=999" -tenantid $TenantFilter -AsApp $true
 
         # Filter users who have license assignment violations
         $UsersWithViolations = $Users | Where-Object {

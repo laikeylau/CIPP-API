@@ -35,7 +35,7 @@ function Invoke-ListGraphBulkRequest {
     if ($BulkRequests) {
         $GraphRequestParams.Requests = @($BulkRequests)
         try {
-            $Body = New-GraphBulkRequest @GraphRequestParams
+            $Body = New-GraphBulkRequest @GraphRequestParams -AsApp $true
             $Results = @{
                 StatusCode = [System.Net.HttpStatusCode]::OK
                 Body       = $Body

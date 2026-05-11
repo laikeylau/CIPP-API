@@ -36,7 +36,7 @@ function Invoke-CIPPStandardPasswordExpireDisabled {
     param($Tenant, $Settings)
 
     try {
-        $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/domains' -tenantid $Tenant
+        $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/domains' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the PasswordExpireDisabled state for $Tenant. Error: $ErrorMessage" -Sev Error

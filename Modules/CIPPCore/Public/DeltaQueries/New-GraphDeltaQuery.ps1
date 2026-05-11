@@ -121,7 +121,7 @@ function New-GraphDeltaQuery {
             $DeltaError = $false
             do {
                 try {
-                    $response = New-GraphGetRequest -tenantid $TenantFilter -uri $nextUrl -ReturnRawResponse -extraHeaders @{ Prefer = 'return=minimal' } -ErrorAction Stop
+                    $response = New-GraphGetRequest -tenantid $TenantFilter -uri $nextUrl -ReturnRawResponse -extraHeaders @{ Prefer = 'return=minimal' } -ErrorAction Stop -AsApp $true
                     if ($response.Content) {
                         $content = $response.Content
                         if ($content -is [string]) {

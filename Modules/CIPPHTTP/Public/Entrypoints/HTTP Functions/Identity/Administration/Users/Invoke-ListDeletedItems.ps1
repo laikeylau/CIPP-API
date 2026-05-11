@@ -18,7 +18,7 @@ function Invoke-ListDeletedItems {
         }
     }
 
-    $BulkResults = New-GraphBulkRequest -Requests @($Requests) -tenantid $TenantFilter
+    $BulkResults = New-GraphBulkRequest -Requests @($Requests) -tenantid $TenantFilter -AsApp $true
 
     $GraphRequest = foreach ($Type in $Types) {
         # pretty format the type name

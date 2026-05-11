@@ -247,7 +247,7 @@ function Invoke-CIPPStandardDefenderAVPolicy {
             try {
                 # If policy exists with wrong settings, delete it first so the helper can recreate
                 if ($PolicyExists) {
-                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($ExistingPolicy.id)')" -tenantid $Tenant -type DELETE
+                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($ExistingPolicy.id)')" -tenantid $Tenant -type DELETE -AsApp $true
                     Write-LogMessage -API 'Standards' -tenant $Tenant -message 'Deleted drifted Defender AV Policy for recreation' -sev Info
                 }
 

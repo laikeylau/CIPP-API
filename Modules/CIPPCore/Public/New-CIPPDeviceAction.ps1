@@ -10,14 +10,14 @@ function New-CIPPDeviceAction {
     )
     try {
         if ($Action -eq 'delete') {
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceFilter" -type DELETE -tenantid $TenantFilter
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceFilter" -type DELETE -tenantid $TenantFilter -AsApp $true
         } elseif ($Action -eq 'users') {
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices('$DeviceFilter')/$($Action)/`$ref" -type POST -tenantid $TenantFilter -body $ActionBody
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices('$DeviceFilter')/$($Action)/`$ref" -type POST -tenantid $TenantFilter -body $ActionBody -AsApp $true
             $regex = "(?<=\(')([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})(?='|\))"
             $PrimaryUser = $ActionBody | Select-String -Pattern $regex -AllMatches | Select-Object -ExpandProperty Matches | Select-Object -ExpandProperty Value
             $Result = "Changed primary user on device $DeviceFilter to $PrimaryUser"
         } else {
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices('$DeviceFilter')/$($Action)" -type POST -tenantid $TenantFilter -body $ActionBody
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices('$DeviceFilter')/$($Action)" -type POST -tenantid $TenantFilter -body $ActionBody -AsApp $true
             $Result = "Queued $Action on $DeviceFilter"
         }
 

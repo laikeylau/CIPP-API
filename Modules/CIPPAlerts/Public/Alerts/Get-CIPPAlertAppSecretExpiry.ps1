@@ -13,7 +13,7 @@ function Get-CIPPAlertAppSecretExpiry {
 
     try {
         Write-Host "Checking app expire for $($TenantFilter)"
-        $appList = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/applications?`$select=appId,displayName,passwordCredentials" -tenantid $TenantFilter
+        $appList = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/applications?`$select=appId,displayName,passwordCredentials" -tenantid $TenantFilter -AsApp $true
     } catch {
         return
     }

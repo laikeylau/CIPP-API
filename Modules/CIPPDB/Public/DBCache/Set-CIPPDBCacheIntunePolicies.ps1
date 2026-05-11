@@ -54,7 +54,7 @@ function Set-CIPPDBCacheIntunePolicies {
         }
 
         try {
-            $PolicyResults = New-GraphBulkRequest -Requests @($PolicyRequests) -tenantid $TenantFilter
+            $PolicyResults = New-GraphBulkRequest -Requests @($PolicyRequests) -tenantid $TenantFilter -AsApp $true
         } catch {
             Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message "Failed to fetch policies in bulk: $($_.Exception.Message)" -sev Error
             throw
@@ -88,7 +88,7 @@ function Set-CIPPDBCacheIntunePolicies {
                     }
 
                     try {
-                        $AssignmentResults = New-GraphBulkRequest -Requests @($AssignmentRequests) -tenantid $TenantFilter
+                        $AssignmentResults = New-GraphBulkRequest -Requests @($AssignmentRequests) -tenantid $TenantFilter -AsApp $true
 
                         if ($AssignmentResults) {
                             foreach ($AssignResult in $AssignmentResults) {
@@ -123,7 +123,7 @@ function Set-CIPPDBCacheIntunePolicies {
                     }
 
                     try {
-                        $DeviceStatusResults = New-GraphBulkRequest -Requests @($DeviceStatusRequests) -tenantid $TenantFilter
+                        $DeviceStatusResults = New-GraphBulkRequest -Requests @($DeviceStatusRequests) -tenantid $TenantFilter -AsApp $true
 
                         if ($DeviceStatusResults) {
                             foreach ($StatusResult in $DeviceStatusResults) {

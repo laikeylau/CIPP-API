@@ -66,7 +66,7 @@ function Invoke-DeleteSharepointSite {
         }
 
         # Execute the deletion
-        $DeleteResult = New-GraphPOSTRequest -scope "$($SharePointInfo.AdminUrl)/.default" -uri $DeleteUri -body (ConvertTo-Json -Depth 10 -InputObject $body) -tenantid $TenantFilter -extraHeaders $ExtraHeaders
+        $DeleteResult = New-GraphPOSTRequest -scope "$($SharePointInfo.AdminUrl)/.default" -uri $DeleteUri -body (ConvertTo-Json -Depth 10 -InputObject $body) -tenantid $TenantFilter -extraHeaders $ExtraHeaders -AsApp $true
 
         $SiteTypeMsg = if ($IsGroupConnected) { "group-connected" } else { "regular" }
         $Results = "Successfully initiated deletion of $SiteTypeMsg SharePoint site with ID $SiteId, this process can take some time to complete in the background"

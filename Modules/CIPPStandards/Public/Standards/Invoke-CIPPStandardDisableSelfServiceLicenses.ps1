@@ -62,7 +62,7 @@ function Invoke-CIPPStandardDisableSelfServiceLicenses {
 
     if ($Settings.DisableTrials) {
         try {
-            $AutoClaimPolicy = New-GraphGetRequest -scope 'https://admin.microsoft.com/.default' -TenantID $Tenant -Uri 'https://admin.microsoft.com/fd/m365licensing/v1/policies/autoclaim'
+            $AutoClaimPolicy = New-GraphGetRequest -scope 'https://admin.microsoft.com/.default' -TenantID $Tenant -Uri 'https://admin.microsoft.com/fd/m365licensing/v1/policies/autoclaim' -AsApp $true
             $CurrentValues.Add([PSCustomObject]@{
                     productName = 'Trial Autoclaim'
                     productId   = 'autoclaim'
@@ -120,7 +120,7 @@ function Invoke-CIPPStandardDisableSelfServiceLicenses {
                     if ($Item.productId -eq 'autoclaim') {
                         New-GraphPostRequest -scope 'https://admin.microsoft.com/.default' -TenantID $Tenant -Uri 'https://admin.microsoft.com/fd/m365licensing/v1/policies/autoclaim' -Body $body
                     } else {
-                        New-GraphPOSTRequest -scope 'aeb86249-8ea3-49e2-900b-54cc8e308f85/.default' -uri "https://licensing.m365.microsoft.com/v1.0/policies/AllowSelfServicePurchase/products/$($Item.productId)" -tenantid $Tenant -body $body -type PUT
+                        New-GraphPOSTRequest -scope 'aeb86249-8ea3-49e2-900b-54cc8e308f85/.default' -uri "https://licensing.m365.microsoft.com/v1.0/policies/AllowSelfServicePurchase/products/$($Item.productId)" -tenantid $Tenant -body $body -type PUT -AsApp $true
                     }
 
                     Write-LogMessage -API 'Standards' -tenant $tenant -message "Changed Self Service status for product '$($Item.productName) - $($Item.productId)' from '$currentValue' to '$($Item.policyValue)'" -sev Info
@@ -141,7 +141,7 @@ function Invoke-CIPPStandardDisableSelfServiceLicenses {
         }
         if ($Settings.DisableTrials) {
             try {
-                $AutoClaimPolicy = New-GraphGetRequest -scope 'https://admin.microsoft.com/.default' -TenantID $Tenant -Uri 'https://admin.microsoft.com/fd/m365licensing/v1/policies/autoclaim'
+                $AutoClaimPolicy = New-GraphGetRequest -scope 'https://admin.microsoft.com/.default' -TenantID $Tenant -Uri 'https://admin.microsoft.com/fd/m365licensing/v1/policies/autoclaim' -AsApp $true
                 $CurrentValues.Add([PSCustomObject]@{
                         productName = 'Trial Autoclaim'
                         productId   = 'autoclaim'

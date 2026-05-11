@@ -56,7 +56,7 @@ function Set-CIPPDefaultAPDeploymentProfile {
             $Profiles | ForEach-Object {
                 if ($_.id -ne $Profiles[0].id) {
                     if ($PSCmdlet.ShouldProcess($_.displayName, 'Delete duplicate Autopilot profile')) {
-                        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$($_.id)" -tenantid $TenantFilter -type DELETE
+                        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$($_.id)" -tenantid $TenantFilter -type DELETE -AsApp $true
                         Write-LogMessage -Headers $Headers -API $APIName -tenant $($TenantFilter) -message "Deleted duplicate Autopilot profile $($DisplayName)" -Sev 'Info'
                     }
                 }
@@ -82,7 +82,7 @@ function Set-CIPPDefaultAPDeploymentProfile {
                     #Get assignments
                     $Assignments = New-GraphGETRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$($GraphRequest.id)/assignments" -tenantid $TenantFilter
                     if (!$Assignments) {
-                        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$($GraphRequest.id)/assignments" -tenantid $TenantFilter -type POST -body $AssignBody
+                        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles/$($GraphRequest.id)/assignments" -tenantid $TenantFilter -type POST -body $AssignBody -AsApp $true
                     }
                     Write-LogMessage -Headers $Headers -API $APIName -tenant $TenantFilter -message "Assigned autopilot profile $($DisplayName) to $($AssignTo)" -Sev 'Info'
                 }

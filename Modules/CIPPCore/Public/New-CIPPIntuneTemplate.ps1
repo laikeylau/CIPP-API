@@ -32,38 +32,38 @@ function New-CIPPIntuneTemplate {
     switch ($URLName) {
         'deviceCompliancePolicies' {
             $Type = 'deviceCompliancePolicies'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)?`$expand=scheduledActionsForRule(`$expand=scheduledActionConfigurations)" -tenantid $TenantFilter
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)?`$expand=scheduledActionsForRule(`$expand=scheduledActionConfigurations)" -tenantid $TenantFilter -AsApp $true
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }
         'managedAppPolicies' {
             $Type = 'AppProtection'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/$($urlname)('$($ID)')" -tenantid $TenantFilter
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/$($urlname)('$($ID)')" -tenantid $TenantFilter -AsApp $true
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }
         'mobileAppConfigurations' {
             $Type = 'AppConfiguration'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/$($urlname)('$($ID)')" -tenantid $TenantFilter
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceAppManagement/$($urlname)('$($ID)')" -tenantid $TenantFilter -AsApp $true
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }
         'configurationPolicies' {
             $Type = 'Catalog'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')?`$expand=settings" -tenantid $TenantFilter | Select-Object name, description, settings, platforms, technologies, templateReference
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')?`$expand=settings" -tenantid $TenantFilter -AsApp $true | Select-Object name, description, settings, platforms, technologies, templateReference
             $TemplateJson = $Template | ConvertTo-Json -Depth 100 -Compress
             $DisplayName = $Template.name
 
         }
         'windowsDriverUpdateProfiles' {
             $Type = 'windowsDriverUpdateProfiles'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter -AsApp $true | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }
         'deviceConfigurations' {
             $Type = 'Device'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter -AsApp $true | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
 
             # Check for and decrypt encrypted OMA settings
             if ($Template.omaSettings) {
@@ -76,11 +76,11 @@ function New-CIPPIntuneTemplate {
         }
         'groupPolicyConfigurations' {
             $Type = 'Admin'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')" -tenantid $TenantFilter
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')" -tenantid $TenantFilter -AsApp $true
             $DisplayName = $Template.displayName
-            $TemplateJsonItems = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')/definitionValues?`$expand=definition" -tenantid $TenantFilter
+            $TemplateJsonItems = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')/definitionValues?`$expand=definition" -tenantid $TenantFilter -AsApp $true
             $TemplateJsonSource = foreach ($TemplateJsonItem in $TemplateJsonItems) {
-                $presentationValues = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')/definitionValues('$($TemplateJsonItem.id)')/presentationValues?`$expand=presentation" -tenantid $TenantFilter | ForEach-Object {
+                $presentationValues = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)('$($ID)')/definitionValues('$($TemplateJsonItem.id)')/presentationValues?`$expand=presentation" -tenantid $TenantFilter -AsApp $true | ForEach-Object {
                     $obj = $_
                     if ($obj.id) {
                         $PresObj = @{
@@ -111,19 +111,19 @@ function New-CIPPIntuneTemplate {
         }
         'windowsFeatureUpdateProfiles' {
             $Type = 'windowsFeatureUpdateProfiles'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter -AsApp $true | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }
         'windowsQualityUpdatePolicies' {
             $Type = 'windowsQualityUpdatePolicies'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter -AsApp $true | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }
         'windowsQualityUpdateProfiles' {
             $Type = 'windowsQualityUpdateProfiles'
-            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
+            $Template = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/$($urlname)/$($ID)" -tenantid $TenantFilter -AsApp $true | Select-Object * -ExcludeProperty id, lastModifiedDateTime, '@odata.context', 'ScopeTagIds', 'supportsScopeTags', 'createdDateTime'
             $DisplayName = $Template.displayName
             $TemplateJson = ConvertTo-Json -InputObject $Template -Depth 100 -Compress
         }

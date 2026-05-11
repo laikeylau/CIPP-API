@@ -33,10 +33,10 @@ function Invoke-ListAppConsentRequests {
             }
         }
 
-        $appConsentRequests = New-GraphGetRequest -Uri $Uri -tenantid $TenantFilter
+        $appConsentRequests = New-GraphGetRequest -Uri $Uri -tenantid $TenantFilter -AsApp $true
 
         $Results = foreach ($app in $appConsentRequests) {
-            $userConsentRequests = New-GraphGetRequest -Uri "https://graph.microsoft.com/v1.0/identityGovernance/appConsent/appConsentRequests/$($app.id)/userConsentRequests" -tenantid $TenantFilter
+            $userConsentRequests = New-GraphGetRequest -Uri "https://graph.microsoft.com/v1.0/identityGovernance/appConsent/appConsentRequests/$($app.id)/userConsentRequests" -tenantid $TenantFilter -AsApp $true
             $userConsentRequests | ForEach-Object {
                 [pscustomobject]@{
                     appId                 = $app.appId

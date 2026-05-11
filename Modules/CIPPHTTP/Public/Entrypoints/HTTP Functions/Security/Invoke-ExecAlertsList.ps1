@@ -18,7 +18,7 @@ function Invoke-ExecAlertsList {
         # Interact with query parameters or the body of the request.
         $TenantFilter = $Request.Query.tenantFilter
         $GraphRequest = if ($TenantFilter -ne 'AllTenants') {
-            $Alerts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/security/alerts' -tenantid $TenantFilter
+            $Alerts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/security/alerts' -tenantid $TenantFilter -AsApp $true
             $AlertsObj = foreach ($Alert in $Alerts) {
                 @{
                     Tenant        = $TenantFilter

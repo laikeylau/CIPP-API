@@ -17,7 +17,7 @@ function Invoke-NinjaOneDeviceWebhook {
             $tenantfilter = $Data.tenantId
             $M365DeviceID = $Data.resourceData.id
 
-            $DeviceM365 = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/devices/$($M365DeviceID)" -Tenantid $tenantfilter
+            $DeviceM365 = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/devices/$($M365DeviceID)" -Tenantid $tenantfilter -AsApp $true
 
             $DeviceFilter = "PartitionKey eq '$($tenantfilter)' and RowKey eq '$($DeviceM365.deviceID)'"
             $DeviceMapTable = Get-CippTable -tablename 'NinjaOneDeviceMap'

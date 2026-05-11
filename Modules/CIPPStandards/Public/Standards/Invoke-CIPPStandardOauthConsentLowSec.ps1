@@ -32,9 +32,9 @@ function Invoke-CIPPStandardOauthConsentLowSec {
     param($Tenant, $Settings)
 
     try {
-        $State = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $tenant)
+        $State = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $tenant -AsApp $true)
 
-        $PermissionState = (New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='00000003-0000-0000-c000-000000000000')/delegatedPermissionClassifications" -tenantid $tenant) |
+        $PermissionState = (New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='00000003-0000-0000-c000-000000000000')/delegatedPermissionClassifications" -tenantid $tenant -AsApp $true) |
             Select-Object -Property permissionName
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

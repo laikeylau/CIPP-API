@@ -20,7 +20,7 @@ function Set-CIPPDBCacheRiskyUsers {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching risky users from Identity Protection' -sev Debug
 
         # Requires P2 or Governance licensing
-        $RiskyUsers = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identityProtection/riskyUsers' -tenantid $TenantFilter
+        $RiskyUsers = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/identityProtection/riskyUsers' -tenantid $TenantFilter -AsApp $true
 
         if ($RiskyUsers) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'RiskyUsers' -Data $RiskyUsers

@@ -23,7 +23,7 @@ function Set-CIPPAssignedPolicy {
         $ResolvedFilterId = $null
         if ($AssignmentFilterName) {
             Write-Host "Looking up assignment filter by name: $AssignmentFilterName"
-            $AllFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter
+            $AllFilters = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/assignmentFilters' -tenantid $TenantFilter -AsApp $true
             $MatchingFilter = $AllFilters | Where-Object { $_.displayName -like $AssignmentFilterName } | Select-Object -First 1
 
             if ($MatchingFilter) {
@@ -83,7 +83,7 @@ function Set-CIPPAssignedPolicy {
                     Write-Host "Using provided GroupIds: $($resolvedGroupIds -join ', ')"
                 } elseif ($GroupName) {
                     $GroupNames = $GroupName.Split(',').Trim()
-                    $resolvedGroupIds = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter |
+                    $resolvedGroupIds = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter -AsApp $true |
                         ForEach-Object {
                             foreach ($SingleName in $GroupNames) {
                                 if ($_.displayName -like $SingleName) {
@@ -114,7 +114,7 @@ function Set-CIPPAssignedPolicy {
         if ($ExcludeGroup) {
             Write-Host "We're supposed to exclude a custom group. The group is $ExcludeGroup"
             $ExcludeGroupNames = $ExcludeGroup.Split(',').Trim()
-            $ExcludeGroupIds = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter |
+            $ExcludeGroupIds = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$select=id,displayName&$top=999' -tenantid $TenantFilter -AsApp $true |
                 ForEach-Object {
                     foreach ($SingleName in $ExcludeGroupNames) {
                         if ($_.displayName -like $SingleName) {
@@ -152,7 +152,7 @@ function Set-CIPPAssignedPolicy {
         if ($AssignmentMode -eq 'append') {
             try {
                 $uri = "https://graph.microsoft.com/beta/$($PlatformType)/$Type('$($PolicyId)')/assignments"
-                $ExistingAssignments = New-GraphGetRequest -uri $uri -tenantid $TenantFilter
+                $ExistingAssignments = New-GraphGetRequest -uri $uri -tenantid $TenantFilter -AsApp $true
                 Write-Host "Found $($ExistingAssignments.Count) existing assignments for policy $PolicyId"
             } catch {
                 Write-Warning "Unable to retrieve existing assignments for $PolicyId. Proceeding with new assignments only. Error: $($_.Exception.Message)"
@@ -211,7 +211,7 @@ function Set-CIPPAssignedPolicy {
         $AssignJSON = ConvertTo-Json -InputObject $assignmentsObject -Depth 10 -Compress
         if ($PSCmdlet.ShouldProcess($GroupName, "Assigning policy $PolicyId")) {
             $uri = "https://graph.microsoft.com/beta/$($PlatformType)/$Type('$($PolicyId)')/assign"
-            $null = New-GraphPOSTRequest -uri $uri -tenantid $TenantFilter -type POST -body $AssignJSON
+            $null = New-GraphPOSTRequest -uri $uri -tenantid $TenantFilter -type POST -body $AssignJSON -AsApp $true
 
             # Build a friendly display name for the assigned groups
             $AssignedGroupsDisplay = if ($GroupNames -and @($GroupNames).Count -gt 0) {

@@ -12,7 +12,7 @@ Function Invoke-ListSharedMailboxStatistics {
     # Interact with query parameters or the body of the request.
     $TenantFilter = $Request.Query.TenantFilter
     try {
-        $GraphRequest = New-GraphGetRequest -uri "https://outlook.office365.com/adminapi/beta/$($tenantFilter)/Mailbox?RecipientTypeDetails=sharedmailbox" -Tenantid $tenantFilter -scope ExchangeOnline | ForEach-Object {
+        $GraphRequest = New-GraphGetRequest -uri "https://outlook.office365.com/adminapi/beta/$($tenantFilter)/Mailbox?RecipientTypeDetails=sharedmailbox" -Tenantid $tenantFilter -scope ExchangeOnline -AsApp $true | ForEach-Object {
             try {
                 New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxStatistics' -cmdParams @{Identity = $_.GUID } -AsApp
             } catch {

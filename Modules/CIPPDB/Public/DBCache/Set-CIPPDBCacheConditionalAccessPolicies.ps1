@@ -27,7 +27,7 @@ function Set-CIPPDBCacheConditionalAccessPolicies {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Conditional Access policies' -sev Debug
 
         try {
-            $CAPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/policies?$top=999' -tenantid $TenantFilter
+            $CAPolicies = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/policies?$top=999' -tenantid $TenantFilter -AsApp $true
             if ($CAPolicies) {
                 Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ConditionalAccessPolicies' -Data $CAPolicies
                 Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ConditionalAccessPolicies' -Data $CAPolicies -Count
@@ -39,7 +39,7 @@ function Set-CIPPDBCacheConditionalAccessPolicies {
         }
 
         try {
-            $NamedLocations = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations?$top=999' -tenantid $TenantFilter
+            $NamedLocations = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations?$top=999' -tenantid $TenantFilter -AsApp $true
 
             if ($NamedLocations) {
                 Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'NamedLocations' -Data $NamedLocations
@@ -52,7 +52,7 @@ function Set-CIPPDBCacheConditionalAccessPolicies {
         }
 
         try {
-            $AuthStrengths = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/authenticationStrength/policies' -tenantid $TenantFilter
+            $AuthStrengths = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/authenticationStrength/policies' -tenantid $TenantFilter -AsApp $true
 
             if ($AuthStrengths) {
                 Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'AuthenticationStrengths' -Data $AuthStrengths

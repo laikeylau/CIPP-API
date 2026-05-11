@@ -84,10 +84,10 @@ function Invoke-AddIntuneReusableSetting {
         }
 
         if ($ExistingMatch) {
-            $null = New-GraphPOSTRequest -Uri "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$($ExistingMatch.id)" -tenantid $Tenant -type PUT -body $TemplateJson
+            $null = New-GraphPOSTRequest -Uri "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$($ExistingMatch.id)" -tenantid $Tenant -type PUT -body $TemplateJson -AsApp $true
             $Result = "Updated reusable setting '$displayName' in tenant $Tenant"
         } else {
-            $Create = New-GraphPOSTRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings' -tenantid $Tenant -type POST -body $TemplateJson
+            $Create = New-GraphPOSTRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings' -tenantid $Tenant -type POST -body $TemplateJson -AsApp $true
             $Result = "Created reusable setting '$displayName' in tenant $Tenant"
         }
 

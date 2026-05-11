@@ -51,7 +51,7 @@ function Invoke-ExecScheduleMailboxVacation {
         if ($IncludeCalendar -and $CalendarPermission) {
             $CalendarPermissions = @(foreach ($owner in $OwnerUPNs) {
                     # Resolve the calendar folder name for this owner's mailbox locale at schedule time.
-                    $FolderStats = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxFolderStatistics' -cmdParams @{ -AsApp
+                    $FolderStats = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxFolderStatistics' -cmdParams @{
                         Identity    = $owner
                         FolderScope = 'Calendar'
                     } -Anchor $owner | Where-Object { $_.FolderType -eq 'Calendar' }

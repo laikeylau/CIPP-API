@@ -50,7 +50,7 @@ function Invoke-CIPPStandardBitLockerKeysForOwnedDevice {
     }
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'Standards' -Tenant $Tenant -Message "Could not get the BitLockerKeysForOwnedDevice state for $Tenant. Error: $($ErrorMessage.NormalizedError)" -Sev Error -LogData $ErrorMessage
@@ -73,7 +73,7 @@ function Invoke-CIPPStandardBitLockerKeysForOwnedDevice {
             try {
                 $BodyObject = @{ defaultUserRolePermissions = @{ allowedToReadBitLockerKeysForOwnedDevice = $DesiredValue } }
                 $BodyJson = $BodyObject | ConvertTo-Json -Depth 4 -Compress
-                $null = New-GraphPOSTRequest -tenantid $tenant -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -Type patch -Body $BodyJson
+                $null = New-GraphPOSTRequest -tenantid $tenant -Uri 'https://graph.microsoft.com/beta/policies/authorizationPolicy/authorizationPolicy' -Type patch -Body $BodyJson -AsApp $true
                 $ActionMessage = if ($DesiredValue) { 'Allowed users to recover BitLocker keys for their owned devices.' } else { 'Restricted users from recovering BitLocker keys for their owned devices.' }
                 Write-LogMessage -API 'Standards' -tenant $tenant -message $ActionMessage -sev Info
 

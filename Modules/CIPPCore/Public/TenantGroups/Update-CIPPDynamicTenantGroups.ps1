@@ -84,7 +84,7 @@ function Update-CIPPDynamicTenantGroups {
                         } else {
                             Write-Information "Fetching licenses for tenant $($Tenant.defaultDomainName)"
                             try {
-                                $LicenseInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/subscribedSkus' -TenantId $Tenant.defaultDomainName
+                                $LicenseInfo = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/subscribedSkus' -TenantId $Tenant.defaultDomainName -AsApp $true
                                 # Cache the result
                                 $CacheEntity = @{
                                     PartitionKey = 'sku'

@@ -12,7 +12,7 @@ Function Invoke-ListAzureADConnectStatus {
     Write-Host "DataToReturn: $DataToReturn"
 
     if (($DataToReturn -eq 'AzureADConnectSettings') -or ([string]::IsNullOrEmpty($DataToReturn)) ) {
-        $ADConnectStatusGraph = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -tenantid $TenantFilter
+        $ADConnectStatusGraph = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/organization' -tenantid $TenantFilter -AsApp $true
         $AzureADConnectSettings = [PSCustomObject]@{
             dirSyncEnabled            = [boolean]$ADConnectStatusGraph.onPremisesSyncEnabled
             numberOfHoursFromLastSync = $ADConnectStatusGraph.onPremisesLastSyncDateTime
@@ -34,7 +34,7 @@ Function Invoke-ListAzureADConnectStatus {
             }
         )
 
-        $Results = New-GraphBulkRequest -Requests $GraphRequest -tenantid $TenantFilter -verbose
+        $Results = New-GraphBulkRequest -Requests $GraphRequest -tenantid $TenantFilter -verbose -AsApp $true
         $ObjectsInError = @(
             foreach ($Result in $Results) {
                 $Type = $Result.id -replace 's$' # Remove the 's' from the end of the type name

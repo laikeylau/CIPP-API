@@ -64,7 +64,7 @@ function Invoke-ExecWebhookSubscriptions {
             $TenantList = Get-Tenants -IncludeErrors
             $Results = foreach ($tenant in $TenantList) {
                 $TenantFilter = $tenant.defaultDomainName
-                $Subscriptions = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscriptions' -tenantid $TenantFilter | Where-Object { $_.notificationUrl -like '*PublicWebhooks*' }
+                $Subscriptions = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscriptions' -tenantid $TenantFilter -AsApp $true | Where-Object { $_.notificationUrl -like '*PublicWebhooks*' }
                 "Unsubscribing from all CIPP subscriptions for $TenantFilter - $($Subscriptions.Count) subscriptions found"
                 $Subscriptions | ForEach-Object {
                     New-GraphPostRequest -uri "https://graph.microsoft.com/beta/subscriptions/$($_.id)" -tenantid $TenantFilter -type DELETE -body {} -Verbose

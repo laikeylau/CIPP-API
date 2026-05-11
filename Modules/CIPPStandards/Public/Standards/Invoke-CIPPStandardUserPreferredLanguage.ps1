@@ -60,7 +60,7 @@ function Invoke-CIPPStandardUserPreferredLanguage {
                         } | ConvertTo-Json
                         ContentType = 'application/json; charset=utf-8'
                     }
-                    $null = New-GraphPOSTRequest @cmdParams
+                    $null = New-GraphPOSTRequest @cmdParams -AsApp $true
                     Write-LogMessage -API 'Standards' -tenant $Tenant -message "Preferred language for $($user.userPrincipalName) has been set to $preferredLanguage" -sev Info
                     $UpdateDB = $true
                 }

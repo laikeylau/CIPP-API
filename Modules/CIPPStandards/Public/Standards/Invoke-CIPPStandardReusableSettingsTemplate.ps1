@@ -137,7 +137,7 @@ function Invoke-CIPPStandardReusableSettingsTemplate {
 
             if ($Template.existingId) {
                 try {
-                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$($Template.existingId)" -tenantid $Tenant -type PUT -body $Body
+                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$($Template.existingId)" -tenantid $Tenant -type PUT -body $Body -AsApp $true
                     Write-LogMessage -API 'Standards' -tenant $Tenant -message "Updated reusable setting $($Template.displayName)" -sev 'Info'
                 } catch {
                     $errorMessage = Get-NormalizedError -Message $_.Exception.Message
@@ -145,7 +145,7 @@ function Invoke-CIPPStandardReusableSettingsTemplate {
                 }
             } else {
                 try {
-                    $CreateRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings' -tenantid $Tenant -type POST -body $Body
+                    $CreateRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings' -tenantid $Tenant -type POST -body $Body -AsApp $true
                     Write-LogMessage -API 'Standards' -tenant $Tenant -message "Created reusable setting $($Template.displayName)" -sev 'Info'
                 } catch {
                     $createError = Get-NormalizedError -Message $_.Exception.Message

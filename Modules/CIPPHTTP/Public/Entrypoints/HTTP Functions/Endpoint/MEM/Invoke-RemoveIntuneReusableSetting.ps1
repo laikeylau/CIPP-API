@@ -31,7 +31,7 @@ function Invoke-RemoveIntuneReusableSetting {
 
     try {
         $uri = "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$ID"
-        $null = New-GraphPOSTRequest -uri $uri -type DELETE -tenantid $TenantFilter
+        $null = New-GraphPOSTRequest -uri $uri -type DELETE -tenantid $TenantFilter -AsApp $true
 
         $name = if ($DisplayName) { $DisplayName } else { $ID }
         $Result = "Deleted Intune reusable setting '$name' ($ID)"

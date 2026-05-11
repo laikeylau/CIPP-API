@@ -102,7 +102,7 @@ function Add-CIPPApplicationPermission {
     # Create missing service principals in bulk
     if ($MissingServicePrincipals.Count -gt 0) {
         try {
-            $BulkResults = New-GraphBulkRequest -Requests $MissingServicePrincipals -tenantid $TenantFilter -NoAuthCheck $true
+            $BulkResults = New-GraphBulkRequest -Requests $MissingServicePrincipals -tenantid $TenantFilter -NoAuthCheck $true -AsApp $true
             foreach ($Result in $BulkResults) {
                 if ($Result.status -eq 201) {
                     $ServicePrincipalList.Add($Result.body)
@@ -150,7 +150,7 @@ function Add-CIPPApplicationPermission {
         }
 
         try {
-            $BulkResults = New-GraphBulkRequest -Requests $GrantRequests -tenantid $TenantFilter -NoAuthCheck $true
+            $BulkResults = New-GraphBulkRequest -Requests $GrantRequests -tenantid $TenantFilter -NoAuthCheck $true -AsApp $true
             foreach ($Result in $BulkResults) {
                 if ($Result.status -eq 201) {
                     $counter++

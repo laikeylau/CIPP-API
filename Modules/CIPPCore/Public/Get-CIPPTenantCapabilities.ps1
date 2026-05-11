@@ -12,7 +12,7 @@ function Get-CIPPTenantCapabilities {
     if ($ConfigEntries) {
         $Org = $ConfigEntries.JSON | ConvertFrom-Json
     } else {
-        $Org = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscribedSkus' -tenantid $TenantFilter
+        $Org = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscribedSkus' -tenantid $TenantFilter -AsApp $true
         # Save the capabilities to the cache table
         $Entity = @{
             PartitionKey = 'Capabilities'

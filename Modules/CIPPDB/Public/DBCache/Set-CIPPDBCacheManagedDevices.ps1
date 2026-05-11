@@ -18,7 +18,7 @@ function Set-CIPPDBCacheManagedDevices {
 
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching managed devices' -sev Debug
-        $ManagedDevices = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/managedDevices?$top=999' -tenantid $TenantFilter
+        $ManagedDevices = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/managedDevices?$top=999' -tenantid $TenantFilter -AsApp $true
         if (!$ManagedDevices) { $ManagedDevices = @() }
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ManagedDevices' -Data $ManagedDevices
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ManagedDevices' -Data $ManagedDevices -Count

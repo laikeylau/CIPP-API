@@ -18,7 +18,7 @@ function Invoke-ExecExchangeRoleRepair {
         $OrgManagementRoles = New-ExoRequest -tenantid $Tenant.customerId -cmdlet 'Get-ManagementRoleAssignment' -cmdParams @{ Delegating = $false } -AsApp | Where-Object { $_.RoleAssigneeName -eq 'Organization Management' } | Select-Object -Property Role, Guid
         Write-Information "Found $($OrgManagementRoles.Count) Organization Management roles in Exchange"
 
-        $RoleDefinitions = New-GraphGetRequest -tenantid $Tenant.customerId -uri 'https://graph.microsoft.com/beta/roleManagement/exchange/roleDefinitions'
+        $RoleDefinitions = New-GraphGetRequest -tenantid $Tenant.customerId -uri 'https://graph.microsoft.com/beta/roleManagement/exchange/roleDefinitions' -AsApp $true
         Write-Information "Found $($RoleDefinitions.Count) Exchange role definitions"
 
         $AllOrgManagementRoles = Get-Content -Path (Join-Path $env:CIPPRootPath 'Config\OrganizationManagementRoles.json') -ErrorAction Stop | ConvertFrom-Json
@@ -45,7 +45,7 @@ function Invoke-ExecExchangeRoleRepair {
                 }
             }
 
-            $RepairResults = New-GraphBulkRequest -tenantid $Tenant.customerId -Requests @($Requests) -asapp $true
+            $RepairResults = New-GraphBulkRequest -tenantid $Tenant.customerId -Requests @($Requests) -asapp $true -AsApp $true
             $RepairSuccess = $RepairResults.status -eq 201
             if ($RepairSuccess) {
                 $Results = @{

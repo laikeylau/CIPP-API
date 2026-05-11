@@ -13,7 +13,7 @@ function Get-CippAlertSecureScore {
     )
     try {
         $TopCount = if ($InputValue.ThresholdType.value -eq 'drop') { 2 } else { 1 }
-        $SecureScores = @(New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/security/secureScores?`$top=$TopCount" -tenantid $TenantFilter -noPagination $true)
+        $SecureScores = @(New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/security/secureScores?`$top=$TopCount" -tenantid $TenantFilter -noPagination $true -AsApp $true)
         $SecureScore = $SecureScores[0]
 
         if ($InputValue.ThresholdType.value -eq 'absolute') {

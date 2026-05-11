@@ -43,7 +43,7 @@ function Invoke-AddGroupTeam {
             body     = ($TeamSettings | ConvertTo-Json -Depth 10)
             AsApp    = $true
         }
-        $null = New-GraphPOSTRequest @GraphParams
+        $null = New-GraphPOSTRequest @GraphParams -AsApp $true
 
         $Results.Add("Successfully created team from group $GroupId")
         Write-LogMessage -API $APIName -tenant $TenantFilter -message "Created team from group $GroupId" -Sev 'Info'

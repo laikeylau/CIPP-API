@@ -39,7 +39,7 @@ function Get-CIPPFileVaultKey {
     )
 
     try {
-        $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$Device/getFileVaultKey" -tenantid $TenantFilter
+        $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$Device/getFileVaultKey" -tenantid $TenantFilter -AsApp $true
 
         if ([string]::IsNullOrEmpty($GraphRequest)) {
             $Result = "No FileVault recovery key found for $($Device)"

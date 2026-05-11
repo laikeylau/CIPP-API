@@ -12,7 +12,7 @@ function Get-CIPPAlertQuotaUsed {
     )
 
     try {
-        $AlertData = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/reports/getMailboxUsageDetail(period='D7')?`$format=application/json" -tenantid $TenantFilter
+        $AlertData = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/reports/getMailboxUsageDetail(period='D7')?`$format=application/json" -tenantid $TenantFilter -AsApp $true
     } catch {
         return
     }

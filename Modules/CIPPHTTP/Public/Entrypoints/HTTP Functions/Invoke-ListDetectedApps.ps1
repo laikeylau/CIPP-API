@@ -22,11 +22,11 @@ function Invoke-ListDetectedApps {
     try {
         # If DeviceID is provided, get detected apps for that device
         if ($DeviceID) {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceID/detectedApps" -Tenantid $TenantFilter
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceID/detectedApps" -Tenantid $TenantFilter -AsApp $true
         }
         # If no device ID is provided, get detected apps for the entire tenant
         else {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/detectedApps" -Tenantid $TenantFilter
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/detectedApps" -Tenantid $TenantFilter -AsApp $true
         }
 
         # Ensure we return an array even if null
@@ -49,7 +49,7 @@ function Invoke-ListDetectedApps {
             }
 
             if ($BulkRequests.Count -gt 0) {
-                $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+                $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
 
                 # Merge device information back into each detected app
                 $GraphRequest = foreach ($App in $GraphRequest) {

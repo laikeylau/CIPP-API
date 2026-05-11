@@ -54,7 +54,7 @@ function Invoke-CIPPStandardAutopilotProfile {
         return $true
     } #we're done.
     try {
-        $CurrentConfig = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles' -tenantid $Tenant |
+        $CurrentConfig = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeploymentProfiles' -tenantid $Tenant -AsApp $true |
             Where-Object { $_.displayName -eq $Settings.DisplayName } |
             Select-Object -Property displayName, description, deviceNameTemplate, locale, preprovisioningAllowed, hardwareHashExtractionEnabled, outOfBoxExperienceSetting
 

@@ -33,7 +33,7 @@ function Invoke-AddNamedLocation {
                 }
             }
             $Body = ConvertTo-Json -InputObject $ObjBody
-            $GraphRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations' -body $body -Type POST -tenantid $tenant
+            $GraphRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations' -body $body -Type POST -tenantid $tenant -AsApp $true
             "Successfully added Named Location for $($Tenant)"
             Write-LogMessage -headers $Request.Headers -API $APINAME -tenant $tenant -message "Added Named Location $($Displayname)" -Sev 'Info'
 

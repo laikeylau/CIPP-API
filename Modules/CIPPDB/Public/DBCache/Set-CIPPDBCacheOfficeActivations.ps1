@@ -19,7 +19,7 @@ function Set-CIPPDBCacheOfficeActivations {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Office activations' -sev Debug
 
-        $Activations = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/reports/getOffice365ActivationsUserDetail?`$format=application%2fjson" -tenantid $TenantFilter
+        $Activations = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/reports/getOffice365ActivationsUserDetail?`$format=application%2fjson" -tenantid $TenantFilter -AsApp $true
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'OfficeActivations' -Data $Activations
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'OfficeActivations' -Data $Activations -Count
         $Activations = $null

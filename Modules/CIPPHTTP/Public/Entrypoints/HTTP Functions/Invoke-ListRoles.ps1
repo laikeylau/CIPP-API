@@ -11,7 +11,7 @@ function Invoke-ListRoles {
     $TenantFilter = $Request.Query.tenantFilter
 
     try {
-        [System.Collections.Generic.List[PSCustomObject]]$Roles = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/directoryRoles' -tenantid $TenantFilter
+        [System.Collections.Generic.List[PSCustomObject]]$Roles = New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/directoryRoles' -tenantid $TenantFilter -AsApp $true
 
         $MemberRequests = $Roles | ForEach-Object {
             @{
@@ -20,7 +20,7 @@ function Invoke-ListRoles {
                 url    = "/directoryRoles/$($_.id)/members"
             }
         }
-        $MemberResponses = New-GraphBulkRequest -Requests $MemberRequests -tenantid $TenantFilter -Version 'v1.0'
+        $MemberResponses = New-GraphBulkRequest -Requests $MemberRequests -tenantid $TenantFilter -Version 'v1.0' -AsApp $true
 
         $MemberMap = @{}
         foreach ($Response in $MemberResponses) {

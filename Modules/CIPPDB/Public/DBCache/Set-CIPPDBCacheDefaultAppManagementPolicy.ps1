@@ -18,7 +18,7 @@ function Set-CIPPDBCacheDefaultAppManagementPolicy {
 
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching default app management policy' -sev Debug
-        $AppMgmtPolicy = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/defaultAppManagementPolicy' -tenantid $TenantFilter
+        $AppMgmtPolicy = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/defaultAppManagementPolicy' -tenantid $TenantFilter -AsApp $true
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'DefaultAppManagementPolicy' -Data @($AppMgmtPolicy)
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'DefaultAppManagementPolicy' -Data @($AppMgmtPolicy) -Count
         $AppMgmtPolicy = $null

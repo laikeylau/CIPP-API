@@ -52,7 +52,7 @@ function Invoke-ExecSetMdoAlert {
         # Convert hashtable to JSON
         $AssignBodyJson = $AssignBody | ConvertTo-Json -Compress
 
-        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/security/alerts_v2/$AlertId" -type PATCH -tenantid $TenantFilter -body $AssignBodyJson -asApp $true
+        $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/security/alerts_v2/$AlertId" -type PATCH -tenantid $TenantFilter -body $AssignBodyJson -asApp $true -AsApp $true
         Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message $Result -Sev 'Info'
 
         $StatusCode = [HttpStatusCode]::OK

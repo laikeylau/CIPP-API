@@ -33,7 +33,7 @@ function Invoke-AddTransportRule {
             if ($Existing) {
                 Write-Host 'Found existing'
                 $RequestParams | Add-Member -NotePropertyValue $Existing.Identity -NotePropertyName Identity -Force
-                $null = New-ExoRequest -tenantid $tenantFilter -cmdlet 'Set-TransportRule' -cmdParams ($RequestParams -AsApp | Select-Object -Property * -ExcludeProperty UseLegacyRegex) -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $tenantFilter -cmdlet 'Set-TransportRule' -cmdParams ($RequestParams | Select-Object -Property * -ExcludeProperty UseLegacyRegex) -useSystemMailbox $true -AsApp
                 "Successfully set transport rule for $tenantFilter."
             } else {
                 Write-Host 'Creating new'

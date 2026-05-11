@@ -50,7 +50,7 @@ function Invoke-CIPPStandardRestrictThirdPartyStorageServices {
     $Uri = "https://graph.microsoft.com/beta/servicePrincipals?`$filter=appId eq '$AppId'"
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri $Uri -tenantid $Tenant | Select-Object displayName, accountEnabled, appId
+        $CurrentState = New-GraphGetRequest -Uri $Uri -tenantid $Tenant -AsApp $true | Select-Object displayName, accountEnabled, appId
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-LogMessage -API 'Standards' -tenant $Tenant -message "Could not get current state for Microsoft 365 on the web service principal. Error: $($ErrorMessage.NormalizedError)" -sev Error -LogData $ErrorMessage
@@ -74,7 +74,7 @@ function Invoke-CIPPStandardRestrictThirdPartyStorageServices {
                 $null = New-GraphPostRequest -Uri $UpdateUri -Body $DisableBody -TenantID $Tenant -Type PATCH -AddedHeaders @{'Prefer' = 'create-if-missing' }
 
                 # Refresh the current state after disabling
-                $CurrentState = New-GraphGetRequest -Uri $Uri -tenantid $Tenant | Select-Object displayName, accountEnabled, appId
+                $CurrentState = New-GraphGetRequest -Uri $Uri -tenantid $Tenant -AsApp $true | Select-Object displayName, accountEnabled, appId
                 Write-LogMessage -API 'Standards' -tenant $Tenant -message 'Successfully restricted third-party storage services in Microsoft 365 on the web.' -sev Info
             } catch {
                 $ErrorMessage = Get-CippException -Exception $_

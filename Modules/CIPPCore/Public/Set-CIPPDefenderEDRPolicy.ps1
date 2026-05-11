@@ -74,10 +74,10 @@ function Set-CIPPDefenderEDRPolicy {
         if ($CheckExistingEDR) {
             "$($TenantFilter): EDR Policy already exists. Skipping"
         } else {
-            $EDRRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -type POST -body $EDRbody
+            $EDRRequest = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies' -tenantid $TenantFilter -type POST -body $EDRbody -AsApp $true
             if ($EDR.AssignTo -and $EDR.AssignTo -ne 'none') {
                 $AssignBody = if ($EDR.AssignTo -ne 'AllDevicesAndUsers') { '{"assignments":[{"id":"","target":{"@odata.type":"#microsoft.graph.' + $($EDR.AssignTo) + 'AssignmentTarget"}}]}' } else { '{"assignments":[{"id":"","target":{"@odata.type":"#microsoft.graph.allDevicesAssignmentTarget"}},{"id":"","target":{"@odata.type":"#microsoft.graph.allLicensedUsersAssignmentTarget"}}]}' }
-                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($EDRRequest.id)')/assign" -tenantid $TenantFilter -type POST -body $AssignBody
+                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies('$($EDRRequest.id)')/assign" -tenantid $TenantFilter -type POST -body $AssignBody -AsApp $true
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Assigned EDR policy $($DisplayName) to $($EDR.AssignTo)" -Sev 'Info'
             }
             "$($TenantFilter): Successfully added EDR Settings"

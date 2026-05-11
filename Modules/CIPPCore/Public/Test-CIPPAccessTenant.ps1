@@ -135,7 +135,7 @@ function Test-CIPPAccessTenant {
                 Write-Information "Found $($OrgManagementRoles.Count) Organization Management roles in Exchange"
                 $Results.OrgManagementRoles = $OrgManagementRoles
 
-                $RoleDefinitions = New-GraphGetRequest -tenantid $Tenant.customerId -uri 'https://graph.microsoft.com/beta/roleManagement/exchange/roleDefinitions'
+                $RoleDefinitions = New-GraphGetRequest -tenantid $Tenant.customerId -uri 'https://graph.microsoft.com/beta/roleManagement/exchange/roleDefinitions' -AsApp $true
                 Write-Information "Found $($RoleDefinitions.Count) Exchange role definitions"
 
                 $OrgRolePath = Join-Path $env:CIPPRootPath 'Config\OrganizationManagementRoles.json'

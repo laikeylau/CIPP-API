@@ -83,7 +83,7 @@ function Invoke-ListGroups {
 
     try {
         if ($BulkRequestArrayList.Count -gt 0) {
-            $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantFilter -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequestArrayList) -asapp $true
+            $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantFilter -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequestArrayList) -asapp $true -AsApp $true
             $GraphRequest = [PSCustomObject]@{
                 groupInfo              = ($RawGraphRequest | Where-Object { $_.id -eq 1 }).body | Select-Object *, @{ Name = 'primDomain'; Expression = { $_.mail -split '@' | Select-Object -Last 1 } },
                 @{Name = 'teamsEnabled'; Expression = { if ($_.resourceProvisioningOptions -like '*Team*') { $true } else { $false } } },
@@ -110,7 +110,7 @@ function Invoke-ListGroups {
                 SID                    = (Convert-AzureAdObjectIdToSid -ObjectID $((($RawGraphRequest | Where-Object { $_.id -eq 1 }).body).id))
             }
         } else {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$($GroupID)/$($members)?`$top=999&select=$SelectString" -tenantid $TenantFilter | Select-Object *, @{ Name = 'primDomain'; Expression = { $_.mail -split '@' | Select-Object -Last 1 } },
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$($GroupID)/$($members)?`$top=999&select=$SelectString" -tenantid $TenantFilter -AsApp $true | Select-Object *, @{ Name = 'primDomain'; Expression = { $_.mail -split '@' | Select-Object -Last 1 } },
             @{Name = 'membersCsv'; Expression = { $_.members.userPrincipalName -join ',' } },
             @{Name = 'teamsEnabled'; Expression = { if ($_.resourceProvisioningOptions -like '*Team*') { $true }else { $false } } },
             @{Name = 'groupType'; Expression = {

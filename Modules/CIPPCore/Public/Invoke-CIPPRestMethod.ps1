@@ -8,7 +8,7 @@ function Invoke-CIPPRestMethod {
         pooling across all runspaces in the worker process. Handles all usage
         patterns found in CIPP core paths:
 
-          - New-GraphGetRequest   (GET + ResponseHeadersVariable + pagination)
+          - New-GraphGetRequest   (GET + ResponseHeadersVariable + pagination -AsApp $true)
           - New-GraphBulkRequest  (POST $batch)
           - New-ExoRequest        (POST + MaximumRedirection 0 for compliance URL)
           - New-ExoBulkRequest    (POST $batch EXO)

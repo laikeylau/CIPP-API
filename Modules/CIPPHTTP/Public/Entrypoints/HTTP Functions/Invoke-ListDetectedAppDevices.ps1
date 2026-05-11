@@ -19,7 +19,7 @@ function Invoke-ListDetectedAppDevices {
             throw "AppID parameter is required"
         }
 
-        $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/detectedApps/$AppID/managedDevices" -Tenantid $TenantFilter
+        $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/detectedApps/$AppID/managedDevices" -Tenantid $TenantFilter -AsApp $true
 
         # Ensure we return an array even if null
         if ($null -eq $GraphRequest) {

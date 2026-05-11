@@ -49,7 +49,7 @@ function Test-DeltaQueryConditions {
                 }
             }
             try {
-                $DeletedItems = New-GraphBulkRequest -Requests @($Requests) -tenantid $TenantFilter
+                $DeletedItems = New-GraphBulkRequest -Requests @($Requests) -tenantid $TenantFilter -AsApp $true
                 if ($DeletedItems.status -eq 200) {
                     Write-Information 'Retrieved full details for deleted items.'
                     Write-Information "Deleted items response: $($DeletedItems | ConvertTo-Json -Depth 5)"

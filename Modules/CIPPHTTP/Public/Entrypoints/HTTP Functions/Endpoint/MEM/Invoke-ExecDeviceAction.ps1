@@ -21,7 +21,7 @@ function Invoke-ExecDeviceAction {
         switch ($Action) {
             'setDeviceName' {
                 if ($Request.Body.input -match '%') {
-                    $Device = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceFilter" -tenantid $TenantFilter
+                    $Device = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices/$DeviceFilter" -tenantid $TenantFilter -AsApp $true
                     $Request.Body.input = Get-CIPPTextReplacement -TenantFilter $TenantFilter -Text $Request.Body.input
                     $Request.Body.input = $Request.Body.input -replace '%SERIAL%', $Device.serialNumber
                     # limit to 15 characters

@@ -15,9 +15,9 @@ Function Invoke-RemoveAPDevice {
 
     try {
         if ($null -eq $TenantFilter -or $TenantFilter -eq 'null') {
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities/$Deviceid" -type DELETE
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities/$Deviceid" -type DELETE -AsApp $true
         } else {
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities/$Deviceid" -tenantid $TenantFilter -type DELETE
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotDeviceIdentities/$Deviceid" -tenantid $TenantFilter -type DELETE -AsApp $true
         }
         $Result = "Deleted autopilot device $Deviceid"
         Write-LogMessage -headers $Request.Headers -tenant $TenantFilter -API $APIName -message $Result -Sev 'Info'
@@ -29,7 +29,7 @@ Function Invoke-RemoveAPDevice {
         $StatusCode = [HttpStatusCode]::InternalServerError
     }
     # Force a sync, this can give "too many requests" if deleting a bunch of devices though.
-    $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotSettings/sync' -tenantid $TenantFilter -type POST -body '{}'
+    $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/windowsAutopilotSettings/sync' -tenantid $TenantFilter -type POST -body '{}' -AsApp $true
 
     $Body = [pscustomobject]@{'Results' = "$Result" }
     return ([HttpResponseContext]@{

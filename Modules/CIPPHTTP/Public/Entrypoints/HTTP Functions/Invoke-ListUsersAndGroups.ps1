@@ -25,7 +25,7 @@ function Invoke-ListUsersAndGroups {
                 url    = "groups?`$select=id,displayName&`$top=999"
             }
         )
-        $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+        $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
         $Users = ($BulkResults | Where-Object { $_.id -eq 'users' }).body.value | Select-Object *, @{Name = '@odata.type'; Expression = { '#microsoft.graph.user' } }
         $Groups = ($BulkResults | Where-Object { $_.id -eq 'groups' }).body.value | Select-Object id, displayName, @{Name = 'userPrincipalName'; Expression = { $null } }, @{Name = '@odata.type'; Expression = { '#microsoft.graph.group' } }
         $GraphRequest = @($Users) + @($Groups) | Sort-Object displayName

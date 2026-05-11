@@ -44,7 +44,7 @@ function Invoke-ListGraphReports {
             if ($Type -eq 'office') {
                 # reports.office.com OData service document returns an array of { name, kind, url }
                 $TenantId = (Get-Tenants -TenantFilter $TenantFilter).customerId
-                $ServiceDoc = New-GraphGetRequest -uri 'https://reports.office.com/odataux' -tenantid $TenantFilter -scope 'https://reports.office.com/.default'
+                $ServiceDoc = New-GraphGetRequest -uri 'https://reports.office.com/odataux' -tenantid $TenantFilter -scope 'https://reports.office.com/.default' -AsApp $true
                 $Body = @($ServiceDoc | Select-Object name, kind, @{
                         Name       = 'uri'
                         Expression = { "https://reports.office.com/odataux/$($_.url)?tenantId=$TenantId" }
@@ -83,7 +83,7 @@ function Invoke-ListGraphReports {
                 $TenantId = (Get-Tenants -TenantFilter $TenantFilter).customerId
                 $Uri = "https://reports.office.com/odataux/$Report`?tenantId=$TenantId"
                 Write-Information "Fetching office report: $Uri"
-                $Data = New-GraphGetRequest -uri $Uri -tenantid $TenantFilter -scope 'https://reports.office.com/.default'
+                $Data = New-GraphGetRequest -uri $Uri -tenantid $TenantFilter -scope 'https://reports.office.com/.default' -AsApp $true
             } else {
                 # Most Graph usage reports are functions that require a period parameter.
                 # Try period-based first, fall back to bare URI for navigation links / flat resources.
@@ -94,7 +94,7 @@ function Invoke-ListGraphReports {
                 } catch {
                     $UriBare = "https://graph.microsoft.com/beta/reports/$Report"
                     Write-Information "Period-based fetch failed, retrying: $UriBare"
-                    $Data = New-GraphGetRequest -uri $UriBare -tenantid $TenantFilter
+                    $Data = New-GraphGetRequest -uri $UriBare -tenantid $TenantFilter -AsApp $true
                 }
             }
 

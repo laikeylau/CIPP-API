@@ -13,7 +13,7 @@ Function Invoke-ListConditionalAccessPolicyChanges {
     $PolicyDisplayName = $Request.Query.displayName
 
     try {
-        [array]$Changes = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?`$filter=targetResources/any(s:s/id eq '$($PolicyId)')" -tenantid $TenantFilter | ForEach-Object {
+        [array]$Changes = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?`$filter=targetResources/any(s:s/id eq '$($PolicyId)')" -tenantid $TenantFilter -AsApp $true | ForEach-Object {
             [pscustomobject]@{
                 policy           = $PolicyDisplayName
                 policyId         = $PolicyId

@@ -10,7 +10,7 @@ function Push-GraphDeltaQuery {
 
     $Item = $Item | Select-Object -ExcludeProperty FunctionName | ConvertTo-Json -Depth 5 | ConvertFrom-Json -AsHashtable
     try {
-        New-GraphDeltaQuery @Item
+        New-GraphDeltaQuery @Item -AsApp $true
     } catch {
         Write-Error "Failed to create Delta Query: $(Get-NormalizedError -Message $_.Exception.message)"
         Write-Warning $_.InvocationInfo.PositionMessage

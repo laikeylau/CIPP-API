@@ -11,10 +11,10 @@ Function Invoke-ListAllTenantDeviceCompliance {
     $TenantFilter = $Request.Query.TenantFilter
     try {
         if ($TenantFilter -eq 'AllTenants') {
-            $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/tenantRelationships/managedTenants/managedDeviceCompliances'
+            $GraphRequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/tenantRelationships/managedTenants/managedDeviceCompliances' -AsApp $true
             $StatusCode = [HttpStatusCode]::OK
         } else {
-            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/managedTenants/managedDeviceCompliances?`$top=999&`$filter=organizationId eq '$TenantFilter'"
+            $GraphRequest = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/managedTenants/managedDeviceCompliances?`$top=999&`$filter=organizationId eq '$TenantFilter'" -AsApp $true
             $StatusCode = [HttpStatusCode]::OK
         }
 

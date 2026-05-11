@@ -35,10 +35,10 @@ function Set-CIPPDefaultAPEnrollment {
             'roleScopeTagIds'                         = @()
         }
         $Body = ConvertTo-Json -InputObject $ObjBody
-        $ExistingStatusPage = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations' -tenantid $TenantFilter) | Where-Object { $_.id -like '*DefaultWindows10EnrollmentCompletionPageConfiguration' }
+        $ExistingStatusPage = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations' -tenantid $TenantFilter -AsApp $true | Where-Object { $_.id -like '*DefaultWindows10EnrollmentCompletionPageConfiguration' }
 
         if ($PSCmdlet.ShouldProcess($ExistingStatusPage.ID, 'Set Default Enrollment Status Page')) {
-            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($ExistingStatusPage.ID)" -body $Body -Type PATCH -tenantid $TenantFilter
+            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($ExistingStatusPage.ID)" -body $Body -Type PATCH -tenantid $TenantFilter -AsApp $true
             "Successfully changed default enrollment status page for $TenantFilter"
             Write-LogMessage -Headers $Headers -API $APIName -tenant $TenantFilter -message "Added Autopilot Enrollment Status Page $($ExistingStatusPage.displayName)" -Sev 'Info'
         }

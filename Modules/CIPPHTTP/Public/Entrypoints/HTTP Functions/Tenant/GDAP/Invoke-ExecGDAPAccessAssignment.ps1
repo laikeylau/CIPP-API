@@ -42,11 +42,11 @@ function Invoke-ExecGDAPAccessAssignment {
                     }
                 )
 
-                $RelationshipResults = New-GraphBulkRequest -Requests $RelationshipRequests -NoAuthCheck $true
+                $RelationshipResults = New-GraphBulkRequest -Requests $RelationshipRequests -NoAuthCheck $true -AsApp $true
                 $Relationship = ($RelationshipResults | Where-Object id -EQ 'getRelationship').body
                 $AccessAssignments = ($RelationshipResults | Where-Object id -EQ 'getAccessAssignments').body.value
 
-                $Groups = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/groups?`$top=999&`$select=id,displayName&`$filter=securityEnabled eq true" -asApp $true -NoAuthCheck $true
+                $Groups = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/groups?`$top=999&`$select=id,displayName&`$filter=securityEnabled eq true" -asApp $true -NoAuthCheck $true -AsApp $true
 
                 $Requests = [System.Collections.Generic.List[object]]::new()
                 $Messages = [System.Collections.Generic.List[object]]::new()
@@ -140,7 +140,7 @@ function Invoke-ExecGDAPAccessAssignment {
                     Write-Warning "Executing $($Requests.Count) access assignment changes"
                     Write-Information ($Requests | ConvertTo-Json -Depth 10)
 
-                    $BulkResults = New-GraphBulkRequest -Requests $Requests -NoAuthCheck $true
+                    $BulkResults = New-GraphBulkRequest -Requests $Requests -NoAuthCheck $true -AsApp $true
 
                     Write-Warning "Received $($BulkResults.Count) access assignment results"
                     Write-Information ($BulkResults | ConvertTo-Json -Depth 10)

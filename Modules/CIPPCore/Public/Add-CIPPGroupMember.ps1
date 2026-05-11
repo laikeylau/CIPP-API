@@ -43,7 +43,7 @@ function Add-CIPPGroupMember {
                 method = 'GET'
             }
         }
-        $Users = New-GraphBulkRequest -Requests @($Requests) -tenantid $TenantFilter
+        $Users = New-GraphBulkRequest -Requests @($Requests) -tenantid $TenantFilter -AsApp $true
 
         if ($GroupType -eq 'Distribution list' -or $GroupType -eq 'Mail-Enabled Security') {
             $ExoBulkRequests = [System.Collections.Generic.List[object]]::new()
@@ -80,7 +80,7 @@ function Add-CIPPGroupMember {
                 }
             }
         } else {
-            # Build one bulk request list; New-GraphBulkRequest handles internal chunking
+            # Build one bulk request list; New-GraphBulkRequest handles internal chunking -AsApp $true
             $AddRequests = foreach ($User in $Users) {
                 @{
                     id      = $User.body.id

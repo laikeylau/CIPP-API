@@ -28,7 +28,7 @@ function Get-CIPPAlertAdminPassword {
 
         # Make bulk call to get user information
         if ($UserRequests) {
-            $BulkResults = New-GraphBulkRequest -Requests @($UserRequests) -tenantid $TenantFilter
+            $BulkResults = New-GraphBulkRequest -Requests @($UserRequests) -tenantid $TenantFilter -AsApp $true
 
             # Filter users with recent password changes and sort to prevent duplicate alerts
             $AlertData = $BulkResults | Where-Object { $_.status -eq 200 -and $_.body.lastPasswordChangeDateTime -gt (Get-Date).AddDays(-1) } | ForEach-Object {

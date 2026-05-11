@@ -45,7 +45,7 @@ function Invoke-CIPPStandardIntuneComplianceSettings {
     } #we're done.
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/settings' -tenantid $Tenant |
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/deviceManagement/settings' -tenantid $Tenant -AsApp $true |
             Select-Object secureByDefault, deviceComplianceCheckinThresholdDays
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

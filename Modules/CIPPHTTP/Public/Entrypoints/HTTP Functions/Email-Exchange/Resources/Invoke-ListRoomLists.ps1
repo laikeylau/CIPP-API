@@ -59,7 +59,7 @@ Function Invoke-ListRoomLists {
                     # Get valid owners from Graph API
                     if ($ValidOwnerIds.Count -gt 0) {
                         $body = ConvertTo-Json -InputObject @{ids = @($ValidOwnerIds) } -Compress
-                        $OwnersData = New-GraphPOSTRequest -tenantid $TenantFilter -uri 'https://graph.microsoft.com/beta/directoryObjects/getByIds' -body $body
+                        $OwnersData = New-GraphPOSTRequest -tenantid $TenantFilter -uri 'https://graph.microsoft.com/beta/directoryObjects/getByIds' -body $body -AsApp $true
                         foreach ($Owner in $OwnersData.value) {
                             $AllOwners.Add($Owner)
                         }

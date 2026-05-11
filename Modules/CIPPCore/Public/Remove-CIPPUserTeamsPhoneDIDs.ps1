@@ -26,7 +26,7 @@ function Remove-CIPPUserTeamsPhoneDIDs {
         $ErrorCount = 0
 
         # Get all tenant DIDs
-        $TeamsPhoneDIDs = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/admin/teams/telephoneNumberManagement/numberAssignments" -tenant $TenantFilter
+        $TeamsPhoneDIDs = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/admin/teams/telephoneNumberManagement/numberAssignments" -tenant $TenantFilter -AsApp $true
 
         if (-not $TeamsPhoneDIDs -or $TeamsPhoneDIDs.Count -eq 0) {
             $Result = "No Teams Phone DIDs found in tenant"

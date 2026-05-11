@@ -49,7 +49,7 @@ function Invoke-CIPPStandardWindowsBackupRestore {
     $WantedState = $Settings.state.value ?? $Settings.state
 
     try {
-        $Config = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations?$filter=deviceEnrollmentConfigurationType eq ''windowsRestore''' -tenantid $Tenant
+        $Config = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations?$filter=deviceEnrollmentConfigurationType eq ''windowsRestore''' -tenantid $Tenant -AsApp $true
         $CurrentState = $Config.state
     } catch {
         $ErrorMessage = Get-CippException -Exception $_

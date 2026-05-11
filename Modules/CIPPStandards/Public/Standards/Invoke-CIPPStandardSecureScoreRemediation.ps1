@@ -36,7 +36,7 @@ function Invoke-CIPPStandardSecureScoreRemediation {
 
     # Get current secure score controls
     try {
-        $CurrentControls = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/security/secureScoreControlProfiles?$top=999' -tenantid $Tenant
+        $CurrentControls = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/security/secureScoreControlProfiles?$top=999' -tenantid $Tenant -AsApp $true
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message
         Write-LogMessage -API 'Standards' -tenant $Tenant -message "Could not retrieve Secure Score controls for $Tenant. Error: $ErrorMessage" -sev Error

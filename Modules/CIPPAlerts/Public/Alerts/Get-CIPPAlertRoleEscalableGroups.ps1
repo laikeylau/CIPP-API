@@ -21,7 +21,7 @@ function Get-CIPPAlertRoleEscalableGroups {
     )
 
     try {
-        $groups = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups?`$select=id,displayName,isAssignableToRole&`$top=999" -tenantid $TenantFilter)
+        $groups = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups?`$select=id,displayName,isAssignableToRole&`$top=999" -tenantid $TenantFilter -AsApp $true)
         if (-not $groups -or $groups.Count -eq 0) {
             Write-Information "Get-CIPPAlertRoleEscalableGroups: no groups returned for $TenantFilter"
             return
@@ -32,14 +32,14 @@ function Get-CIPPAlertRoleEscalableGroups {
             $groupById["$($g.id)"] = $g
         }
 
-        $roleDefinitions = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/roleManagement/directory/roleDefinitions?`$select=id,displayName&`$top=999" -tenantid $TenantFilter)
+        $roleDefinitions = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/roleManagement/directory/roleDefinitions?`$select=id,displayName&`$top=999" -tenantid $TenantFilter -AsApp $true)
         $roleDefById = @{}
         foreach ($rd in $roleDefinitions) {
             if (-not $rd.id) { continue }
             $roleDefById["$($rd.id)"] = $rd
         }
 
-        $roleAssignments = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/roleManagement/directory/roleAssignments?`$select=id,principalId,roleDefinitionId,directoryScopeId,appScopeId&`$top=999" -tenantid $TenantFilter)
+        $roleAssignments = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/roleManagement/directory/roleAssignments?`$select=id,principalId,roleDefinitionId,directoryScopeId,appScopeId&`$top=999" -tenantid $TenantFilter -AsApp $true)
         if (-not $roleAssignments -or $roleAssignments.Count -eq 0) {
             Write-Information "Get-CIPPAlertRoleEscalableGroups: no role assignments returned for $TenantFilter"
             return
@@ -82,7 +82,7 @@ function Get-CIPPAlertRoleEscalableGroups {
             if (-not $transitiveNestedGroupIdsByRoot.ContainsKey($principalId)) {
                 $nestedIds = [System.Collections.Generic.List[string]]::new()
                 try {
-                    $transitive = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$principalId/transitiveMembers/microsoft.graph.group?`$select=id" -tenantid $TenantFilter)
+                    $transitive = @(New-GraphGetRequest -uri "https://graph.microsoft.com/beta/groups/$principalId/transitiveMembers/microsoft.graph.group?`$select=id" -tenantid $TenantFilter -AsApp $true)
                     foreach ($m in $transitive) {
                         $mid = "$($m.id)"
                         if (-not $mid -or $mid -eq $principalId) { continue }

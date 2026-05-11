@@ -26,7 +26,7 @@ function Set-CIPPCopyGroupMembers {
             method = 'GET'
         }
     )
-    $Results = New-GraphBulkRequest -Requests $Requests -tenantid $TenantFilter
+    $Results = New-GraphBulkRequest -Requests $Requests -tenantid $TenantFilter -AsApp $true
     $User = ($Results | Where-Object { $_.id -eq 'User' }).body
     $CurrentMemberships = ($Results | Where-Object { $_.id -eq 'UserMembership' }).body.value
     $CopyFromMemberships = ($Results | Where-Object { $_.id -eq 'CopyFromMembership' }).body.value

@@ -48,7 +48,7 @@ function Get-CIPPAlertTenantAccess {
                     url    = "roleManagement/directory/roleAssignments?`$filter=roleDefinitionId eq '$($_.Id)'&`$expand=principal"
                 }
             }
-            $GDAPRolesGraph = New-GraphBulkRequest -tenantid $TenantId -Requests $BulkRequests
+            $GDAPRolesGraph = New-GraphBulkRequest -tenantid $TenantId -Requests $BulkRequests -AsApp $true
             $MissingRoles = [System.Collections.Generic.List[string]]::new()
 
             foreach ($RoleId in $ExpectedRoles) {

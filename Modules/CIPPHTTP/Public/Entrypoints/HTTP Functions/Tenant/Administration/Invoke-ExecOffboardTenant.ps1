@@ -47,7 +47,7 @@ function Invoke-ExecOffboardTenant {
                                 }
                             })
 
-                        $null = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+                        $null = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
 
                         $results.Add('Successfully removed guest users')
                         Write-LogMessage -headers $Headers -API $APIName -message 'CSP Guest users were removed' -Sev 'Info' -tenant $TenantFilter

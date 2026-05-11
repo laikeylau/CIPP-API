@@ -14,7 +14,7 @@ function Get-CIPPAlertDefenderIncidents {
 
     $IncidentSeverities = $InputValue.IncidentSeverities.value -as [System.Collections.Generic.List[string]]
     try {
-        $Incidents = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/security/incidents?`$top=50&`$filter=status eq 'active'" -tenantid $TenantFilter
+        $Incidents = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/security/incidents?`$top=50&`$filter=status eq 'active'" -tenantid $TenantFilter -AsApp $true
         $AlertData = foreach ($Incident in $Incidents) {
             # Skip if severity doesn't match filter (unless "All" is selected or no filter)
             if ($IncidentSeverities.Count -gt 0 -and 'All' -notin $IncidentSeverities) {

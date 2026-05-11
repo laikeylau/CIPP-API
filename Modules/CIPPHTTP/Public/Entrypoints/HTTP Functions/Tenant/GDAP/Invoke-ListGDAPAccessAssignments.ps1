@@ -12,10 +12,10 @@ function Invoke-ListGDAPAccessAssignments {
 
     Write-Information "Getting access assignments for $Id"
 
-    $AccessAssignments = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$Id/accessAssignments" -tenantid $TenantFilter
+    $AccessAssignments = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$Id/accessAssignments" -tenantid $TenantFilter -AsApp $true
 
     # get groups asapp
-    $Groups = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/groups?`$top=999&`$select=id,displayName&`$filter=securityEnabled eq true" -tenantid $TenantFilter -asApp $true -NoAuthCheck $true
+    $Groups = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/groups?`$top=999&`$select=id,displayName&`$filter=securityEnabled eq true" -tenantid $TenantFilter -asApp $true -NoAuthCheck $true -AsApp $true
 
 
     # Get all the access containers
@@ -29,7 +29,7 @@ function Invoke-ListGDAPAccessAssignments {
             'method' = 'GET'
         }
     }
-    $Members = New-GraphBulkRequest -Requests @($ContainerMembers) -tenantid $TenantFilter -asApp $true -NoAuthCheck $true
+    $Members = New-GraphBulkRequest -Requests @($ContainerMembers) -tenantid $TenantFilter -asApp $true -NoAuthCheck $true -AsApp $true
 
     $Results = foreach ($AccessAssignment in $AccessAssignments) {
         [PSCustomObject]@{

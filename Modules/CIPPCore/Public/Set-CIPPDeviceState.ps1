@@ -57,13 +57,13 @@
     try {
         switch ($Action) {
             'Delete' {
-                $ActionResult = New-GraphPOSTRequest -uri $Url -type DELETE -tenantid $TenantFilter
+                $ActionResult = New-GraphPOSTRequest -uri $Url -type DELETE -tenantid $TenantFilter -AsApp $true
             }
             'Disable' {
-                $ActionResult = New-GraphPOSTRequest -uri $Url -type PATCH -tenantid $TenantFilter -body '{"accountEnabled": false }'
+                $ActionResult = New-GraphPOSTRequest -uri $Url -type PATCH -tenantid $TenantFilter -body '{"accountEnabled": false }' -AsApp $true
             }
             'Enable' {
-                $ActionResult = New-GraphPOSTRequest -uri $Url -type PATCH -tenantid $TenantFilter -body '{"accountEnabled": true }'
+                $ActionResult = New-GraphPOSTRequest -uri $Url -type PATCH -tenantid $TenantFilter -body '{"accountEnabled": true }' -AsApp $true
             }
         }
         Write-Host $ActionResult

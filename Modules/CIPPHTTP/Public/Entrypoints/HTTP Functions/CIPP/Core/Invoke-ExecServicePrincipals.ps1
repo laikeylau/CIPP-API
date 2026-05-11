@@ -50,10 +50,10 @@ function Invoke-ExecServicePrincipals {
             default {
                 if ($Request.Query.AppId) {
                     $Action = 'Get'
-                    $Results = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='$($Request.Query.AppId)')" -tenantid $TenantFilter -NoAuthCheck $true
+                    $Results = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals(appId='$($Request.Query.AppId)')" -tenantid $TenantFilter -NoAuthCheck $true -AsApp $true
                 } elseif ($Request.Query.Id) {
                     $Action = 'Get'
-                    $Results = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals/$($Request.Query.Id)" -tenantid $TenantFilter -NoAuthCheck $true
+                    $Results = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/servicePrincipals/$($Request.Query.Id)" -tenantid $TenantFilter -NoAuthCheck $true -AsApp $true
                 } else {
                     $Action = 'List'
                     $Uri = 'https://graph.microsoft.com/beta/servicePrincipals?$top=999&$orderby=displayName&$count=true'
@@ -61,7 +61,7 @@ function Invoke-ExecServicePrincipals {
                         $Uri = '{0}&$select={1}' -f $Uri, $Request.Query.Select
                     }
 
-                    $Results = New-GraphGetRequest -Uri $Uri -ComplexFilter -tenantid $TenantFilter -NoAuthCheck $true
+                    $Results = New-GraphGetRequest -Uri $Uri -ComplexFilter -tenantid $TenantFilter -NoAuthCheck $true -AsApp $true
                 }
             }
         }

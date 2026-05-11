@@ -19,7 +19,7 @@ function Set-CIPPDBCacheManagedDeviceEncryptionStates {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching managed device encryption states' -sev Debug
 
-        $ManagedDeviceEncryptionStates = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/managedDeviceEncryptionStates?$top=999' -tenantid $TenantFilter
+        $ManagedDeviceEncryptionStates = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/managedDeviceEncryptionStates?$top=999' -tenantid $TenantFilter -AsApp $true
 
         if ($ManagedDeviceEncryptionStates) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ManagedDeviceEncryptionStates' -Data $ManagedDeviceEncryptionStates

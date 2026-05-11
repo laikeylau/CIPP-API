@@ -16,7 +16,7 @@ function Invoke-ExecDevicePasscodeAction {
     $TenantFilter = $Request.Body.tenantFilter
 
     try {
-        $GraphResponse = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices('$DeviceFilter')/$($Action)" -type POST -tenantid $TenantFilter -body '{}'
+        $GraphResponse = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/managedDevices('$DeviceFilter')/$($Action)" -type POST -tenantid $TenantFilter -body '{}' -AsApp $true
 
         $Result = switch ($Action) {
             'resetPasscode' {

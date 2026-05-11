@@ -153,7 +153,7 @@ function Invoke-ListConditionalAccessPolicies {
                 }
             )
 
-            $BulkResults = New-GraphBulkRequest -Requests $Requests -tenantid $TenantFilter -asapp $true
+            $BulkResults = New-GraphBulkRequest -Requests $Requests -tenantid $TenantFilter -asapp $true -AsApp $true
 
             $ConditionalAccessPolicyOutput = ($BulkResults | Where-Object { $_.id -eq 'policies' }).body.value
             $AllNamedLocations = ($BulkResults | Where-Object { $_.id -eq 'namedLocations' }).body.value

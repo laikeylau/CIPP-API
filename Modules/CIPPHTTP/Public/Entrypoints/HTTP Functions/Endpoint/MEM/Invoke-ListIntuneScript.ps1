@@ -44,7 +44,7 @@ function Invoke-ListIntuneScript {
     )
 
     try {
-        $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter
+        $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -AsApp $true
     } catch {
         $ErrorMessage = Get-CippException -Exception $_
         Write-Host "Failed to retrieve scripts. Error: $($ErrorMessage.NormalizedError)"

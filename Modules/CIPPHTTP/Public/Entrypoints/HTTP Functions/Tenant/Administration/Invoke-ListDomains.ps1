@@ -11,7 +11,7 @@ Function Invoke-ListDomains {
     $TenantFilter = $Request.Query.tenantFilter
 
     try {
-        $Result = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/domains' -tenantid $TenantFilter | Select-Object id, isdefault, isinitial | Sort-Object isdefault -Descending
+        $Result = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/domains' -tenantid $TenantFilter -AsApp $true | Select-Object id, isdefault, isinitial | Sort-Object isdefault -Descending
         $StatusCode = [HttpStatusCode]::OK
     } catch {
         $Result = Get-NormalizedError -Message $_.Exception.Message

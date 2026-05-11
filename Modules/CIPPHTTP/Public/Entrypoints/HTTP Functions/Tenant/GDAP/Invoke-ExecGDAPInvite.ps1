@@ -58,7 +58,7 @@ function Invoke-ExecGDAPInvite {
                 Start-Sleep -Milliseconds 100
                 $Count = 0
                 do {
-                    $CheckActive = New-GraphGetRequest -NoAuthCheck $True -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($NewRelationship.id)" -tenantid $env:TenantID
+                    $CheckActive = New-GraphGetRequest -NoAuthCheck $True -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($NewRelationship.id)" -tenantid $env:TenantID -AsApp $true
                     Start-Sleep -Milliseconds 200
                     $Count++
                 } until ($CheckActive.status -eq 'created' -or $Count -gt 5)

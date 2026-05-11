@@ -11,7 +11,7 @@ function Push-ExecAlertsListAllTenants {
     $Table = Get-CIPPTable -TableName 'cachealertsandincidents'
 
     try {
-        $Alerts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/security/alerts' -tenantid $domainName
+        $Alerts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/security/alerts' -tenantid $domainName -AsApp $true
         foreach ($Alert in $Alerts) {
             $GUID = (New-Guid).Guid
             $alertJson = $Alert | ConvertTo-Json

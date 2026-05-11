@@ -11,7 +11,7 @@ Function Invoke-ExecGDAPRemoveGArole {
     $GDAPID = $Request.Query.GDAPId ?? $Request.Body.GDAPId
 
     try {
-        $CheckActive = New-GraphGetRequest -NoAuthCheck $True -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($GDAPID)" -tenantid $env:TenantID
+        $CheckActive = New-GraphGetRequest -NoAuthCheck $True -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($GDAPID)" -tenantid $env:TenantID -AsApp $true
         if ($CheckActive.status -eq 'active' -AND '62e90394-69f5-4237-9190-012177145e10' -in $CheckActive.accessDetails.unifiedRoles.roleDefinitionId) {
             $AddedHeader = @{'If-Match' = $CheckActive.'@odata.etag' }
 
@@ -23,7 +23,7 @@ Function Invoke-ExecGDAPRemoveGArole {
                 }
             } | ConvertTo-Json -Depth 3
 
-            New-GraphPOSTRequest -NoAuthCheck $True -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($GDAPID)" -tenantid $env:TenantID -type PATCH -body $RawJSON -AddedHeaders $AddedHeader
+            New-GraphPOSTRequest -NoAuthCheck $True -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($GDAPID)" -tenantid $env:TenantID -type PATCH -body $RawJSON -AddedHeaders $AddedHeader -AsApp $true
 
             $Message = "Removed Global Administrator from $($GDAPID)"
             Write-LogMessage -headers $Request.Headers -API $APINAME -message $Message -Sev 'Info'

@@ -62,7 +62,7 @@ function Invoke-PatchUser {
                 }
 
                 # Execute bulk request for this tenant
-                $BulkResults = New-GraphBulkRequest -tenantid $tenantFilter -Requests @($BulkRequests)
+                $BulkResults = New-GraphBulkRequest -tenantid $tenantFilter -Requests @($BulkRequests) -AsApp $true
 
                 # Process results for this tenant
                 for ($i = 0; $i -lt $BulkResults.Count; $i++) {

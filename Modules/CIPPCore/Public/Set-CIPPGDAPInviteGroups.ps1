@@ -7,7 +7,7 @@ function Set-CIPPGDAPInviteGroups {
         $Invite = Get-CIPPAzDataTableEntity @Table -Filter "RowKey eq '$($Relationship.id)'"
         $APINAME = 'GDAPInvites'
         $RoleMappings = $Invite.RoleMappings | ConvertFrom-Json
-        $AccessAssignments = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($Relationship.id)/accessAssignments"
+        $AccessAssignments = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships/$($Relationship.id)/accessAssignments" -AsApp $true
         foreach ($Role in $RoleMappings) {
             # Skip mapping if group is present in relationship
             if ($AccessAssignments.id -and $AccessAssignments.accessContainer.accessContainerid -contains $Role.GroupId ) { continue }
@@ -42,7 +42,7 @@ function Set-CIPPGDAPInviteGroups {
     } else {
         $InviteList = Get-CIPPAzDataTableEntity @Table
         if (($InviteList | Measure-Object).Count -gt 0) {
-            $Activations = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships?`$filter=status eq 'active'"
+            $Activations = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/tenantRelationships/delegatedAdminRelationships?`$filter=status eq 'active'" -AsApp $true
 
             $Batch = foreach ($Activation in $Activations) {
                 if ($InviteList.RowKey -contains $Activation.id) {

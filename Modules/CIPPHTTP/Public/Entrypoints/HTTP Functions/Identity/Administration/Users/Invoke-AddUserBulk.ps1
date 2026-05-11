@@ -111,7 +111,7 @@ function Invoke-AddUserBulk {
         if ($BulkRequests.Count -gt 0) {
             Write-Warning "We have $($BulkRequests.Count) users to import"
             #Write-Information ($BulkRequests | ConvertTo-Json -Depth 5)
-            $BulkResults = New-GraphBulkRequest -tenantid $TenantFilter -Requests $BulkRequests
+            $BulkResults = New-GraphBulkRequest -tenantid $TenantFilter -Requests $BulkRequests -AsApp $true
             Write-Warning "We have $($BulkResults.Count) results"
             #Write-Information ($BulkResults | ConvertTo-Json -Depth 10)
             foreach ($BulkResult in $BulkResults) {

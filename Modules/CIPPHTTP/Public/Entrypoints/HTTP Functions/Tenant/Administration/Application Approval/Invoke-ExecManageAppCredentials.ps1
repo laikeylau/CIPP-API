@@ -23,13 +23,13 @@ function Invoke-ExecManageAppCredentials {
         $Results = switch ($Action) {
             'Remove' {
                 if ($CredentialType -eq 'password') {
-                    $null = New-GraphPOSTRequest -Uri "$Uri/removePassword" -Body (@{ keyId = $KeyId } | ConvertTo-Json) -tenantid $TenantFilter
+                    $null = New-GraphPOSTRequest -Uri "$Uri/removePassword" -Body (@{ keyId = $KeyId } | ConvertTo-Json) -AsApp $true -tenantid $TenantFilter
                     @{ resultText = "Successfully removed password credential $KeyId"; state = 'success' }
                 } else {
                     # Certificates can't use removeKey without a proof JWT, so PATCH the array instead
-                    $Current = New-GraphGetRequest -Uri $Uri -tenantid $TenantFilter
+                    $Current = New-GraphGetRequest -Uri $Uri -tenantid $TenantFilter -AsApp $true
                     $Updated = @($Current.keyCredentials | Where-Object { $_.keyId -ne $KeyId })
-                    $null = New-GraphPOSTRequest -Uri $Uri -Type 'PATCH' -Body (@{ keyCredentials = $Updated } | ConvertTo-Json -Depth 10) -tenantid $TenantFilter
+                    $null = New-GraphPOSTRequest -Uri $Uri -Type 'PATCH' -Body (@{ keyCredentials = $Updated } | ConvertTo-Json -Depth 10) -AsApp $true -tenantid $TenantFilter
                     @{ resultText = "Successfully removed key credential $KeyId"; state = 'success' }
                 }
             }

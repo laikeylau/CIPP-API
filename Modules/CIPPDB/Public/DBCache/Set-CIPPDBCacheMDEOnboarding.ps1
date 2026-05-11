@@ -20,7 +20,7 @@ function Set-CIPPDBCacheMDEOnboarding {
         $ConnectorId = 'fc780465-2017-40d4-a0c5-307022471b92'
         $ConnectorUri = "https://graph.microsoft.com/beta/deviceManagement/mobileThreatDefenseConnectors/$ConnectorId"
         try {
-            $ConnectorState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter
+            $ConnectorState = New-GraphGetRequest -uri $ConnectorUri -tenantid $TenantFilter -AsApp $true
             $Connector = $ConnectorState | Select-Object -ExcludeProperty '@odata.context'
             $Connector | Add-Member -NotePropertyName 'Tenant'       -NotePropertyValue $TenantFilter -Force
             $Connector | Add-Member -NotePropertyName 'RowKey'       -NotePropertyValue 'MDEOnboarding' -Force

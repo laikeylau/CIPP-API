@@ -19,7 +19,7 @@ function Set-CIPPDBCacheGroups {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching groups' -sev Debug
 
-        $Groups = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999&$select=id,displayName,groupTypes,mail,mailEnabled,securityEnabled,membershipRule,onPremisesSyncEnabled' -tenantid $TenantFilter
+        $Groups = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999&$select=id,displayName,groupTypes,mail,mailEnabled,securityEnabled,membershipRule,onPremisesSyncEnabled' -tenantid $TenantFilter -AsApp $true
 
         # Build bulk request for group members
         $MemberRequests = $Groups | ForEach-Object {

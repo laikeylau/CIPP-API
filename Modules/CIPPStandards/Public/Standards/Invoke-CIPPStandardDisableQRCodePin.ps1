@@ -32,7 +32,7 @@ function Invoke-CIPPStandardDisableQRCodePin {
     param($Tenant, $Settings)
 
     try {
-        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authenticationmethodspolicy/authenticationMethodConfigurations/QRCodePin' -tenantid $Tenant
+        $CurrentState = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/authenticationmethodspolicy/authenticationMethodConfigurations/QRCodePin' -tenantid $Tenant -AsApp $true
     }
     catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

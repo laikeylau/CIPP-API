@@ -18,7 +18,7 @@ function Set-CIPPDBCacheAdminConsentRequestPolicy {
 
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching admin consent request policy' -sev Debug
-        $ConsentPolicy = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/adminConsentRequestPolicy' -tenantid $TenantFilter
+        $ConsentPolicy = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/policies/adminConsentRequestPolicy' -tenantid $TenantFilter -AsApp $true
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'AdminConsentRequestPolicy' -Data @($ConsentPolicy)
         Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'AdminConsentRequestPolicy' -Data @($ConsentPolicy) -Count
         $ConsentPolicy = $null

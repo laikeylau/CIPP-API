@@ -68,5 +68,5 @@ function Get-CIPPIntunePolicyAssignments {
     }
 
     $Uri = "https://graph.microsoft.com/beta/$PlatformType/$TypeUrl('$PolicyId')/assignments"
-    return New-GraphGetRequest -uri $Uri -tenantid $TenantFilter
+    return New-GraphGetRequest -uri $Uri -tenantid $TenantFilter -AsApp $true
 }

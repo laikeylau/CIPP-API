@@ -45,7 +45,7 @@ function Invoke-EditIntuneScript {
                 }
 
                 try {
-                    $intuneScript = New-GraphGetRequest @parms -ErrorAction Stop
+                    $intuneScript = New-GraphGetRequest @parms -ErrorAction Stop -AsApp $true
                     if ($intuneScript) {
                         $intuneScript | Add-Member -MemberType NoteProperty -Name scriptType -Value $scriptType -Force
                         $scriptTypeFound = $true
@@ -106,7 +106,7 @@ function Invoke-EditIntuneScript {
             }
 
             try {
-                $patchResult = New-GraphPOSTRequest @parms -type 'PATCH'
+                $patchResult = New-GraphPOSTRequest @parms -type 'PATCH' -AsApp $true
                 $body = [pscustomobject]@{'Results' = $patchResult }
                 return ([HttpResponseContext]@{
                         StatusCode = [HttpStatusCode]::OK

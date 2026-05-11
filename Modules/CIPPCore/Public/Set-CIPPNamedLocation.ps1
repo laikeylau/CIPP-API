@@ -12,7 +12,7 @@ function Set-CIPPNamedLocation {
     )
 
     try {
-        $NamedLocations = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations/$NamedLocationId" -Tenantid $TenantFilter
+        $NamedLocations = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations/$NamedLocationId" -Tenantid $TenantFilter -AsApp $true
 
         switch ($Change) {
             'addIp' {
@@ -52,7 +52,7 @@ function Set-CIPPNamedLocation {
 
         if ($PSCmdlet.ShouldProcess($NamedLocations.displayName, $ActionDescription)) {
             if ($Change -eq 'delete') {
-                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations/$NamedLocationId" -tenantid $TenantFilter -type DELETE
+                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations/$NamedLocationId" -tenantid $TenantFilter -type DELETE -AsApp $true
                 $Result = "Deleted named location: $($NamedLocations.displayName)"
             } else {
                 # PATCH operations - remove unneeded properties
@@ -63,7 +63,7 @@ function Set-CIPPNamedLocation {
                 }
 
                 $JsonBody = ConvertTo-Json -InputObject $NamedLocations -Compress -Depth 10
-                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations/$NamedLocationId" -tenantid $TenantFilter -type PATCH -body $JsonBody
+                $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/identity/conditionalAccess/namedLocations/$NamedLocationId" -tenantid $TenantFilter -type PATCH -body $JsonBody -AsApp $true
                 $Result = "Edited named location: $($NamedLocations.displayName). Change: $Change$(if ($Content) { " with content $Content" })"
             }
 

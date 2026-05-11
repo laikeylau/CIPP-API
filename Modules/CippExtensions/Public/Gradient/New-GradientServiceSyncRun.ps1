@@ -37,7 +37,7 @@ function New-GradientServiceSyncRun {
         Import-Module (Join-Path $env:CIPPRootPath 'Modules\CIPPCore')
         Write-Host "Doing $domainName"
         try {
-            $Licrequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscribedSkus' -tenantid $_.defaultDomainName -ErrorAction Stop | Where-Object -Property skuId -NotIn $ExcludedSkuList.RowKey
+            $Licrequest = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/subscribedSkus' -tenantid $_.defaultDomainName -ErrorAction Stop -AsApp $true | Where-Object -Property skuId -NotIn $ExcludedSkuList.RowKey
             [PSCustomObject]@{
                 Tenant   = $domainName
                 Licenses = $Licrequest

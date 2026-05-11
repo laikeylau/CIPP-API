@@ -99,7 +99,7 @@ function Invoke-ExecJITAdmin {
         $Username = $Request.Body.existingUser.value
         if ($Username -match '^[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}$') {
             Write-Information "Resolving UserPrincipalName from ObjectId: $($Request.Body.existingUser.value)"
-            $Username = (New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/users/$($Request.Body.existingUser.value)" -tenantid $TenantFilter).userPrincipalName
+            $Username = (New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/users/$($Request.Body.existingUser.value)" -tenantid $TenantFilter -AsApp $true).userPrincipalName
 
             # If the resolved username is a guest user, we need to use the id instead of the UPN
             if ($Username -clike '*#EXT#*') {

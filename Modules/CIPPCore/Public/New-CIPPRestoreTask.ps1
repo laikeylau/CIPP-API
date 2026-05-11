@@ -114,7 +114,7 @@ function New-CIPPRestoreTask {
             }
         }
         'users' {
-            $currentUsers = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/users?$top=999&select=id,userPrincipalName' -tenantid $TenantFilter
+            $currentUsers = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/users?$top=999&select=id,userPrincipalName' -tenantid $TenantFilter -AsApp $true
             $backupUsers = if ($BackupData.users -is [string]) { $BackupData.users | ConvertFrom-Json } else { $BackupData.users }
 
             Write-Host "Restore users for $TenantFilter"
@@ -129,7 +129,7 @@ function New-CIPPRestoreTask {
                             # Patch existing user - clean object to remove reference properties, nulls, and empty strings
                             $cleanedUser = Clean-GraphObject -Object $userObject
                             $patchBody = $cleanedUser | ConvertTo-Json -Depth 100 -Compress
-                            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/users/$($userObject.id)" -tenantid $TenantFilter -body $patchBody -type PATCH
+                            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/users/$($userObject.id)" -tenantid $TenantFilter -body $patchBody -type PATCH -AsApp $true
                             Write-LogMessage -message "Restored $($UPN) from backup by patching the existing object." -Sev 'info'
                             $restorationStats['Users'].success++
                             $RestoreData.Add("The user existed. Restored $($UPN) from backup")
@@ -144,7 +144,7 @@ function New-CIPPRestoreTask {
                             }
                             $JSON = $cleanedUser | ConvertTo-Json -Depth 100 -Compress
 
-                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/users' -tenantid $TenantFilter -body $JSON -type POST
+                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/users' -tenantid $TenantFilter -body $JSON -type POST -AsApp $true
                             # Try to wrap password in PwPush link
                             $displayPassword = $tempPassword
                             try {
@@ -171,7 +171,7 @@ function New-CIPPRestoreTask {
                                 'password'                      = $tempPassword
                             }
                             $JSON = $cleanedUser | ConvertTo-Json -Depth 100 -Compress
-                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/users' -tenantid $TenantFilter -body $JSON -type POST
+                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/users' -tenantid $TenantFilter -body $JSON -type POST -AsApp $true
                             # Try to wrap password in PwPush link
                             $displayPassword = $tempPassword
                             try {
@@ -198,7 +198,7 @@ function New-CIPPRestoreTask {
         'groups' {
             Write-Host "Restore groups for $TenantFilter"
             $backupGroups = if ($BackupData.groups -is [string]) { $BackupData.groups | ConvertFrom-Json } else { $BackupData.groups }
-            $Groups = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999' -tenantid $TenantFilter
+            $Groups = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/groups?$top=999' -tenantid $TenantFilter -AsApp $true
             $BackupGroups | ForEach-Object {
 
                 try {
@@ -207,12 +207,12 @@ function New-CIPPRestoreTask {
                     $DisplayName = $_.displayName
                     if ($overwrite) {
                         if ($_.id -in $Groups.id) {
-                            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/groups/$($_.id)" -tenantid $TenantFilter -body $JSON -type PATCH
+                            $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/groups/$($_.id)" -tenantid $TenantFilter -body $JSON -type PATCH -AsApp $true
                             Write-LogMessage -message "Restored $DisplayName from backup by patching the existing object." -Sev 'info'
                             $restorationStats['Groups'].success++
                             $RestoreData.Add("The group existed. Restored $DisplayName from backup")
                         } else {
-                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/groups' -tenantid $TenantFilter -body $JSON -type POST
+                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/groups' -tenantid $TenantFilter -body $JSON -type POST -AsApp $true
                             Write-LogMessage -message "Restored $DisplayName from backup" -Sev 'info'
                             $restorationStats['Groups'].success++
                             $RestoreData.Add("Restored $DisplayName from backup")
@@ -220,7 +220,7 @@ function New-CIPPRestoreTask {
                     }
                     if (!$overwrite) {
                         if ($_.id -notin $Groups.id) {
-                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/groups' -tenantid $TenantFilter -body $JSON -type POST
+                            $null = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/groups' -tenantid $TenantFilter -body $JSON -type POST -AsApp $true
                             Write-LogMessage -message "Restored $DisplayName from backup" -Sev 'info'
                             $restorationStats['Groups'].success++
                             $RestoreData.Add("Restored $DisplayName from backup")

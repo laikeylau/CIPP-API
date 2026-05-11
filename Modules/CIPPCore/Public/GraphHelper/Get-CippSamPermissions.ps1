@@ -34,7 +34,7 @@ function Get-CippSamPermissions {
         $SamManifestFile = Get-Item (Join-Path $env:CIPPRootPath 'Config\SAMManifest.json')
         $AdditionalPermissions = Get-Item (Join-Path $env:CIPPRootPath 'Config\AdditionalPermissions.json')
 
-        $ServicePrincipalList = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/servicePrincipals?$top=999&$select=id,appId,displayName' -tenantid $env:TenantID -NoAuthCheck $true
+        $ServicePrincipalList = New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/servicePrincipals?$top=999&$select=id,appId,displayName' -tenantid $env:TenantID -NoAuthCheck $true -AsApp $true
 
         $SAMManifest = Get-Content -Path $SamManifestFile.FullName | ConvertFrom-Json
         $AdditionalPermissions = Get-Content -Path $AdditionalPermissions.FullName | ConvertFrom-Json

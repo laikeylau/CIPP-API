@@ -13,7 +13,7 @@ function Invoke-ExecMDOAlertsList {
     try {
         $GraphRequest = if ($TenantFilter -ne 'AllTenants') {
             # Single tenant functionality
-            New-GraphGetRequest -uri "https://graph.microsoft.com/beta/security/alerts_v2?`$filter=serviceSource eq 'microsoftDefenderForOffice365'" -tenantid $TenantFilter
+            New-GraphGetRequest -uri "https://graph.microsoft.com/beta/security/alerts_v2?`$filter=serviceSource eq 'microsoftDefenderForOffice365'" -tenantid $TenantFilter -AsApp $true
         } else {
             # AllTenants functionality
             $Table = Get-CIPPTable -TableName cachealertsandincidents

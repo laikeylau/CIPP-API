@@ -14,7 +14,7 @@ function Invoke-ExecSyncDEP {
 
     $TenantFilter = $Request.Body.tenantFilter
     try {
-        $DepOnboardingSettings = @(New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/depOnboardingSettings' -tenantid $TenantFilter)
+        $DepOnboardingSettings = @(New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/depOnboardingSettings' -tenantid $TenantFilter -AsApp $true)
 
         if ($null -eq $DepOnboardingSettings -or $DepOnboardingSettings.Count -eq 0) {
             $Result = 'No Apple Business Manager connections found'
@@ -23,7 +23,7 @@ function Invoke-ExecSyncDEP {
             $SyncCount = 0
             foreach ($DepSetting in $DepOnboardingSettings) {
                 if ($DepSetting.id) {
-                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/depOnboardingSettings/$($DepSetting.id)/syncWithAppleDeviceEnrollmentProgram" -tenantid $TenantFilter
+                    $null = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/depOnboardingSettings/$($DepSetting.id)/syncWithAppleDeviceEnrollmentProgram" -tenantid $TenantFilter -AsApp $true
                     $SyncCount++
                 }
             }

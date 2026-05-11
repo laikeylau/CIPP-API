@@ -114,7 +114,7 @@ function Push-ExecScheduledCommand {
                 TenantFilter = $Tenant
                 PartitionKey = $task.RowKey
             }
-            $Query = New-GraphDeltaQuery @DeltaQuery
+            $Query = New-GraphDeltaQuery @DeltaQuery -AsApp $true
 
             $secondsToAdd = switch -Regex ($task.Recurrence) {
                 '(\d+)m$' { [int64]$matches[1] * 60 }

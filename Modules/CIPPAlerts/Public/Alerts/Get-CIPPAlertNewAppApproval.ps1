@@ -14,14 +14,14 @@ function Get-CIPPAlertNewAppApproval {
     )
 
     try {
-        $Approvals = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/identityGovernance/appConsent/appConsentRequests?`$top=100&`$filter=userConsentRequests/any (u:u/status eq 'InProgress')" -tenantid $TenantFilter
+        $Approvals = New-GraphGetRequest -Uri "https://graph.microsoft.com/beta/identityGovernance/appConsent/appConsentRequests?`$top=100&`$filter=userConsentRequests/any (u:u/status eq 'InProgress')" -tenantid $TenantFilter -AsApp $true
 
         if ($Approvals.count -gt 0) {
             $TenantGUID = (Get-Tenants -TenantFilter $TenantFilter -SkipDomains).customerId
             $AlertData = [System.Collections.Generic.List[PSCustomObject]]::new()
 
             foreach ($App in $Approvals) {
-                $userConsentRequests = New-GraphGetRequest -Uri "https://graph.microsoft.com/v1.0/identityGovernance/appConsent/appConsentRequests/$($App.id)/userConsentRequests" -tenantid $TenantFilter
+                $userConsentRequests = New-GraphGetRequest -Uri "https://graph.microsoft.com/v1.0/identityGovernance/appConsent/appConsentRequests/$($App.id)/userConsentRequests" -tenantid $TenantFilter -AsApp $true
 
                 $userConsentRequests | ForEach-Object {
                     $consentUrl = if ($App.consentType -eq 'Static') {

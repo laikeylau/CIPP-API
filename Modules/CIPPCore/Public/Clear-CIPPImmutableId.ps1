@@ -63,10 +63,10 @@ function Clear-CIPPImmutableId {
 
         # Perform the actual clear operation
         try {
-            $UserObj = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UserID" -tenantid $TenantFilter -ErrorAction SilentlyContinue
+            $UserObj = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/users/$UserID" -tenantid $TenantFilter -ErrorAction SilentlyContinue -AsApp $true
         } catch {
             # User might be deleted, try to restore it
-            $DeletedUser = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/directory/deletedItems/$UserID" -tenantid $TenantFilter
+            $DeletedUser = New-GraphGetRequest -uri "https://graph.microsoft.com/beta/directory/deletedItems/$UserID" -tenantid $TenantFilter -AsApp $true
             if ($DeletedUser.id) {
                 # Restore deleted user object
                 $null = New-GraphPostRequest -uri "https://graph.microsoft.com/beta/directory/deletedItems/$UserID/restore" -tenantid $TenantFilter -type POST

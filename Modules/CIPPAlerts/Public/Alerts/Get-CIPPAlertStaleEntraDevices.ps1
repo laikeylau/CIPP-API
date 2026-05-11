@@ -34,7 +34,7 @@ function Get-CIPPAlertStaleEntraDevices {
                 'https://graph.microsoft.com/beta/devices'
             }
 
-            $GraphRequest = New-GraphGetRequest -uri $Uri -tenantid $TenantFilter
+            $GraphRequest = New-GraphGetRequest -uri $Uri -tenantid $TenantFilter -AsApp $true
 
             $AlertData = foreach ($device in $GraphRequest) {
 

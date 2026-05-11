@@ -42,7 +42,7 @@ function Get-CIPPAlertInactiveLicensedUsers {
                 "https://graph.microsoft.com/beta/users?`$select=id,UserPrincipalName,signInActivity,mail,userType,accountEnabled,assignedLicenses"
             }
 
-            $GraphRequest = New-GraphGetRequest -uri $Uri -scope 'https://graph.microsoft.com/.default' -tenantid $TenantFilter |
+            $GraphRequest = New-GraphGetRequest -uri $Uri -scope 'https://graph.microsoft.com/.default' -tenantid $TenantFilter -AsApp $true |
                 Where-Object { $null -ne $_.assignedLicenses -and $_.assignedLicenses.Count -gt 0 }
 
             $AlertData = foreach ($user in $GraphRequest) {

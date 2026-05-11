@@ -54,10 +54,10 @@ function Sync-CIPPReusablePolicySettings {
         if ($needsUpdate) {
             try {
                 if ($targetId) {
-                    $updated = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$targetId" -tenantid $Tenant -type PUT -body $templateRaw
+                    $updated = New-GraphPOSTRequest -uri "https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings/$targetId" -tenantid $Tenant -type PUT -body $templateRaw -AsApp $true
                     $targetId = $updated.id ?? $targetId
                 } else {
-                    $created = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings' -tenantid $Tenant -type POST -body $templateRaw
+                    $created = New-GraphPOSTRequest -uri 'https://graph.microsoft.com/beta/deviceManagement/reusablePolicySettings' -tenantid $Tenant -type POST -body $templateRaw -AsApp $true
                     $targetId = $created.id ?? $targetId
                 }
             } catch {
