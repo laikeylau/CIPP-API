@@ -78,7 +78,9 @@ function Get-GraphRequestList {
         [switch]$NoAuthCheck,
         [switch]$ReverseTenantLookup,
         [string]$ReverseTenantLookupProperty = 'tenantId',
-        [boolean]$AsApp = $false,
+        # In Linux GDAP mode (NonLocalHostAzurite=true), default to app-only auth
+        # because there's no delegated refresh token available
+        [boolean]$AsApp = ($env:NonLocalHostAzurite -eq 'true'),
         [string]$Caller = 'Get-GraphRequestList',
         [switch]$UseBatchExpand,
         [switch]$RawJsonArray
