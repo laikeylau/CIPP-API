@@ -19,8 +19,8 @@ Function Invoke-AddSpamFilter {
     $Tenants = ($Request.body.selectedTenants).value
     $Result = foreach ($TenantFilter in $tenants) {
         try {
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-HostedContentFilterPolicy' -cmdParams $RequestParams
-            $Domains = (New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AcceptedDomain').name
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-HostedContentFilterPolicy' -cmdParams $RequestParams -AsApp
+            $Domains = (New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AcceptedDomain').name -AsApp
             $ruleparams = @{
                 'name'                      = "$($RequestParams.name)"
                 'hostedcontentfilterpolicy' = "$($RequestParams.name)"
@@ -28,7 +28,7 @@ Function Invoke-AddSpamFilter {
                 'Enabled'                   = $true
                 'Priority'                  = $RequestPriority
             }
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-HostedContentFilterRule' -cmdParams $ruleparams
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-HostedContentFilterRule' -cmdParams $ruleparams -AsApp
             "Successfully created spamfilter for $TenantFilter."
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Successfully created spamfilter for $TenantFilter." -sev Info
         } catch {

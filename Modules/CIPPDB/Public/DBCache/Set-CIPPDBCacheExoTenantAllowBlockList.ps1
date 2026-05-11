@@ -19,9 +19,9 @@ function Set-CIPPDBCacheExoTenantAllowBlockList {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Tenant Allow/Block List items' -sev Debug
 
-        $SenderItems = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ListType = 'Sender' }
-        $UrlItems = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ListType = 'Url' }
-        $FileHashItems = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ListType = 'FileHash' }
+        $SenderItems = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ListType = 'Sender' } -AsApp
+        $UrlItems = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ListType = 'Url' } -AsApp
+        $FileHashItems = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ListType = 'FileHash' } -AsApp
 
         # Combine all list types into a single collection
         $AllItems = @()

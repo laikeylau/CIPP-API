@@ -16,7 +16,7 @@ Function Invoke-ListRoomLists {
     try {
         if ($GroupID) {
             # Get specific room list with detailed information
-            $GroupInfo = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroup' -cmdParams @{Identity = $GroupID } -useSystemMailbox $true |
+            $GroupInfo = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroup' -cmdParams @{Identity = $GroupID } -useSystemMailbox $true -AsApp |
                 Select-Object -ExcludeProperty *data.type*
 
             $Result = [PSCustomObject]@{
@@ -28,7 +28,7 @@ Function Invoke-ListRoomLists {
 
             # Get members if requested
             if ($Members -eq 'true') {
-                $RoomListMembers = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroupMember' -cmdParams @{Identity = $GroupID } | Select-Object -ExcludeProperty *data.type* -Property @{Name = 'id'; Expression = { $_.ExternalDirectoryObjectId } },
+                $RoomListMembers = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroupMember' -cmdParams @{Identity = $GroupID } -AsApp | Select-Object -ExcludeProperty *data.type* -Property @{Name = 'id'; Expression = { $_.ExternalDirectoryObjectId } },
                 @{Name = 'displayName'; Expression = { $_.DisplayName } },
                 @{Name = 'mail'; Expression = { $_.PrimarySmtpAddress } },
                 @{Name = 'mailNickname'; Expression = { $_.Alias } },
@@ -90,7 +90,7 @@ Function Invoke-ListRoomLists {
             $ResponseBody = $Result
         } else {
             # Get all room lists (original functionality)
-            $RoomLists = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroup' -cmdParams @{RecipientTypeDetails = 'RoomList'; ResultSize = 'Unlimited' } |
+            $RoomLists = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroup' -cmdParams @{RecipientTypeDetails = 'RoomList'; ResultSize = 'Unlimited' } -AsApp |
                 Select-Object Guid, DisplayName, PrimarySmtpAddress, Alias, Phone, Identity, Notes, Description, Id -ExcludeProperty *data.type*
             $StatusCode = [HttpStatusCode]::OK
             $ResponseBody = @{ Results = @($RoomLists | Sort-Object DisplayName) }

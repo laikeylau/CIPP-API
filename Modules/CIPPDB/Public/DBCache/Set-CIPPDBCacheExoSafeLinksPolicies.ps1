@@ -20,7 +20,7 @@ function Set-CIPPDBCacheExoSafeLinksPolicies {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Safe Links policies and rules' -sev Debug
 
         # Get Safe Links policies
-        $SafeLinksPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksPolicy'
+        $SafeLinksPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksPolicy' -AsApp
         if ($SafeLinksPolicies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoSafeLinksPolicies' -Data $SafeLinksPolicies
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoSafeLinksPolicies' -Data $SafeLinksPolicies -Count
@@ -29,7 +29,7 @@ function Set-CIPPDBCacheExoSafeLinksPolicies {
         $SafeLinksPolicies = $null
 
         # Get Safe Links rules
-        $SafeLinksRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksRule'
+        $SafeLinksRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksRule' -AsApp
         if ($SafeLinksRules) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoSafeLinksRules' -Data $SafeLinksRules
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoSafeLinksRules' -Data $SafeLinksRules -Count

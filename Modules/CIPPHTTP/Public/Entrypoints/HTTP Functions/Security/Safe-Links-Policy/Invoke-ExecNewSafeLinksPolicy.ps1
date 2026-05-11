@@ -49,13 +49,13 @@ function Invoke-ExecNewSafeLinksPolicy {
 
     function Test-PolicyExists {
         param($TenantFilter, $PolicyName)
-        $ExistingPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksPolicy' -useSystemMailbox $true
+        $ExistingPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksPolicy' -useSystemMailbox $true -AsApp
         return $ExistingPolicies | Where-Object { $_.Name -eq $PolicyName }
     }
 
     function Test-RuleExists {
         param($TenantFilter, $RuleName)
-        $ExistingRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksRule' -useSystemMailbox $true
+        $ExistingRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksRule' -useSystemMailbox $true -AsApp
         return $ExistingRules | Where-Object { $_.Name -eq $RuleName }
     }
 
@@ -159,9 +159,10 @@ function Invoke-ExecNewSafeLinksPolicy {
             cmdlet           = 'New-SafeLinksPolicy'
             cmdParams        = $policyParams
             useSystemMailbox = $true
+            AsApp     = $true
         }
 
-        $null = New-ExoRequest @ExoPolicyRequestParam
+        $null = New-ExoRequest @ExoPolicyRequestParam -AsApp
         $PolicyResult = "Successfully created new SafeLinks policy '$PolicyName'"
         Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message $PolicyResult -Sev 'Info'
 
@@ -186,9 +187,10 @@ function Invoke-ExecNewSafeLinksPolicy {
             cmdlet           = 'New-SafeLinksRule'
             cmdParams        = $ruleParams
             useSystemMailbox = $true
+            AsApp     = $true
         }
 
-        $null = New-ExoRequest @ExoRuleRequestParam
+        $null = New-ExoRequest @ExoRuleRequestParam -AsApp
 
         # If State is specified, enable or disable the rule
         if ($null -ne $State) {
@@ -198,11 +200,12 @@ function Invoke-ExecNewSafeLinksPolicy {
                 cmdlet           = $EnableCmdlet
                 cmdParams        = @{
                     Identity = $RuleName
+            AsApp     = $true
                 }
                 useSystemMailbox = $true
             }
 
-            $null = New-ExoRequest @EnableRequestParam
+            $null = New-ExoRequest @EnableRequestParam -AsApp
         }
 
         $RuleResult = "Successfully created new SafeLinks rule '$RuleName'"

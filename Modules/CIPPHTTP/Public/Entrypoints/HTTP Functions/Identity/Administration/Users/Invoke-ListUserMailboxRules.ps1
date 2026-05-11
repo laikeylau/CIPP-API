@@ -17,7 +17,7 @@ Function Invoke-ListUserMailboxRules {
     $UserID = $Request.Query.UserID
     try {
         $UserEmail = if ([string]::IsNullOrWhiteSpace($Request.Query.userEmail)) { $UserID } else { $Request.Query.userEmail }
-        $Result = New-ExoRequest -Anchor $UserID -tenantid $TenantFilter -cmdlet 'Get-InboxRule' -cmdParams @{mailbox = $UserID; IncludeHidden = $true } |
+        $Result = New-ExoRequest -Anchor $UserID -tenantid $TenantFilter -cmdlet 'Get-InboxRule' -cmdParams @{mailbox = $UserID; IncludeHidden = $true } -AsApp |
             Where-Object { $_.Name -ne 'Junk E-Mail Rule' -and $_.Name -notlike 'Microsoft.Exchange.OOF.*' } | Select-Object * -ExcludeProperty RuleIdentity
         $StatusCode = [HttpStatusCode]::OK
     } catch {

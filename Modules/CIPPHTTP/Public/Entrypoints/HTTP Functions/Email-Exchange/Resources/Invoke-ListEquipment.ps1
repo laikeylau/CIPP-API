@@ -13,20 +13,20 @@ function Invoke-ListEquipment {
     try {
         if ($EquipmentId) {
             # Get specific equipment details
-            $Equipment = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-Mailbox' -cmdParams @{
+            $Equipment = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-Mailbox' -cmdParams @{ -AsApp
                 Identity             = $EquipmentId
                 RecipientTypeDetails = 'EquipmentMailbox'
             }
 
-            $UserDetails = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-User' -cmdParams @{
+            $UserDetails = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-User' -cmdParams @{ -AsApp
                 Identity = $EquipmentId
             }
 
-            $CalendarProcessing = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-CalendarProcessing' -cmdParams @{
+            $CalendarProcessing = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-CalendarProcessing' -cmdParams @{ -AsApp
                 Identity = $EquipmentId
             }
 
-            $CalendarConfig = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-MailboxCalendarConfiguration' -cmdParams @{
+            $CalendarConfig = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-MailboxCalendarConfiguration' -cmdParams @{ -AsApp
                 Identity = $EquipmentId
             }
 
@@ -70,7 +70,7 @@ function Invoke-ListEquipment {
             }
         } else {
             # List all equipment mailboxes
-            $Results = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-Mailbox' -cmdParams @{
+            $Results = New-ExoRequest -tenantid $Tenant -cmdlet 'Get-Mailbox' -cmdParams @{ -AsApp
                 RecipientTypeDetails = 'EquipmentMailbox'
                 ResultSize           = 'Unlimited'
             } | Select-Object -ExcludeProperty *data.type*

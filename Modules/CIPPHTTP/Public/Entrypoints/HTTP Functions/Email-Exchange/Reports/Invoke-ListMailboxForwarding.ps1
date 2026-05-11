@@ -34,11 +34,12 @@ function Invoke-ListMailboxForwarding {
         $ExoRequest = @{
             tenantid  = $TenantFilter
             cmdlet    = 'Get-Mailbox'
-            cmdParams = @{}
+            cmdParams = @{
+            AsApp     = $true}
             Select    = $Select
         }
 
-        $Mailboxes = New-ExoRequest @ExoRequest
+        $Mailboxes = New-ExoRequest @ExoRequest -AsApp
 
         $GraphRequest = foreach ($Mailbox in $Mailboxes) {
             $HasExternalForwarding = -not [string]::IsNullOrWhiteSpace($Mailbox.ForwardingSmtpAddress)

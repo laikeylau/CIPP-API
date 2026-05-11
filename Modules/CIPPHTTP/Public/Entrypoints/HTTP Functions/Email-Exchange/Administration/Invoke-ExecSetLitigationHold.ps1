@@ -26,6 +26,7 @@ function Invoke-ExecSetLitigationHold {
         cmdParams = @{
             Identity              = $Identity
             LitigationHoldEnabled = $LitHoldState
+            AsApp     = $true
         }
     }
 
@@ -36,7 +37,7 @@ function Invoke-ExecSetLitigationHold {
 
     # Execute the EXO request
     try {
-        $null = New-ExoRequest @ExoRequest
+        $null = New-ExoRequest @ExoRequest -AsApp
         $Results = "Litigation hold for $UserPrincipalName with Id $Identity has been set to $LitHoldState"
         if ($Days -ne 0 -and $LitHoldState -eq $true) {
             $Results += " for $Days days"

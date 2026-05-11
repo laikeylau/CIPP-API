@@ -15,17 +15,17 @@ Function Invoke-ExecSetMailboxQuota {
         $quota = $Request.body.quota
         $Results = try {
             if ($Request.Body.ProhibitSendQuota) {
-                $quota = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $Username; ProhibitSendQuota = $quota }
+                $quota = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $Username; ProhibitSendQuota = $quota } -AsApp
                 "Changed ProhibitSendQuota for $username - $($message)"
                 Write-LogMessage -headers $Request.Headers -API $APINAME -message "Changed ProhibitSendQuota for $username - $($message)" -Sev 'Info' -tenant $TenantFilter
             }
             if ($Request.Body.ProhibitSendReceiveQuota) {
-                $quota = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $Username; ProhibitSendReceiveQuota = $quota }
+                $quota = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $Username; ProhibitSendReceiveQuota = $quota } -AsApp
                 "Changed ProhibitSendReceiveQuota for $username - $($message)"
                 Write-LogMessage -headers $Request.Headers -API $APINAME -message "Changed ProhibitSendReceiveQuota for $username - $($message)" -Sev 'Info' -tenant $TenantFilter
             }
             if ($Request.Body.IssueWarningQuota) {
-                $quota = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $Username; IssueWarningQuota = $quota }
+                $quota = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $Username; IssueWarningQuota = $quota } -AsApp
                 "Changed IssueWarningQuota for $username - $($message)"
                 Write-LogMessage -headers $Request.Headers -API $APINAME -message "Changed IssueWarningQuota for $username - $($message)" -Sev 'Info' -tenant $TenantFilter
             }

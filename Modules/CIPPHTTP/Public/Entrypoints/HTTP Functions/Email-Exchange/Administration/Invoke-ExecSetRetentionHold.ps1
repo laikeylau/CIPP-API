@@ -25,12 +25,13 @@ function Invoke-ExecSetRetentionHold {
         cmdParams = @{
             Identity              = $Identity
             RetentionHoldEnabled = $RetentionHoldState
+            AsApp     = $true
         }
     }
 
     # Execute the EXO request
     try {
-        $null = New-ExoRequest @ExoRequest
+        $null = New-ExoRequest @ExoRequest -AsApp
         $Results = "Retention hold for $UserPrincipalName with Id $Identity has been set to $RetentionHoldState"
 
         Write-LogMessage -API $APIName -tenant $TenantFilter -message $Results -sev Info

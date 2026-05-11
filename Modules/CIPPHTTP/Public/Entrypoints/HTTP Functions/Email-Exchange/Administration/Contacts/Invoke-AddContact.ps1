@@ -26,7 +26,7 @@ function Invoke-AddContact {
         }
 
         # Create the mail contact first
-        $NewContact = New-ExoRequest -tenantid $TenantId -cmdlet 'New-MailContact' -cmdParams $BodyToship -UseSystemMailbox $true
+        $NewContact = New-ExoRequest -tenantid $TenantId -cmdlet 'New-MailContact' -cmdParams $BodyToship -UseSystemMailbox $true -AsApp
 
         # Build SetContactParams efficiently with only provided values
         $SetContactParams = @{
@@ -57,7 +57,7 @@ function Invoke-AddContact {
         # Update the contact with additional details only if we have properties to set
         if ($SetContactParams.Count -gt 1) {
             Start-Sleep -Milliseconds 500 # Ensure the contact is created before updating
-            $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-Contact' -cmdParams $SetContactParams -UseSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-Contact' -cmdParams $SetContactParams -UseSystemMailbox $true -AsApp
         }
 
         # Check if we need to update MailContact properties
@@ -81,7 +81,7 @@ function Invoke-AddContact {
         # Only call Set-MailContact if we have changes to make
         if ($needsMailContactUpdate) {
             Start-Sleep -Milliseconds 500 # Ensure the contact is created before updating
-            $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-MailContact' -cmdParams $MailContactParams -UseSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-MailContact' -cmdParams $MailContactParams -UseSystemMailbox $true -AsApp
         }
 
         # Log the result

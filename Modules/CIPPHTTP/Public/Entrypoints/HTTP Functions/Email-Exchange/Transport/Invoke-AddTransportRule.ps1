@@ -28,16 +28,16 @@ function Invoke-AddTransportRule {
     }
 
     $Result = foreach ($tenantFilter in $tenants) {
-        $Existing = New-ExoRequest -ErrorAction SilentlyContinue -tenantid $tenantFilter -cmdlet 'Get-TransportRule' -useSystemMailbox $true | Where-Object -Property Identity -EQ $RequestParams.name
+        $Existing = New-ExoRequest -ErrorAction SilentlyContinue -tenantid $tenantFilter -cmdlet 'Get-TransportRule' -useSystemMailbox $true -AsApp | Where-Object -Property Identity -EQ $RequestParams.name
         try {
             if ($Existing) {
                 Write-Host 'Found existing'
                 $RequestParams | Add-Member -NotePropertyValue $Existing.Identity -NotePropertyName Identity -Force
-                $null = New-ExoRequest -tenantid $tenantFilter -cmdlet 'Set-TransportRule' -cmdParams ($RequestParams | Select-Object -Property * -ExcludeProperty UseLegacyRegex) -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $tenantFilter -cmdlet 'Set-TransportRule' -cmdParams ($RequestParams -AsApp | Select-Object -Property * -ExcludeProperty UseLegacyRegex) -useSystemMailbox $true
                 "Successfully set transport rule for $tenantFilter."
             } else {
                 Write-Host 'Creating new'
-                $null = New-ExoRequest -tenantid $tenantFilter -cmdlet 'New-TransportRule' -cmdParams $RequestParams -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $tenantFilter -cmdlet 'New-TransportRule' -cmdParams $RequestParams -useSystemMailbox $true -AsApp
                 "Successfully created transport rule for $tenantFilter."
             }
 

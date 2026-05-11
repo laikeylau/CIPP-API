@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoAcceptedDomains {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Accepted Domains' -sev Debug
 
-        $AcceptedDomains = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AcceptedDomain'
+        $AcceptedDomains = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AcceptedDomain' -AsApp
 
         if ($AcceptedDomains) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoAcceptedDomains' -Data $AcceptedDomains

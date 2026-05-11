@@ -29,10 +29,11 @@ function Invoke-ExecDeleteSafeLinksPolicy {
                     cmdParams        = @{
                         Identity = $RuleName
                         Confirm  = $false
+            AsApp     = $true
                     }
                     useSystemMailbox = $true
                 }
-                $null = New-ExoRequest @ExoRequestRuleParam
+                $null = New-ExoRequest @ExoRequestRuleParam -AsApp
                 $ResultMessages.Add("Successfully deleted SafeLinks rule '$RuleName'") | Out-Null
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Successfully deleted SafeLinks rule '$RuleName'" -Sev 'Info'
             }
@@ -56,10 +57,11 @@ function Invoke-ExecDeleteSafeLinksPolicy {
                     cmdParams        = @{
                         Identity = $PolicyName
                         Confirm  = $false
+            AsApp     = $true
                     }
                     useSystemMailbox = $true
                 }
-                $null = New-ExoRequest @ExoRequestPolicyParam
+                $null = New-ExoRequest @ExoRequestPolicyParam -AsApp
                 $ResultMessages.Add("Successfully deleted SafeLinks policy '$PolicyName'") | Out-Null
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Successfully deleted SafeLinks policy '$PolicyName'" -Sev 'Info'
             }

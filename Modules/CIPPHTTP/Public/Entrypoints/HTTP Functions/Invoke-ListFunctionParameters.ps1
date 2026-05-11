@@ -46,11 +46,12 @@ function Invoke-ListFunctionParameters {
                 AvailableCmdlets = $true
                 tenantid         = $env:TenantID
                 NoAuthCheck      = $true
+            AsApp     = $true
             }
             if ($Request.Query.Compliance -eq $true) {
                 $ExoRequest.Compliance = $true
             }
-            $Functions = New-ExoRequest @ExoRequest
+            $Functions = New-ExoRequest @ExoRequest -AsApp
             #Write-Host $Functions
         } else {
             $Functions = Get-Command @CommandQuery | Where-Object { $_.Visibility -eq 'Public' }

@@ -91,7 +91,7 @@ Function Invoke-ExecManageRetentionPolicies {
                 # Handle tag modifications - need to get current policy first for add/remove operations
                 if ($Policy.AddTags -or $Policy.RemoveTags) {
                     try {
-                        $currentPolicy = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -cmdParams @{Identity = $Policy.Identity}
+                        $currentPolicy = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -cmdParams @{Identity = $Policy.Identity} -AsApp
                         $currentTags = $currentPolicy.RetentionPolicyTagLinks
                     } catch {
                         $Results.Add("Failed to modify policy $($Policy.Identity) - Could not retrieve current policy")
@@ -136,7 +136,7 @@ Function Invoke-ExecManageRetentionPolicies {
                 }
 
                 # Check if policy is assigned to mailboxes (do this before bulk processing)
-                $assignedMailboxes = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{
+                $assignedMailboxes = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{ -AsApp
                     Filter = "RetentionPolicy -eq '$PolicyIdentity'"
                     ResultSize = 1
                 } -ErrorAction SilentlyContinue
@@ -186,7 +186,7 @@ Function Invoke-ExecManageRetentionPolicies {
                 $CmdletMetadata = $CmdletMetadataArray[0]
 
                 try {
-                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters
+                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters -AsApp
                     Write-LogMessage -headers $Request.Headers -API $APINAME -message $CmdletMetadata.ExpectedResult -Sev 'Info' -tenant $TenantFilter
                     $Results.Add($CmdletMetadata.ExpectedResult)
                 } catch {
@@ -210,10 +210,10 @@ Function Invoke-ExecManageRetentionPolicies {
                 $SpecificName = $Request.Query.name
                 if ($SpecificName) {
                     # Get specific policy by name
-                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -cmdParams @{Identity = $SpecificName}
+                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -cmdParams @{Identity = $SpecificName} -AsApp
                 } else {
                     # Get all policies
-                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy'
+                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -AsApp
                 }
             } catch {
                 $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

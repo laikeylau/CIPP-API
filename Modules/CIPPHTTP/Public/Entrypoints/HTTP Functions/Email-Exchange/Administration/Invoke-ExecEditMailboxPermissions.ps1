@@ -23,7 +23,7 @@ function Invoke-ExecEditMailboxPermissions {
     $RemoveFullAccess = ($Request.body.RemoveFullAccess).value
     foreach ($RemoveUser in $RemoveFullAccess) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Remove-mailboxpermission' -cmdParams @{Identity = $userid; user = $RemoveUser; accessRights = @('FullAccess'); }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Remove-mailboxpermission' -cmdParams @{Identity = $userid; user = $RemoveUser; accessRights = @('FullAccess'); } -AsApp
             $results.add("Removed $($removeuser) from $($username) Shared Mailbox permissions")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Removed $($RemoveUser) from $($username) Shared Mailbox permission" -Sev 'Info' -tenant $TenantFilter
 
@@ -38,7 +38,7 @@ function Invoke-ExecEditMailboxPermissions {
 
     foreach ($UserAutomap in $AddFullAccess) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Add-MailboxPermission' -cmdParams @{Identity = $userid; user = $UserAutomap; accessRights = @('FullAccess'); automapping = $true }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Add-MailboxPermission' -cmdParams @{Identity = $userid; user = $UserAutomap; accessRights = @('FullAccess'); automapping = $true } -AsApp
             $results.add( "Granted $($UserAutomap) access to $($username) Mailbox with automapping")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Granted $($UserAutomap) access to $($username) Mailbox with automapping" -Sev 'Info' -tenant $TenantFilter
 
@@ -54,7 +54,7 @@ function Invoke-ExecEditMailboxPermissions {
 
     foreach ($UserNoAutomap in $AddFullAccessNoAutoMap) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Add-MailboxPermission' -cmdParams @{Identity = $userid; user = $UserNoAutomap; accessRights = @('FullAccess'); automapping = $false }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Add-MailboxPermission' -cmdParams @{Identity = $userid; user = $UserNoAutomap; accessRights = @('FullAccess'); automapping = $false } -AsApp
             $results.add( "Granted $UserNoAutomap access to $($username) Mailbox without automapping")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Granted $UserNoAutomap access to $($username) Mailbox without automapping" -Sev 'Info' -tenant $TenantFilter
 
@@ -70,7 +70,7 @@ function Invoke-ExecEditMailboxPermissions {
 
     foreach ($UserSendAs in $AddSendAS) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Add-RecipientPermission' -cmdParams @{Identity = $userid; Trustee = $UserSendAs; accessRights = @('SendAs') }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Add-RecipientPermission' -cmdParams @{Identity = $userid; Trustee = $UserSendAs; accessRights = @('SendAs') } -AsApp
             $results.add( "Granted $UserSendAs access to $($username) with Send As permissions")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Granted $UserSendAs access to $($username) with Send As permissions" -Sev 'Info' -tenant $TenantFilter
 
@@ -86,7 +86,7 @@ function Invoke-ExecEditMailboxPermissions {
 
     foreach ($UserSendAs in $RemoveSendAs) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Remove-RecipientPermission' -cmdParams @{Identity = $userid; Trustee = $UserSendAs; accessRights = @('SendAs') }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Remove-RecipientPermission' -cmdParams @{Identity = $userid; Trustee = $UserSendAs; accessRights = @('SendAs') } -AsApp
             $results.add( "Removed $UserSendAs from $($username) with Send As permissions")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Removed $UserSendAs from $($username) with Send As permissions" -Sev 'Info' -tenant $TenantFilter
 
@@ -102,7 +102,7 @@ function Invoke-ExecEditMailboxPermissions {
 
     foreach ($UserSendOnBehalf in $AddSendOnBehalf) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $userid; GrantSendonBehalfTo = @{'@odata.type' = '#Exchange.GenericHashTable'; add = $UserSendOnBehalf }; }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $userid; GrantSendonBehalfTo = @{'@odata.type' = '#Exchange.GenericHashTable'; add = $UserSendOnBehalf }; } -AsApp
             $results.add( "Granted $UserSendOnBehalf access to $($username) with Send On Behalf Permissions")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Granted $UserSendOnBehalf access to $($username) with Send On Behalf Permissions" -Sev 'Info' -tenant $TenantFilter
         } catch {
@@ -115,7 +115,7 @@ function Invoke-ExecEditMailboxPermissions {
 
     foreach ($UserSendOnBehalf in $RemoveSendOnBehalf) {
         try {
-            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $userid; GrantSendonBehalfTo = @{'@odata.type' = '#Exchange.GenericHashTable'; remove = $UserSendOnBehalf }; }
+            $MailboxPerms = New-ExoRequest -Anchor $username -tenantid $Tenantfilter -cmdlet 'Set-Mailbox' -cmdParams @{Identity = $userid; GrantSendonBehalfTo = @{'@odata.type' = '#Exchange.GenericHashTable'; remove = $UserSendOnBehalf }; } -AsApp
             $results.add( "Removed $UserSendOnBehalf from $($username) Send on Behalf Permissions")
             Write-LogMessage -headers $Request.Headers -API $APINAME-message "Removed $UserSendOnBehalf from $($username) Send on Behalf Permissions" -Sev 'Info' -tenant $TenantFilter
         } catch {

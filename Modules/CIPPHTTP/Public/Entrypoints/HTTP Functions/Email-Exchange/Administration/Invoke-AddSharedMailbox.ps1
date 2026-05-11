@@ -26,7 +26,7 @@ function Invoke-AddSharedMailbox {
             primarySMTPAddress = $Email
             Shared             = $true
         }
-        $AddSharedRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-Mailbox' -cmdParams $BodyToShip
+        $AddSharedRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-Mailbox' -cmdParams $BodyToShip -AsApp
         $Results.Add("Successfully created shared mailbox: $Email.")
         Write-LogMessage -Headers $Headers -API $APIName -tenant $Tenant -message "Created shared mailbox $($MailboxObject.displayName) with email $Email" -Sev 'Info'
 
@@ -49,7 +49,7 @@ function Invoke-AddSharedMailbox {
                     Identity       = $AddSharedRequest.Guid
                     EmailAddresses = @{'@odata.type' = '#Exchange.GenericHashTable'; Add = $Aliases }
                 }
-                $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-Mailbox' -cmdParams $AliasBodyToShip -UseSystemMailbox $true
+                $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-Mailbox' -cmdParams $AliasBodyToShip -UseSystemMailbox $true -AsApp
                 $Message = "Added aliases to $Email : $($Aliases -join ',')"
                 Write-LogMessage -Headers $Headers -API $APIName -tenant $Tenant -message $Message -Sev 'Info'
                 $Results.Add($Message)

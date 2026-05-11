@@ -28,7 +28,7 @@ function Invoke-AddExConnector {
 
     $Result = foreach ($TenantFilter in $Tenants) {
         try {
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet "New-$($ConnectorType)connector" -cmdParams $RequestParams
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet "New-$($ConnectorType)connector" -cmdParams $RequestParams -AsApp
             "Successfully created Connector for $TenantFilter."
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Successfully created Connector for $TenantFilter." -sev 'Info'
         } catch {

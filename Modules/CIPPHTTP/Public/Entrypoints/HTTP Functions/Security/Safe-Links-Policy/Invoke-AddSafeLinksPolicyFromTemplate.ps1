@@ -63,14 +63,14 @@ Function Invoke-AddSafeLinksPolicyFromTemplate {
         function Test-PolicyExists {
             param($TenantFilter, $PolicyName)
 
-            $ExistingPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksPolicy' -useSystemMailbox $true
+            $ExistingPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksPolicy' -useSystemMailbox $true -AsApp
             return $ExistingPolicies | Where-Object { $_.Name -eq $PolicyName }
         }
 
         function Test-RuleExists {
             param($TenantFilter, $RuleName)
 
-            $ExistingRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksRule' -useSystemMailbox $true
+            $ExistingRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SafeLinksRule' -useSystemMailbox $true -AsApp
             return $ExistingRules | Where-Object { $_.Name -eq $RuleName }
         }
 
@@ -131,7 +131,7 @@ Function Invoke-AddSafeLinksPolicyFromTemplate {
             }
 
             # Create SafeLinks Policy
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-SafeLinksPolicy' -cmdParams $PolicyParams -useSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-SafeLinksPolicy' -cmdParams $PolicyParams -useSystemMailbox $true -AsApp
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Created SafeLinks policy '$PolicyName'" -Sev 'Info'
 
             # Create rule parameters
@@ -169,7 +169,7 @@ Function Invoke-AddSafeLinksPolicyFromTemplate {
             }
 
             # Create SafeLinks Rule
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-SafeLinksRule' -cmdParams $RuleParams -useSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-SafeLinksRule' -cmdParams $RuleParams -useSystemMailbox $true -AsApp
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Created SafeLinks rule '$RuleName'" -Sev 'Info'
 
             # Handle rule state
@@ -185,7 +185,7 @@ Function Invoke-AddSafeLinksPolicyFromTemplate {
 
                 if ($null -ne $IsState) {
                     $Cmdlet = $IsState ? 'Enable-SafeLinksRule' : 'Disable-SafeLinksRule'
-                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams @{ Identity = $RuleName } -useSystemMailbox $true
+                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams @{ Identity = $RuleName } -useSystemMailbox $true -AsApp
                     $StateMessage = " (rule $($IsState ? 'enabled' : 'disabled'))"
                 }
             }

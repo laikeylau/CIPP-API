@@ -36,7 +36,7 @@ function Invoke-ExecHVEUser {
             HVEAccount         = $true
         }
 
-        $CreateHVERequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-MailUser' -cmdParams $BodyToShip
+        $CreateHVERequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-MailUser' -cmdParams $BodyToShip -AsApp
         $Results.Add("Successfully created HVE user: $($HVEUserObject.primarySMTPAddress)")
         Write-LogMessage -Headers $Headers -API $APIName -tenant $Tenant -message "Created HVE user $($HVEUserObject.displayName) with email $($HVEUserObject.primarySMTPAddress)" -Sev 'Info'
 

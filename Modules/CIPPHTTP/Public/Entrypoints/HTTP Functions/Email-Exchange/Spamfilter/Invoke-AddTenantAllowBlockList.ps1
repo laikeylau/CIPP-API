@@ -38,6 +38,7 @@ function Invoke-AddTenantAllowBlockList {
                     ListType                    = [string]$BlockListObject.listType
                     Notes                       = [string]$BlockListObject.notes
                     $BlockListObject.listMethod = [bool]$true
+            AsApp     = $true
                 }
             }
 
@@ -47,7 +48,7 @@ function Invoke-AddTenantAllowBlockList {
                 $ExoRequest.cmdParams.RemoveAfter = 45
             }
 
-            New-ExoRequest @ExoRequest
+            New-ExoRequest @ExoRequest -AsApp
             $Result = "Successfully added $($BlockListObject.Entries) as type $($BlockListObject.ListType) to the $($BlockListObject.listMethod) list for $tenant"
             $Results.Add($Result)
             Write-LogMessage -headers $Headers -API $APIName -tenant $Tenant -message $Result -Sev 'Info'

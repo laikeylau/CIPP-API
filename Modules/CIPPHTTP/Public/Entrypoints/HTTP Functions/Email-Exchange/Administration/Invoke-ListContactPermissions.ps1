@@ -14,10 +14,10 @@ Function Invoke-ListContactPermissions {
 
     try {
         $GetContactParam = @{Identity = $UserID; FolderScope = 'Contacts' }
-        $ContactFolder = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxFolderStatistics' -anchor $UserID -cmdParams $GetContactParam | Select-Object -First 1 -ExcludeProperty *data.type*
+        $ContactFolder = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxFolderStatistics' -anchor $UserID -cmdParams $GetContactParam -AsApp | Select-Object -First 1 -ExcludeProperty *data.type*
         $ContactParam = @{Identity = "$($UserID):\$($ContactFolder.name)" }
-        $Mailbox = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{Identity = $UserID }
-        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxFolderPermission' -anchor $UserID -cmdParams $ContactParam -UseSystemMailbox $true | Select-Object Identity, User, AccessRights, FolderName, @{ Name = 'MailboxInfo'; Expression = { $Mailbox } }
+        $Mailbox = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{Identity = $UserID } -AsApp
+        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxFolderPermission' -anchor $UserID -cmdParams $ContactParam -UseSystemMailbox $true -AsApp | Select-Object Identity, User, AccessRights, FolderName, @{ Name = 'MailboxInfo'; Expression = { $Mailbox } }
 
         Write-LogMessage -API $APIName -tenant $TenantFilter -message "Contact permissions listed for $($TenantFilter)" -sev Debug
         $StatusCode = [HttpStatusCode]::OK

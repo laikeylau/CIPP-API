@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoAdminAuditLogConfig {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Admin Audit Log configuration' -sev Debug
 
-        $AuditConfig = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AdminAuditLogConfig'
+        $AuditConfig = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AdminAuditLogConfig' -AsApp
 
         if ($AuditConfig) {
             # AdminAuditLogConfig returns a single object, wrap in array for consistency

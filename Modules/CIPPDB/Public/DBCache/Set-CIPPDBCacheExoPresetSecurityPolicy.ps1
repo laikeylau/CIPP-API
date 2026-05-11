@@ -19,8 +19,8 @@ function Set-CIPPDBCacheExoPresetSecurityPolicy {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Preset Security Policies' -sev Debug
 
-        $EOPRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-EOPProtectionPolicyRule'
-        $ATPRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-ATPProtectionPolicyRule'
+        $EOPRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-EOPProtectionPolicyRule' -AsApp
+        $ATPRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-ATPProtectionPolicyRule' -AsApp
 
         # Combine both rule types into a single collection
         $AllRules = @()

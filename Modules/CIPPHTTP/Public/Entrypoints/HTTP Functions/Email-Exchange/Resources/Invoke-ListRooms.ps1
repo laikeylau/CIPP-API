@@ -27,7 +27,7 @@ function Invoke-ListRooms {
             $CalendarProperties = $BulkResults['Get-CalendarProcessing'] | Select-Object -ExcludeProperty *@odata.type* | Select-Object -First 1
 
             # Get-MailboxCalendarConfiguration requires anchor to the room mailbox
-            $CalendarConfigurationProperties = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxCalendarConfiguration' -cmdParams @{ Identity = $RoomId } -Anchor $RoomId | Select-Object -ExcludeProperty *@odata.type*
+            $CalendarConfigurationProperties = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxCalendarConfiguration' -cmdParams @{ Identity = $RoomId } -Anchor $RoomId -AsApp | Select-Object -ExcludeProperty *@odata.type*
 
             if ($RoomMailbox -and $PlaceDetails -and $CalendarProperties -and $CalendarConfigurationProperties) {
                 $GraphRequest = @(

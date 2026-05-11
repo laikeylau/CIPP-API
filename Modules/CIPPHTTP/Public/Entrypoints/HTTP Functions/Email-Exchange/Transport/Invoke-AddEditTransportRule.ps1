@@ -649,8 +649,9 @@ function Invoke-AddEditTransportRule {
                 cmdlet           = 'New-TransportRule'
                 cmdParams        = $ruleParams
                 useSystemMailbox = $true
+            AsApp     = $true
             }
-            $null = New-ExoRequest @ExoRequestParam
+            $null = New-ExoRequest @ExoRequestParam -AsApp
             $Results = "Successfully created transport rule '$Name'"
         }
         else {
@@ -659,19 +660,21 @@ function Invoke-AddEditTransportRule {
                 cmdlet           = 'Set-TransportRule'
                 cmdParams        = $ruleParams
                 useSystemMailbox = $true
+            AsApp     = $true
             }
             $ExoRequestState = @{
                 tenantid         = $TenantFilter
                 cmdlet           = $CmdletState
-                cmdParams        = @{ Identity = $Identity }
+                cmdParams        = @{ Identity = $Identity
+            AsApp     = $true }
                 useSystemMailbox = $true
             }
             if ($Enabled) {
-                $null = New-ExoRequest @ExoRequestState
+                $null = New-ExoRequest @ExoRequestState -AsApp
                 $Results = "Successfully $($Enabled) transport rule $($Name)"
             } else {
-                $null = New-ExoRequest @ExoRequestParam
-                $null = New-ExoRequest @ExoRequestState
+                $null = New-ExoRequest @ExoRequestParam -AsApp
+                $null = New-ExoRequest @ExoRequestState -AsApp
                 $Results = "Successfully configured transport rule '$Name'"
             }
         }

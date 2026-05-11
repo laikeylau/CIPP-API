@@ -21,7 +21,7 @@ function Invoke-EditExConnector {
             Identity = $Guid
             Enabled  = $State
         }
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet "Set-$($Type)Connector" -cmdParams $params -UseSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet "Set-$($Type)Connector" -cmdParams $params -UseSystemMailbox $true -AsApp
         $Result = "Set Connector $($Guid) to $($ConnectorState)"
         Write-LogMessage -Headers $Headers -API $APINAME -tenant $TenantFilter -message "Set Connector $($Guid) to $($ConnectorState)" -sev Info
         $StatusCode = [HttpStatusCode]::OK

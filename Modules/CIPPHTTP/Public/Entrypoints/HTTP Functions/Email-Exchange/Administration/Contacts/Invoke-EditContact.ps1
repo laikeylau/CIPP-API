@@ -50,7 +50,7 @@ Function Invoke-EditContact {
 
         # Update contact only if we have properties to set beyond Identity
         if ($bodyForSetContact.Count -gt 1) {
-            $null = New-ExoRequest -tenantid $TenantID -cmdlet 'Set-Contact' -cmdParams $bodyForSetContact -UseSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantID -cmdlet 'Set-Contact' -cmdParams $bodyForSetContact -UseSystemMailbox $true -AsApp
         }
 
         # Prepare mail contact specific parameters
@@ -70,7 +70,7 @@ Function Invoke-EditContact {
 
         # Update mail contact only if we have properties to set beyond Identity
         if ($MailContactParams.Count -gt 1) {
-            $null = New-ExoRequest -tenantid $TenantID -cmdlet 'Set-MailContact' -cmdParams $MailContactParams -UseSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantID -cmdlet 'Set-MailContact' -cmdParams $MailContactParams -UseSystemMailbox $true -AsApp
         }
 
         $Results = "Successfully edited contact $($contactInfo.displayName)"

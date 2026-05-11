@@ -28,7 +28,7 @@ function Invoke-ExecQuarantineManagement {
             $params['Identities'] = $Request.Body.Identity
             $params['Identity'] = '000'
         }
-        New-ExoRequest -tenantid $TenantFilter -cmdlet 'Release-QuarantineMessage' -cmdParams $params
+        New-ExoRequest -tenantid $TenantFilter -cmdlet 'Release-QuarantineMessage' -cmdParams $params -AsApp
 
         # AllowSender via HostedContentFilterPolicy since -AllowSender switch fails in REST API
         if ($AllowSender) {
@@ -37,17 +37,17 @@ function Invoke-ExecQuarantineManagement {
                 $PolicyName = $Request.Body.PolicyName
                 if ([string]::IsNullOrEmpty($SenderAddress) -or [string]::IsNullOrEmpty($PolicyName)) {
                     if ($Request.Body.Identity -is [string]) {
-                        $QuarantineMessage = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-QuarantineMessage' -cmdParams @{ Identity = $Request.Body.Identity }
+                        $QuarantineMessage = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-QuarantineMessage' -cmdParams @{ Identity = $Request.Body.Identity } -AsApp
                         if ([string]::IsNullOrEmpty($SenderAddress)) { $SenderAddress = $QuarantineMessage.SenderAddress }
                         if ([string]::IsNullOrEmpty($PolicyName)) { $PolicyName = $QuarantineMessage.PolicyName }
                     }
                 }
                 if (-not [string]::IsNullOrEmpty($SenderAddress) -and -not [string]::IsNullOrEmpty($PolicyName)) {
-                    $CurrentPolicy = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-HostedContentFilterPolicy' -cmdParams @{ Identity = $PolicyName }
+                    $CurrentPolicy = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-HostedContentFilterPolicy' -cmdParams @{ Identity = $PolicyName } -AsApp
                     $CurrentSenders = @($CurrentPolicy.AllowedSenders.Sender.Address | Where-Object { $_ })
                     if ($SenderAddress -notin $CurrentSenders) {
                         $UpdatedSenders = @($CurrentSenders + $SenderAddress)
-                        New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-HostedContentFilterPolicy' -cmdParams @{
+                        New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-HostedContentFilterPolicy' -cmdParams @{ -AsApp
                             Identity       = $PolicyName
                             AllowedSenders = $UpdatedSenders
                         }

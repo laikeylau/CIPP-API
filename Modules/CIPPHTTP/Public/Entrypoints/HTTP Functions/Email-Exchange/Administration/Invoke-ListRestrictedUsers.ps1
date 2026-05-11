@@ -13,7 +13,7 @@ function Invoke-ListRestrictedUsers {
     $TenantFilter = $Request.Query.tenantFilter
 
     try {
-        $BlockedUsers = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-BlockedSenderAddress'
+        $BlockedUsers = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-BlockedSenderAddress' -AsApp
 
         if ($BlockedUsers) {
             $GraphRequest = foreach ($User in $BlockedUsers) {

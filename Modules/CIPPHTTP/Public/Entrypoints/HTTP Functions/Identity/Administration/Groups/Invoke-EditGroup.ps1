@@ -269,7 +269,7 @@ function Invoke-EditGroup {
     }
 
     if ($GroupType -in @( 'Distribution List', 'Mail-Enabled Security') -and ($AddOwners -or $RemoveOwners)) {
-        $CurrentOwners = New-ExoRequest -tenantid $TenantId -cmdlet 'Get-DistributionGroup' -cmdParams @{ Identity = $GroupId } -UseSystemMailbox $true | Select-Object -ExpandProperty ManagedBy
+        $CurrentOwners = New-ExoRequest -tenantid $TenantId -cmdlet 'Get-DistributionGroup' -cmdParams @{ Identity = $GroupId } -UseSystemMailbox $true -AsApp | Select-Object -ExpandProperty ManagedBy
 
         $NewManagedBy = [System.Collections.Generic.List[string]]::new()
         foreach ($CurrentOwner in $CurrentOwners) {
@@ -390,17 +390,17 @@ function Invoke-EditGroup {
         try {
             if ($UserObj.sendCopies -eq $true) {
                 $Params = @{ Identity = $GroupId; subscriptionEnabled = $true; AutoSubscribeNewMembers = $true }
-                New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true
+                New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true -AsApp
 
                 $MemberParams = @{ Identity = $GroupId; LinkType = 'members' }
-                $Members = New-ExoRequest -tenantid $TenantId -cmdlet 'Get-UnifiedGroupLinks' -cmdParams $MemberParams
+                $Members = New-ExoRequest -tenantid $TenantId -cmdlet 'Get-UnifiedGroupLinks' -cmdParams $MemberParams -AsApp
 
                 $MembershipIds = $Members | ForEach-Object { $_.ExternalDirectoryObjectId }
                 if ($MembershipIds) {
                     $subscriberParams = @{ Identity = $GroupId; LinkType = 'subscribers'; Links = @($MembershipIds | Where-Object { $_ }) }
 
                     try {
-                        New-ExoRequest -tenantid $TenantId -cmdlet 'Add-UnifiedGroupLinks' -cmdParams $subscriberParams -Anchor $UserObj.mail
+                        New-ExoRequest -tenantid $TenantId -cmdlet 'Add-UnifiedGroupLinks' -cmdParams $subscriberParams -Anchor $UserObj.mail -AsApp
                     } catch {
                         $ErrorMessage = Get-CippException -Exception $_
                         Write-Warning "Error in SendCopies: Add-UnifiedGroupLinks $($ErrorMessage.NormalizedError) - $($_.InvocationInfo.ScriptLineNumber)"
@@ -415,9 +415,9 @@ function Invoke-EditGroup {
                 # Disable send copies. Has to be done in 2 calls, otherwise it fails saying AutoSubscribeNewMembers cannot be true when subscriptionEnabled is false.
                 # Why this happens and can't be done in one call, only Bill Gates and the mystical gods of Exchange knows.
                 $Params = @{ Identity = $GroupId; AutoSubscribeNewMembers = $false }
-                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true -AsApp
                 $Params = @{ Identity = $GroupId; subscriptionEnabled = $false }
-                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true -AsApp
 
                 $Results.Add("Send Copies of team emails and events to team members inboxes for $($UserObj.mail) disabled.")
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantId -message "Send Copies of team emails and events to team members inboxes for $($UserObj.mail) disabled." -Sev 'Info'
@@ -435,7 +435,7 @@ function Invoke-EditGroup {
     if ($null -ne $UserObj.hideFromOutlookClients -and $GroupType -eq 'Microsoft 365') {
         try {
             $Params = @{ Identity = $GroupId; HiddenFromExchangeClientsEnabled = $UserObj.hideFromOutlookClients }
-            $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-UnifiedGroup' -cmdParams $Params -useSystemMailbox $true -AsApp
 
             if ($UserObj.hideFromOutlookClients -eq $true) {
                 $Results.Add("Successfully hidden group mailbox from Outlook for $($GroupName).")

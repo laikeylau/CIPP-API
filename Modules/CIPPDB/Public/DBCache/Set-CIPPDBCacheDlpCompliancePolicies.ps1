@@ -27,7 +27,7 @@ function Set-CIPPDBCacheDlpCompliancePolicies {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching DLP compliance policies' -sev Debug
 
         $Tenant = Get-Tenants -TenantFilter $TenantFilter | Select-Object -First 1
-        $Policies = New-ExoRequest -TenantId $Tenant.customerId -cmdlet 'Get-DlpCompliancePolicy' -Compliance -Select 'Name,DisplayName,Mode,Enabled,Workload,CreatedBy,WhenCreatedUTC,WhenChangedUTC'
+        $Policies = New-ExoRequest -TenantId $Tenant.customerId -cmdlet 'Get-DlpCompliancePolicy' -Compliance -Select 'Name,DisplayName,Mode,Enabled,Workload,CreatedBy,WhenCreatedUTC,WhenChangedUTC' -AsApp
 
         if ($Policies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'DlpCompliancePolicies' -Data $Policies

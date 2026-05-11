@@ -31,7 +31,7 @@ Function Invoke-EditUserAliases {
     try {
         if ($Aliases -or $RemoveAliases -or $UserObj.MakePrimary) {
             # Get current mailbox
-            $CurrentMailbox = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{ Identity = $UserObj.id } -UseSystemMailbox $true
+            $CurrentMailbox = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-Mailbox' -cmdParams @{ Identity = $UserObj.id } -UseSystemMailbox $true -AsApp
 
             if (-not $CurrentMailbox) {
                 throw 'Could not find mailbox for user'
@@ -126,7 +126,7 @@ Function Invoke-EditUserAliases {
                 Identity       = $UserObj.id
                 EmailAddresses = $NewProxyAddresses
             }
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams $Params -UseSystemMailbox $true
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Mailbox' -cmdParams $Params -UseSystemMailbox $true -AsApp
         } else {
             $Results.Add('No alias changes specified.')
         }

@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoSharingPolicy {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Sharing Policies' -sev Debug
 
-        $SharingPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SharingPolicy'
+        $SharingPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-SharingPolicy' -AsApp
 
         if ($SharingPolicies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoSharingPolicy' -Data $SharingPolicies

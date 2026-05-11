@@ -20,7 +20,7 @@ Function Invoke-RemoveContact {
         $Params = @{
             Identity = $GUID
         }
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Remove-MailContact' -cmdParams $Params -UseSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Remove-MailContact' -cmdParams $Params -UseSystemMailbox $true -AsApp
         Write-LogMessage -Headers $Request.Headers -API $APIName -tenant $TenantFilter -message "Deleted contact $GUID" -sev Debug
         $Result = "Deleted $Mail"
         $StatusCode = [HttpStatusCode]::OK

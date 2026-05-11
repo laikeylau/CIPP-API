@@ -82,7 +82,7 @@ function Invoke-ExecBECRemediate {
         $Step = 'Disable Inbox Rules'
         try {
             Write-LogMessage -headers $Headers -API $APIName -message "Starting inbox rules processing for user: $Username" -Sev 'Info' -tenant $TenantFilter
-            $Rules = New-ExoRequest -anchor $Username -tenantid $TenantFilter -cmdlet 'Get-InboxRule' -cmdParams @{Mailbox = $Username; IncludeHidden = $true }
+            $Rules = New-ExoRequest -anchor $Username -tenantid $TenantFilter -cmdlet 'Get-InboxRule' -cmdParams @{Mailbox = $Username; IncludeHidden = $true } -AsApp
             Write-LogMessage -headers $Headers -API $APIName -message "Retrieved $(($Rules | Measure-Object).Count) total rules for $Username" -Sev 'Info' -tenant $TenantFilter
             $RuleDisabled = 0
             $RuleFailed = 0

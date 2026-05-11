@@ -20,7 +20,7 @@ Function Invoke-AddConnectionFilter {
     $Tenants = ($Request.Body.selectedTenants).value
     $Result = foreach ($TenantFilter in $Tenants) {
         try {
-            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-HostedConnectionFilterPolicy' -cmdParams $RequestParams
+            $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-HostedConnectionFilterPolicy' -cmdParams $RequestParams -AsApp
             "Successfully created Connection filter for $TenantFilter."
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Successfully created Connection filter for $TenantFilter." -sev Info
         } catch {

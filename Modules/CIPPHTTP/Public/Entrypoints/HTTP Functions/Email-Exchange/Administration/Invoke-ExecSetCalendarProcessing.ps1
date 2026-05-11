@@ -44,7 +44,7 @@ function Invoke-ExecSetCalendarProcessing {
             $cmdParams['AdditionalResponse'] = $Request.Body.additionalResponse
         }
 
-        $null = New-ExoRequest -tenantid $Request.Body.tenantFilter -cmdlet 'Set-CalendarProcessing' -cmdParams $cmdParams
+        $null = New-ExoRequest -tenantid $Request.Body.tenantFilter -cmdlet 'Set-CalendarProcessing' -cmdParams $cmdParams -AsApp
 
         $Results = "Calendar processing settings for $($Request.Body.UPN) have been updated successfully"
         Write-LogMessage -API $APIName -tenant $Request.Body.tenantFilter -message $Results -sev Info

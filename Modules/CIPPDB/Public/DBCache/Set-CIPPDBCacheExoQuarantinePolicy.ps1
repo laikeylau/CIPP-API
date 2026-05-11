@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoQuarantinePolicy {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Quarantine policies' -sev Debug
 
-        $QuarantinePolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-QuarantinePolicy'
+        $QuarantinePolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-QuarantinePolicy' -AsApp
         if ($QuarantinePolicies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoQuarantinePolicy' -Data $QuarantinePolicies
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoQuarantinePolicy' -Data $QuarantinePolicies -Count

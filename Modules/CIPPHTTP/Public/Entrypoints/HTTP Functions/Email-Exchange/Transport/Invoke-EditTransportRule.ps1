@@ -22,7 +22,7 @@ function Invoke-EditTransportRule {
 
     try {
         $cmdlet = if ($State -eq 'enable') { 'Enable-TransportRule' } else { 'Disable-TransportRule' }
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $cmdlet -cmdParams $params -UseSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $cmdlet -cmdParams $params -UseSystemMailbox $true -AsApp
         $Result = "Set transport rule $($Identity) to $($State)"
         Write-LogMessage -Headers $Headers -API $APINAME -tenant $TenantFilter -message $Result -sev Info
         $StatusCode = [HttpStatusCode]::OK

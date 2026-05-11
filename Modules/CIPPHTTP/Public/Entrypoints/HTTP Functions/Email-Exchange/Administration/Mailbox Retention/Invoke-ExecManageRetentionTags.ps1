@@ -236,7 +236,7 @@ Function Invoke-ExecManageRetentionTags {
                 }
 
                 # Check if tag is used in any retention policies
-                $AllPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -ErrorAction SilentlyContinue
+                $AllPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicy' -ErrorAction SilentlyContinue -AsApp
                 $policiesUsingTag = $AllPolicies | Where-Object {
                     $_.RetentionPolicyTagLinks -contains $TagIdentity
                 }
@@ -287,7 +287,7 @@ Function Invoke-ExecManageRetentionTags {
                 $CmdletMetadata = $CmdletMetadataArray[0]
 
                 try {
-                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters
+                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters -AsApp
                     Write-LogMessage -headers $Request.Headers -API $APINAME -message $CmdletMetadata.ExpectedResult -Sev 'Info' -tenant $TenantFilter
                     $Results.Add($CmdletMetadata.ExpectedResult)
                 } catch {
@@ -311,10 +311,10 @@ Function Invoke-ExecManageRetentionTags {
                 $SpecificName = $Request.Query.name
                 if ($SpecificName) {
                     # Get specific tag by name
-                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicyTag' -cmdParams @{Identity = $SpecificName}
+                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicyTag' -cmdParams @{Identity = $SpecificName} -AsApp
                 } else {
                     # Get all tags
-                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicyTag'
+                    $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-RetentionPolicyTag' -AsApp
                 }
             } catch {
                 $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

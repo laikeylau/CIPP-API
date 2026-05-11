@@ -33,7 +33,7 @@ Function Invoke-AddRoomList {
     }
 
     try {
-        $AddRoomListRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-DistributionGroup' -cmdParams $AddRoomListParams
+        $AddRoomListRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-DistributionGroup' -cmdParams $AddRoomListParams -AsApp
         $Results.Add("Successfully created room list: $($RoomListObject.displayName).")
         Write-LogMessage -Headers $Headers -API $APINAME -tenant $Tenant -message "Created room list $($RoomListObject.displayName) with id $($AddRoomListRequest.identity)" -Sev 'Info'
 

@@ -37,7 +37,7 @@ Function Invoke-EditRoomList {
             }
 
             try {
-                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-DistributionGroup' -cmdParams $SetRoomListParams -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-DistributionGroup' -cmdParams $SetRoomListParams -useSystemMailbox $true -AsApp
                 $Results.Add("Successfully updated room list properties for $($RoomListObj.displayName)")
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantId -message "Updated room list properties for $($RoomListObj.displayName)" -Sev 'Info'
             } catch {
@@ -57,7 +57,7 @@ Function Invoke-EditRoomList {
                         BypassSecurityGroupManagerCheck = $true
                     }
 
-                    $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Add-DistributionGroupMember' -cmdParams $AddMemberParams -useSystemMailbox $true
+                    $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Add-DistributionGroupMember' -cmdParams $AddMemberParams -useSystemMailbox $true -AsApp
                     $Results.Add("Successfully added room $MemberEmail to room list")
                     Write-LogMessage -headers $Headers -API $APIName -tenant $TenantId -message "Added room $MemberEmail to room list $GroupId" -Sev 'Info'
                 } catch {
@@ -78,7 +78,7 @@ Function Invoke-EditRoomList {
                         BypassSecurityGroupManagerCheck = $true
                     }
 
-                    $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Remove-DistributionGroupMember' -cmdParams $RemoveMemberParams -useSystemMailbox $true
+                    $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Remove-DistributionGroupMember' -cmdParams $RemoveMemberParams -useSystemMailbox $true -AsApp
                     $Results.Add("Successfully removed room $MemberEmail from room list")
                     Write-LogMessage -headers $Headers -API $APIName -tenant $TenantId -message "Removed room $MemberEmail from room list $GroupId" -Sev 'Info'
                 } catch {
@@ -92,7 +92,7 @@ Function Invoke-EditRoomList {
         if ($RoomListObj.AddOwner -or $RoomListObj.RemoveOwner) {
             try {
                 # Get current owners
-                $CurrentGroup = New-ExoRequest -tenantid $TenantId -cmdlet 'Get-DistributionGroup' -cmdParams @{ Identity = $GroupId } -useSystemMailbox $true
+                $CurrentGroup = New-ExoRequest -tenantid $TenantId -cmdlet 'Get-DistributionGroup' -cmdParams @{ Identity = $GroupId } -useSystemMailbox $true -AsApp
                 $CurrentOwners = [System.Collections.Generic.List[string]]::new()
 
                 if ($CurrentGroup.ManagedBy) {
@@ -131,7 +131,7 @@ Function Invoke-EditRoomList {
                     ManagedBy = $CurrentOwners.ToArray()
                 }
 
-                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-DistributionGroup' -cmdParams $SetOwnersParams -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-DistributionGroup' -cmdParams $SetOwnersParams -useSystemMailbox $true -AsApp
                 Write-LogMessage -headers $Headers -API $APIName -tenant $TenantId -message "Updated owners for room list $GroupId" -Sev 'Info'
             } catch {
                 $Results.Add("Failed to update room list owners: $($_.Exception.Message)")
@@ -147,7 +147,7 @@ Function Invoke-EditRoomList {
                     RequireSenderAuthenticationEnabled = !$RoomListObj.allowExternal
                 }
 
-                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-DistributionGroup' -cmdParams $SetExternalParams -useSystemMailbox $true
+                $null = New-ExoRequest -tenantid $TenantId -cmdlet 'Set-DistributionGroup' -cmdParams $SetExternalParams -useSystemMailbox $true -AsApp
 
                 if ($RoomListObj.allowExternal) {
                     $Results.Add('Enabled external email access for room list')

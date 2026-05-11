@@ -23,7 +23,7 @@ function Invoke-ExecRemoveRestrictedUser {
         if ([string]::IsNullOrEmpty($TenantFilter)) { throw 'tenantFilter parameter is required' }
 
         # Remove the user from the restricted list
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Remove-BlockedSenderAddress' -cmdParams @{SenderAddress = $SenderAddress }
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Remove-BlockedSenderAddress' -cmdParams @{SenderAddress = $SenderAddress } -AsApp
         $Results = "Successfully removed $SenderAddress from the restricted users list."
 
 

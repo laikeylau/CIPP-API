@@ -30,8 +30,10 @@ function Set-CIPPDBCacheMailboxes {
         $ExoRequest = @{
             tenantid  = $TenantFilter
             cmdlet    = 'Get-Mailbox'
-            cmdParams = @{}
+            cmdParams = @{
+            AsApp     = $true}
             Select    = $Select
+            AsApp     = $true
         }
         # Use Generic List for better memory efficiency with large datasets
         $Mailboxes = [System.Collections.Generic.List[PSObject]]::new()

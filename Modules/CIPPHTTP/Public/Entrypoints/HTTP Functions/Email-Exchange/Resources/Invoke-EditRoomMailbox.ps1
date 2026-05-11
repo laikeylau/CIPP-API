@@ -95,7 +95,7 @@ Function Invoke-EditRoomMailbox {
         $Results.Add("Successfully updated room: $($MailboxObject.DisplayName) (Mailbox, Place & Calendar Properties)")
 
         # Set-MailboxCalendarConfiguration requires anchor to the room mailbox
-        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-MailboxCalendarConfiguration' -cmdParams $UpdateCalendarConfigParams -Anchor $MailboxObject.roomId
+        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-MailboxCalendarConfiguration' -cmdParams $UpdateCalendarConfigParams -Anchor $MailboxObject.roomId -AsApp
         $Results.Add("Successfully updated room: $($MailboxObject.DisplayName) (Calendar Configuration)")
 
         Write-LogMessage -headers $Request.Headers -API $APIName -tenant $Tenant -message "Updated room $($MailboxObject.DisplayName)" -Sev 'Info'

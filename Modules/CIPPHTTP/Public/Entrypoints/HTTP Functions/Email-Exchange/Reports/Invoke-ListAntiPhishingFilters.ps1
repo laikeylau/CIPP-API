@@ -9,8 +9,8 @@ function Invoke-ListAntiPhishingFilters {
     param($Request, $TriggerMetadata)
     # Interact with query parameters or the body of the request.
     $TenantFilter = $Request.Query.TenantFilter
-    $Policies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishPolicy' | Select-Object -Property *
-    $Rules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishRule' | Select-Object -Property *
+    $Policies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishPolicy' -AsApp | Select-Object -Property *
+    $Rules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishRule' -AsApp | Select-Object -Property *
 
     $Output = $Policies | Select-Object -Property *,
     @{ Name = 'RuleName'; Expression = { foreach ($item in $Rules) { if ($item.AntiPhishPolicy -eq $_.Name) { $item.Name } } } },

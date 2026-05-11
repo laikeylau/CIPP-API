@@ -10,7 +10,7 @@ function Invoke-ListMailboxCAS {
     # Interact with query parameters or the body of the request.
     $TenantFilter = $Request.Query.TenantFilter
     try {
-        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-CasMailbox' | Select-Object @{ Name = 'displayName'; Expression = { $_.'DisplayName' } },
+        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-CasMailbox' -AsApp | Select-Object @{ Name = 'displayName'; Expression = { $_.'DisplayName' } },
         @{ Name = 'primarySmtpAddress'; Expression = { $_.'PrimarySMTPAddress' } },
         @{ Name = 'ecpenabled'; Expression = { $_.'ECPEnabled' } },
         @{ Name = 'owaenabled'; Expression = { $_.'OWAEnabled' } },

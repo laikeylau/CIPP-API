@@ -66,11 +66,12 @@ Function Invoke-DeployContactTemplates {
                         cmdlet           = 'Get-MailContact'
                         cmdParams        = @{
                             Filter = "ExternalEmailAddress -eq '$($ContactTemplate.email)'"
+            AsApp     = $true
                         }
                         useSystemMailbox = $true
                     }
 
-                    $ExistingContacts = New-ExoRequest @ExistingContactsParam
+                    $ExistingContacts = New-ExoRequest @ExistingContactsParam -AsApp
                     $ContactExists = $ExistingContacts | Where-Object { $_.ExternalEmailAddress -eq $ContactTemplate.email }
 
                     if ($ContactExists) {
@@ -89,7 +90,7 @@ Function Invoke-DeployContactTemplates {
                     }
 
                     # Create the mail contact first
-                    $NewContact = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-MailContact' -cmdParams $BodyToship -UseSystemMailbox $true
+                    $NewContact = New-ExoRequest -tenantid $TenantFilter -cmdlet 'New-MailContact' -cmdParams $BodyToship -UseSystemMailbox $true -AsApp
 
                     # Build SetContactParams efficiently with only provided values
                     $SetContactParams = @{
@@ -120,7 +121,7 @@ Function Invoke-DeployContactTemplates {
                     # Update the contact with additional details only if we have properties to set
                     if ($SetContactParams.Count -gt 1) {
                         Start-Sleep -Milliseconds 500 # Ensure the contact is created before updating
-                        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Contact' -cmdParams $SetContactParams -UseSystemMailbox $true
+                        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-Contact' -cmdParams $SetContactParams -UseSystemMailbox $true -AsApp
                     }
 
                     # Check if we need to update MailContact properties
@@ -144,7 +145,7 @@ Function Invoke-DeployContactTemplates {
                     # Only call Set-MailContact if we have changes to make
                     if ($needsMailContactUpdate) {
                         Start-Sleep -Milliseconds 500 # Ensure the contact is created before updating
-                        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-MailContact' -cmdParams $MailContactParams -UseSystemMailbox $true
+                        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Set-MailContact' -cmdParams $MailContactParams -UseSystemMailbox $true -AsApp
                     }
 
                     # Log the result

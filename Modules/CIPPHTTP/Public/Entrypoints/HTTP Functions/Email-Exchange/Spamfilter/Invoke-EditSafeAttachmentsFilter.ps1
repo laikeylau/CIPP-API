@@ -22,6 +22,7 @@ function Invoke-EditSafeAttachmentsFilter {
             tenantid         = $TenantFilter
             cmdParams        = @{
                 Identity = $RuleName
+            AsApp     = $true
             }
             useSystemMailbox = $true
         }
@@ -37,7 +38,7 @@ function Invoke-EditSafeAttachmentsFilter {
                 throw 'Invalid state'
             }
         }
-        $null = New-ExoRequest @ExoRequestParam
+        $null = New-ExoRequest @ExoRequestParam -AsApp
 
         $Result = "Successfully set SafeAttachment rule $($RuleName) to $($State)"
         Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message $Result -Sev 'Info'

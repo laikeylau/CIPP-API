@@ -115,7 +115,7 @@ Function Invoke-ExecSetMailboxRetentionPolicies {
                 $CmdletMetadata = $CmdletMetadataArray[0]
 
                 try {
-                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters
+                    $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters -AsApp
                     $Message = "Successfully applied retention policy '$PolicyName' to $($CmdletMetadata.MailboxIdentity)"
                     Write-LogMessage -headers $Request.Headers -API $APINAME -message $Message -Sev 'Info' -tenant $TenantFilter
                     $Results.Add($Message)

@@ -79,18 +79,18 @@ Function Invoke-EditEquipmentMailbox {
 
     try {
         # Update mailbox properties
-        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-Mailbox' -cmdParams $UpdateMailboxParams
+        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-Mailbox' -cmdParams $UpdateMailboxParams -AsApp
 
         # Update user properties
-        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-User' -cmdParams $UpdateUserParams
+        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-User' -cmdParams $UpdateUserParams -AsApp
         $Results.Add("Successfully updated equipment: $($MailboxObject.DisplayName) (User Properties)")
 
         # Update calendar properties
-        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-CalendarProcessing' -cmdParams $UpdateCalendarParams
+        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-CalendarProcessing' -cmdParams $UpdateCalendarParams -AsApp
         $Results.Add("Successfully updated equipment: $($MailboxObject.DisplayName) (Calendar Properties)")
 
         # Update calendar configuration properties
-        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-MailboxCalendarConfiguration' -cmdParams $UpdateCalendarConfigParams
+        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Set-MailboxCalendarConfiguration' -cmdParams $UpdateCalendarConfigParams -AsApp
         $Results.Add("Successfully updated equipment: $($MailboxObject.DisplayName) (Calendar Configuration)")
 
         Write-LogMessage -headers $Headers -API $APIName -tenant $Tenant -message "Updated equipment $($MailboxObject.DisplayName)" -Sev 'Info'

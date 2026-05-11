@@ -10,8 +10,8 @@ Function Invoke-ListSpamfilter {
     $Tenantfilter = $request.Query.tenantfilter
 
     try {
-        $Policies = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-HostedContentFilterPolicy' | Select-Object * -ExcludeProperty *odata*, *data.type*
-        $RuleState = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-HostedContentFilterRule' | Select-Object * -ExcludeProperty *odata*, *data.type*
+        $Policies = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-HostedContentFilterPolicy' -AsApp | Select-Object * -ExcludeProperty *odata*, *data.type*
+        $RuleState = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-HostedContentFilterRule' -AsApp | Select-Object * -ExcludeProperty *odata*, *data.type*
         $GraphRequest = $Policies | Select-Object *, @{l = 'ruleState'; e = { $name = $_.name; ($RuleState | Where-Object name -EQ $name).State } }, @{l = 'rulePrio'; e = { $name = $_.name; ($RuleState | Where-Object name -EQ $name).Priority } }
         $StatusCode = [HttpStatusCode]::OK
     } catch {

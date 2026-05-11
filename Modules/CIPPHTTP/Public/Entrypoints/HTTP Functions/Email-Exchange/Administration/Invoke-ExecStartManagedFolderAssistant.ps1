@@ -26,7 +26,7 @@ Function Invoke-ExecStartManagedFolderAssistant {
     }
 
     try {
-        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Start-ManagedFolderAssistant' -cmdParams $ExoParams
+        $null = New-ExoRequest -tenantid $Tenant -cmdlet 'Start-ManagedFolderAssistant' -cmdParams $ExoParams -AsApp
         $Result = "Successfully started Managed Folder Assistant for mailbox $($ShownName)."
         $Severity = 'Info'
         $StatusCode = [HttpStatusCode]::OK

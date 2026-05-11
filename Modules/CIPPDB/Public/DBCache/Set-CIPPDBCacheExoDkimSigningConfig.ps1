@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoDkimSigningConfig {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange DKIM signing configuration' -sev Debug
 
-        $DkimConfig = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DkimSigningConfig'
+        $DkimConfig = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DkimSigningConfig' -AsApp
 
         if ($DkimConfig) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoDkimSigningConfig' -Data $DkimConfig

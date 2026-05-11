@@ -20,9 +20,9 @@ Function Invoke-RemoveSpamfilter {
             Identity = $Name
         }
         $Cmdlet = 'Remove-HostedContentFilterRule'
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams $Params -useSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams $Params -useSystemMailbox $true -AsApp
         $Cmdlet = 'Remove-HostedContentFilterPolicy'
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams $Params -useSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams $Params -useSystemMailbox $true -AsApp
         $Result = "Deleted Spam filter rule $($Name)"
         Write-LogMessage -Headers $Headers -API $APIName -tenant $TenantFilter -message $Result -Sev Info
         $StatusCode = [HttpStatusCode]::OK

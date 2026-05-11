@@ -18,6 +18,7 @@ function Invoke-ExecMailboxRestore {
                     cmdlet    = 'Remove-MailboxRestoreRequest'
                     cmdParams = @{
                         Identity = $Identity
+            AsApp     = $true
                     }
                 }
                 $SuccessMessage = 'Mailbox restore request removed successfully'
@@ -28,6 +29,7 @@ function Invoke-ExecMailboxRestore {
                     cmdlet    = 'Resume-MailboxRestoreRequest'
                     cmdParams = @{
                         Identity = $Identity
+            AsApp     = $true
                     }
                 }
                 $SuccessMessage = 'Mailbox restore request resumed successfully'
@@ -38,6 +40,7 @@ function Invoke-ExecMailboxRestore {
                     cmdlet    = 'Suspend-MailboxRestoreRequest'
                     cmdParams = @{
                         Identity = $Identity
+            AsApp     = $true
                     }
                 }
                 $SuccessMessage = 'Mailbox restore request suspended successfully'
@@ -55,6 +58,7 @@ function Invoke-ExecMailboxRestore {
                         SourceMailbox         = $SourceMailbox
                         TargetMailbox         = $TargetMailbox
                         AllowLegacyDNMismatch = $true
+            AsApp     = $true
                     }
                 }
                 if ($Request.Body.AssociatedMessagesCopyOption) {
@@ -105,7 +109,7 @@ function Invoke-ExecMailboxRestore {
             }
         }
 
-        $GraphRequest = New-ExoRequest @ExoRequest
+        $GraphRequest = New-ExoRequest @ExoRequest -AsApp
 
         $Body = @{
             RestoreRequest = $GraphRequest

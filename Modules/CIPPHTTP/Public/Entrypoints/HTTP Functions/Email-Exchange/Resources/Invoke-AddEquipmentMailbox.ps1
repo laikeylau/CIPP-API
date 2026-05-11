@@ -27,7 +27,7 @@ Function Invoke-AddEquipmentMailbox {
 
     try {
         # Create the equipment mailbox
-        $AddEquipmentRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-Mailbox' -cmdParams $NewMailboxParams
+        $AddEquipmentRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-Mailbox' -cmdParams $NewMailboxParams -AsApp
         $Results.Add("Successfully created equipment mailbox: $($MailboxObject.displayName)")
 
         # Block sign-in for the mailbox

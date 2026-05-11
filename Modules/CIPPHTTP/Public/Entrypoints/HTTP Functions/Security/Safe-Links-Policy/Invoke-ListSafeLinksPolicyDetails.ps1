@@ -31,10 +31,11 @@ function Invoke-ListSafeLinksPolicyDetails {
                     cmdlet           = 'Get-SafeLinksPolicy'
                     cmdParams        = @{
                         Identity = $PolicyName
+            AsApp     = $true
                     }
                     useSystemMailbox = $true
                 }
-                $PolicyDetails = New-ExoRequest @PolicyRequestParam
+                $PolicyDetails = New-ExoRequest @PolicyRequestParam -AsApp
                 $Result.Policy = $PolicyDetails
                 $Result.PolicyName = $PolicyDetails.Name
                 $LogMessages.Add("Successfully retrieved details for SafeLinks policy '$PolicyName'") | Out-Null
@@ -60,10 +61,11 @@ function Invoke-ListSafeLinksPolicyDetails {
                     cmdlet           = 'Get-SafeLinksRule'
                     cmdParams        = @{
                         Identity = $RuleName
+            AsApp     = $true
                     }
                     useSystemMailbox = $true
                 }
-                $RuleDetails = New-ExoRequest @RuleRequestParam
+                $RuleDetails = New-ExoRequest @RuleRequestParam -AsApp
                 $Result.Rule = $RuleDetails
                 $Result.RuleName = $RuleDetails.Name
                 $LogMessages.Add("Successfully retrieved details for SafeLinks rule '$RuleName'") | Out-Null

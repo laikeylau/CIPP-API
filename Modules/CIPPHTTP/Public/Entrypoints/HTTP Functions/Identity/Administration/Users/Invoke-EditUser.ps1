@@ -193,7 +193,7 @@ function Invoke-EditUser {
                 if ($GroupType -eq 'distributionList' -or $GroupType -eq 'security') {
                     Write-Host 'Adding to group via Add-DistributionGroupMember'
                     $Params = @{ Identity = $GroupID; Member = $UserObj.id; BypassSecurityGroupManagerCheck = $true }
-                    $null = New-ExoRequest -tenantid $UserObj.tenantFilter -cmdlet 'Add-DistributionGroupMember' -cmdParams $params -UseSystemMailbox $true
+                    $null = New-ExoRequest -tenantid $UserObj.tenantFilter -cmdlet 'Add-DistributionGroupMember' -cmdParams $params -UseSystemMailbox $true -AsApp
                 } else {
                     Write-Host 'Adding to group via Graph'
                     $UserBody = [PSCustomObject]@{
@@ -225,7 +225,7 @@ function Invoke-EditUser {
                 if ($GroupType -eq 'distributionList' -or $GroupType -eq 'security') {
                     Write-Host 'Removing From group via Remove-DistributionGroupMember'
                     $Params = @{ Identity = $GroupID; Member = $UserObj.id; BypassSecurityGroupManagerCheck = $true }
-                    $null = New-ExoRequest -tenantid $UserObj.tenantFilter -cmdlet 'Remove-DistributionGroupMember' -cmdParams $params -UseSystemMailbox $true
+                    $null = New-ExoRequest -tenantid $UserObj.tenantFilter -cmdlet 'Remove-DistributionGroupMember' -cmdParams $params -UseSystemMailbox $true -AsApp
                 } else {
                     Write-Host 'Removing From group via Graph'
                     $null = New-GraphPostRequest -uri "https://graph.microsoft.com/beta/groups/$GroupID/members/$($UserObj.id)/`$ref" -tenantid $UserObj.tenantFilter -type DELETE

@@ -25,12 +25,13 @@ function Invoke-ExecSetRecipientLimits {
         cmdParams = @{
             Identity              = $Identity
             RecipientLimits       = $recipientLimit
+            AsApp     = $true
         }
     }
 
     # Execute the EXO request
     try {
-        $null = New-ExoRequest @ExoRequest
+        $null = New-ExoRequest @ExoRequest -AsApp
         $Results = "Recipient limit for $UserPrincipalName has been set to $recipientLimit"
 
         Write-LogMessage -API $APIName -tenant $TenantFilter -message $Results -sev Info

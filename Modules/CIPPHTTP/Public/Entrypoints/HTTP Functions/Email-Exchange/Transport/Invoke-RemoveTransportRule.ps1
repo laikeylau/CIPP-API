@@ -21,7 +21,7 @@ Function Invoke-RemoveTransportRule {
 
     try {
         $cmdlet = 'Remove-TransportRule'
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $cmdlet -cmdParams $Params -UseSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $cmdlet -cmdParams $Params -UseSystemMailbox $true -AsApp
         $Result = "Deleted $($Identity)"
         Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Deleted transport rule $($Identity)" -Sev Info
         $StatusCode = [HttpStatusCode]::OK

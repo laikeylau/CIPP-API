@@ -12,7 +12,7 @@ function Invoke-ListMailQuarantineMessage {
     $Identity = $Request.Query.Identity
 
     try {
-        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Export-QuarantineMessage' -cmdParams @{ 'Identity' = $Identity }
+        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Export-QuarantineMessage' -cmdParams @{ 'Identity' = $Identity } -AsApp
         $EmlBase64 = $GraphRequest.Eml
         $EmlContent = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($EmlBase64))
         $Body = @{

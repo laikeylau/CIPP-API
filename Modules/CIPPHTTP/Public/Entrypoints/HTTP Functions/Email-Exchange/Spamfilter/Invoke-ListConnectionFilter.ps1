@@ -10,7 +10,7 @@ function Invoke-ListConnectionFilter {
     $TenantFilter = $request.Query.tenantFilter
 
     try {
-        $Policies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-HostedConnectionFilterPolicy' | Select-Object * -ExcludeProperty *odata*, *data.type*
+        $Policies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-HostedConnectionFilterPolicy' -AsApp | Select-Object * -ExcludeProperty *odata*, *data.type*
         $StatusCode = [HttpStatusCode]::OK
     } catch {
         $ErrorMessage = Get-NormalizedError -Message $_.Exception.Message

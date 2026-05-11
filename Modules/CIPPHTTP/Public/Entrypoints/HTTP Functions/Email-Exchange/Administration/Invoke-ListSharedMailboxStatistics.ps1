@@ -14,7 +14,7 @@ Function Invoke-ListSharedMailboxStatistics {
     try {
         $GraphRequest = New-GraphGetRequest -uri "https://outlook.office365.com/adminapi/beta/$($tenantFilter)/Mailbox?RecipientTypeDetails=sharedmailbox" -Tenantid $tenantFilter -scope ExchangeOnline | ForEach-Object {
             try {
-                New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxStatistics' -cmdParams @{Identity = $_.GUID }
+                New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MailboxStatistics' -cmdParams @{Identity = $_.GUID } -AsApp
             } catch {
                 continue
             }

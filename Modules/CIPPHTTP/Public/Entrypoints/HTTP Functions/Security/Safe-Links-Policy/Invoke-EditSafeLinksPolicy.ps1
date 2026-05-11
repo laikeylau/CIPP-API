@@ -152,9 +152,10 @@ function Invoke-EditSafeLinksPolicy {
                 cmdlet           = 'Set-SafeLinksPolicy'
                 cmdParams        = $policyParams
                 useSystemMailbox = $true
+            AsApp     = $true
             }
 
-            $null = New-ExoRequest @ExoPolicyRequestParam
+            $null = New-ExoRequest @ExoPolicyRequestParam -AsApp
             $Results.Add("Successfully updated SafeLinks policy '$PolicyName'") | Out-Null
             Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Updated SafeLinks policy '$PolicyName'" -Sev 'Info'
         }
@@ -166,9 +167,10 @@ function Invoke-EditSafeLinksPolicy {
                 cmdlet           = 'Set-SafeLinksRule'
                 cmdParams        = $ruleParams
                 useSystemMailbox = $true
+            AsApp     = $true
             }
 
-            $null = New-ExoRequest @ExoRuleRequestParam
+            $null = New-ExoRequest @ExoRuleRequestParam -AsApp
             $hasRuleOperation = $true
             $ruleMessages.Add("updated properties") | Out-Null
         }
@@ -181,11 +183,12 @@ function Invoke-EditSafeLinksPolicy {
                 cmdlet           = $EnableCmdlet
                 cmdParams        = @{
                     Identity = $RuleName
+            AsApp     = $true
                 }
                 useSystemMailbox = $true
             }
 
-            $null = New-ExoRequest @EnableRequestParam
+            $null = New-ExoRequest @EnableRequestParam -AsApp
             $hasRuleOperation = $true
             $State = $State ? "enabled" : "disabled"
             $ruleMessages.Add($State) | Out-Null

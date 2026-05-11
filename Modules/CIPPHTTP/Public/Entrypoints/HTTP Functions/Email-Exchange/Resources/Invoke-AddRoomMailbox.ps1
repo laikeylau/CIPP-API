@@ -26,7 +26,7 @@ Function Invoke-AddRoomMailbox {
     }
     # Interact with query parameters or the body of the request.
     try {
-        $AddRoomRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-Mailbox' -cmdParams $AddRoomParams
+        $AddRoomRequest = New-ExoRequest -tenantid $Tenant -cmdlet 'New-Mailbox' -cmdParams $AddRoomParams -AsApp
         $Results.Add("Successfully created room: $($MailboxObject.DisplayName).")
         Write-LogMessage -Headers $Headers -API $APINAME -tenant $Tenant -message "Created room $($MailboxObject.DisplayName) with id $($AddRoomRequest.id)" -Sev 'Info'
 

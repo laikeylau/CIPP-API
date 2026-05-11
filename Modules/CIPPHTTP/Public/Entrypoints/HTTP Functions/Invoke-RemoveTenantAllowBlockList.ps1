@@ -26,10 +26,11 @@ function Invoke-RemoveTenantAllowBlockList {
             cmdParams = @{
                 Entries  = @($Entries)
                 ListType = $ListType
+            AsApp     = $true
             }
         }
 
-        $Results = New-ExoRequest @ExoRequest
+        $Results = New-ExoRequest @ExoRequest -AsApp
         Write-Host $Results
 
         $Result = "Successfully removed $($Entries) with type $ListType from Block/Allow list"

@@ -13,21 +13,23 @@ function Invoke-ListMailboxRestores {
             $ExoRequest = @{
                 tenantid  = $TenantFilter
                 cmdlet    = 'Get-MailboxRestoreRequestStatistics'
-                cmdParams = @{ Identity = $Request.Query.Identity }
+                cmdParams = @{ Identity = $Request.Query.Identity
+            AsApp     = $true }
             }
 
             if ([bool]$Request.Query.IncludeReport -eq $true) {
                 $ExoRequest.cmdParams.IncludeReport = $true
             }
-            $GraphRequest = New-ExoRequest @ExoRequest
+            $GraphRequest = New-ExoRequest @ExoRequest -AsApp
 
         } else {
             $ExoRequest = @{
                 tenantid = $TenantFilter
                 cmdlet   = 'Get-MailboxRestoreRequest'
+            AsApp     = $true
             }
 
-            $RestoreRequests = (New-ExoRequest @ExoRequest)
+            $RestoreRequests = (New-ExoRequest @ExoRequest) -AsApp
             $GraphRequest = $RestoreRequests
         }
 

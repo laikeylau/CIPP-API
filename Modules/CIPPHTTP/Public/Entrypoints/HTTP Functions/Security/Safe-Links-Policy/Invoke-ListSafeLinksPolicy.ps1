@@ -15,9 +15,9 @@ Function Invoke-ListSafeLinksPolicy {
     $Tenantfilter = $request.Query.tenantfilter
 
     try {
-        $Policies = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-SafeLinksPolicy' | Select-Object -Property * -ExcludeProperty '*@odata.type' , '*@data.type'
-        $Rules = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-SafeLinksRule' | Select-Object -Property * -ExcludeProperty '*@odata.type' , '*@data.type'
-        $BuiltInRules = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-EOPProtectionPolicyRule' | Select-Object -Property * -ExcludeProperty '*@odata.type' , '*@data.type'
+        $Policies = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-SafeLinksPolicy' -AsApp | Select-Object -Property * -ExcludeProperty '*@odata.type' , '*@data.type'
+        $Rules = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-SafeLinksRule' -AsApp | Select-Object -Property * -ExcludeProperty '*@odata.type' , '*@data.type'
+        $BuiltInRules = New-ExoRequest -tenantid $Tenantfilter -cmdlet 'Get-EOPProtectionPolicyRule' -AsApp | Select-Object -Property * -ExcludeProperty '*@odata.type' , '*@data.type'
 
         # Track matched items to identify orphans
         $MatchedRules = [System.Collections.Generic.HashSet[string]]::new()

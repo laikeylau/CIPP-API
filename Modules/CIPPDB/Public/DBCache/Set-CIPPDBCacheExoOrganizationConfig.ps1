@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoOrganizationConfig {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Organization configuration' -sev Debug
 
-        $OrgConfig = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-OrganizationConfig'
+        $OrgConfig = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-OrganizationConfig' -AsApp
 
         if ($OrgConfig) {
             # OrganizationConfig returns a single object, wrap in array for consistency

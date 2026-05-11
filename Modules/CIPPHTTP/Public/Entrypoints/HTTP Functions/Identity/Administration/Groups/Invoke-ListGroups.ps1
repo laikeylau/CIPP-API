@@ -49,7 +49,7 @@ function Invoke-ListGroups {
                     url    = "groups/$($GroupID)/owners?`$top=999&select=$SelectString"
                 })
         } else {
-            $OwnerIds = New-ExoRequest -cmdlet 'Get-DistributionGroup' -tenantid $TenantFilter -cmdParams @{Identity = $GroupID } -Select 'ManagedBy' -useSystemMailbox $true | Select-Object -ExpandProperty ManagedBy
+            $OwnerIds = New-ExoRequest -cmdlet 'Get-DistributionGroup' -tenantid $TenantFilter -cmdParams @{Identity = $GroupID } -Select 'ManagedBy' -useSystemMailbox $true -AsApp | Select-Object -ExpandProperty ManagedBy
 
             $BulkRequestArrayList.add(@{
                     id      = 3
@@ -67,9 +67,9 @@ function Invoke-ListGroups {
 
     if ($GroupType -eq 'Distribution List' -or $GroupType -eq 'Mail-Enabled Security') {
         # get the outside the organization RequireSenderAuthenticationEnabled setting
-        $OnlyAllowInternal = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroup' -cmdParams @{Identity = $GroupID } -Select 'RequireSenderAuthenticationEnabled' -useSystemMailbox $true | Select-Object -ExpandProperty RequireSenderAuthenticationEnabled
+        $OnlyAllowInternal = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-DistributionGroup' -cmdParams @{Identity = $GroupID } -Select 'RequireSenderAuthenticationEnabled' -useSystemMailbox $true -AsApp | Select-Object -ExpandProperty RequireSenderAuthenticationEnabled
     } elseif ($GroupType -eq 'Microsoft 365') {
-        $UnifiedGroupInfo = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-UnifiedGroup' -cmdParams @{Identity = $GroupID } -Select 'RequireSenderAuthenticationEnabled,subscriptionEnabled,AutoSubscribeNewMembers,HiddenFromExchangeClientsEnabled' -useSystemMailbox $true
+        $UnifiedGroupInfo = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-UnifiedGroup' -cmdParams @{Identity = $GroupID } -Select 'RequireSenderAuthenticationEnabled,subscriptionEnabled,AutoSubscribeNewMembers,HiddenFromExchangeClientsEnabled' -useSystemMailbox $true -AsApp
         $OnlyAllowInternal = $UnifiedGroupInfo.RequireSenderAuthenticationEnabled
     } else {
         $OnlyAllowInternal = $null

@@ -358,7 +358,7 @@ Function Invoke-ExecModifyMBPerms {
                 $CmdletObj = $CmdletArray[$i]
                 $CmdletMetadata = $CmdletMetadataArray[$i]
                 try {
-                    $null = New-ExoRequest -Anchor $CmdletMetadata.Mailbox -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters
+                    $null = New-ExoRequest -Anchor $CmdletMetadata.Mailbox -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters -AsApp
                     $null = $Results.Add($CmdletMetadata.ExpectedResult)
                 }
                 catch {
@@ -372,7 +372,7 @@ Function Invoke-ExecModifyMBPerms {
         $CmdletObj = $CmdletArray[0]
         $CmdletMetadata = $CmdletMetadataArray[0]
         try {
-            $null = New-ExoRequest -Anchor $CmdletMetadata.Mailbox -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters
+            $null = New-ExoRequest -Anchor $CmdletMetadata.Mailbox -tenantid $TenantFilter -cmdlet $CmdletObj.CmdletInput.CmdletName -cmdParams $CmdletObj.CmdletInput.Parameters -AsApp
             $null = $Results.Add($CmdletMetadata.ExpectedResult)
             Write-LogMessage -headers $Request.Headers -API $APINAME -message "Executed $($CmdletMetadata.Permission) permission modification" -Sev 'Info' -tenant $TenantFilter
         }

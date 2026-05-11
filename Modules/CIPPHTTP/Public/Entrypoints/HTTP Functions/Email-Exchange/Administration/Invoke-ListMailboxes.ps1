@@ -36,6 +36,7 @@ function Invoke-ListMailboxes {
             cmdlet    = 'Get-Mailbox'
             cmdParams = @{}
             Select    = $Select
+            AsApp     = $true
         }
 
         $AllowedParameters = @(

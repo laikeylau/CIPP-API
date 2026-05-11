@@ -22,6 +22,7 @@ function Invoke-EditAntiPhishingFilter {
             tenantid         = $TenantFilter
             cmdParams        = @{
                 Identity = $RuleName
+            AsApp     = $true
             }
             useSystemMailbox = $true
         }
@@ -37,7 +38,7 @@ function Invoke-EditAntiPhishingFilter {
                 throw 'Invalid state'
             }
         }
-        $null = New-ExoRequest @ExoRequestParam
+        $null = New-ExoRequest @ExoRequestParam -AsApp
 
         $Result = "Successfully set Anti-Phishing rule $RuleName to $State"
         Write-LogMessage -headers $Headers -API $APINAME -tenant $TenantFilter -message $Result -Sev Info

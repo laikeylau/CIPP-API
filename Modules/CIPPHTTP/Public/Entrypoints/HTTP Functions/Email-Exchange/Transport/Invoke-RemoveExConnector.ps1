@@ -18,7 +18,7 @@ Function Invoke-RemoveExConnector {
         $Guid = $Request.Query.GUID ?? $Request.Body.GUID
         $Params = @{ Identity = $Guid }
 
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet "Remove-$($Type)Connector" -cmdParams $params -useSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet "Remove-$($Type)Connector" -cmdParams $params -useSystemMailbox $true -AsApp
         $Result = "Deleted Connector: $($Guid)"
         Write-LogMessage -headers $Headers -API $APIName -tenant $TenantFilter -message "Deleted connector $($Guid)" -sev Debug
         $StatusCode = [HttpStatusCode]::OK

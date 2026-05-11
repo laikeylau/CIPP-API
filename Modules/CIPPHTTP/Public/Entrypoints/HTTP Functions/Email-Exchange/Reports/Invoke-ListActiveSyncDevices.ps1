@@ -11,7 +11,7 @@ function Invoke-ListActiveSyncDevices {
     $TenantFilter = $Request.Query.TenantFilter
 
     try {
-        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MobileDevice' -cmdParams @{ ResultSize = 'Unlimited' } |
+        $GraphRequest = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-MobileDevice' -cmdParams @{ ResultSize = 'Unlimited' } -AsApp |
             Select-Object @{ Name = 'userDisplayName'; Expression = { $_.UserDisplayName } },
             @{ Name = 'userPrincipalName'; Expression = { ($_.Identity -split '\\')[0] } },
             @{ Name = 'deviceFriendlyName'; Expression = { if ([string]::IsNullOrEmpty($_.FriendlyName)) { 'Unknown' } else { $_.FriendlyName } } },

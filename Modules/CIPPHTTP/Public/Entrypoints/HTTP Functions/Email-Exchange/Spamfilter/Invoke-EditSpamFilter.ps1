@@ -18,7 +18,7 @@ Function Invoke-EditSpamFilter {
             Identity = $Name
         }
         $Cmdlet = if ($State -eq 'enable') { 'Enable-HostedContentFilterRule' } else { 'Disable-HostedContentFilterRule' }
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams $Params -useSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet $Cmdlet -cmdParams $Params -useSystemMailbox $true -AsApp
         $Result = "Set Spamfilter rule $($Name) to $($State)"
         Write-LogMessage -headers $Request.Headers -API $APIName -tenant $TenantFilter -message $Result -sev Info
         $StatusCode = [HttpStatusCode]::OK

@@ -60,11 +60,11 @@ function Invoke-ListMessageTrace {
                 MessageTraceId   = $Request.Body.ID
                 RecipientAddress = $Request.Body.recipient
             }
-            New-ExoRequest -TenantId $TenantFilter -Cmdlet 'Get-MessageTraceDetailV2' -CmdParams $CmdParams | Select-Object @{ Name = 'Date'; Expression = { $_.Date.ToString('u') } }, Event, Action, Detail
+            New-ExoRequest -TenantId $TenantFilter -Cmdlet 'Get-MessageTraceDetailV2' -CmdParams $CmdParams -AsApp | Select-Object @{ Name = 'Date'; Expression = { $_.Date.ToString('u') } }, Event, Action, Detail
         } else {
             Write-Information ($SearchParams | ConvertTo-Json)
 
-            New-ExoRequest -TenantId $TenantFilter -Cmdlet 'Get-MessageTraceV2' -CmdParams $SearchParams | Select-Object MessageTraceId, Status, Subject, RecipientAddress, SenderAddress, @{ Name = 'Received'; Expression = { $_.Received.ToString('u') } }, FromIP, ToIP
+            New-ExoRequest -TenantId $TenantFilter -Cmdlet 'Get-MessageTraceV2' -CmdParams $SearchParams -AsApp | Select-Object MessageTraceId, Status, Subject, RecipientAddress, SenderAddress, @{ Name = 'Received'; Expression = { $_.Received.ToString('u') } }, FromIP, ToIP
             Write-LogMessage -headers $Request.Headers -API $APIName -tenant $($TenantFilter) -message 'Executed message trace' -Sev 'Info'
 
         }

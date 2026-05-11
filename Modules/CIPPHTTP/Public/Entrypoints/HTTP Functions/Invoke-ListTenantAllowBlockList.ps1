@@ -14,7 +14,7 @@ function Invoke-ListTenantAllowBlockList {
         if ($TenantFilter -ne 'AllTenants') {
             $Results = $ListTypes | ForEach-Object -Parallel {
                 Import-Module CIPPCore
-                $TempResults = New-ExoRequest -tenantid $using:TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ ListType = $_ }
+                $TempResults = New-ExoRequest -tenantid $using:TenantFilter -cmdlet 'Get-TenantAllowBlockListItems' -cmdParams @{ ListType = $_ } -AsApp
                 $TempResults | Add-Member -MemberType NoteProperty -Name ListType -Value $_ -Force
                 $TempResults | Add-Member -MemberType NoteProperty -Name Tenant -Value $using:TenantFilter -Force
                 $TempResults | Select-Object -ExcludeProperty *'@data.type'*, *'(DateTime])'*

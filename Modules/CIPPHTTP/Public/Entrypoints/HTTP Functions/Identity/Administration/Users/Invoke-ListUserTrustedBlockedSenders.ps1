@@ -16,7 +16,7 @@
     $UserPrincipalName = $Request.Query.userPrincipalName
 
     try {
-        $Config = New-ExoRequest -Anchor $UserID -tenantid $TenantFilter -cmdlet 'Get-MailboxJunkEmailConfiguration' -cmdParams @{Identity = $UserID }
+        $Config = New-ExoRequest -Anchor $UserID -tenantid $TenantFilter -cmdlet 'Get-MailboxJunkEmailConfiguration' -cmdParams @{Identity = $UserID } -AsApp
 
         $Result = [System.Collections.Generic.List[PSObject]]::new()
         $Properties = @(

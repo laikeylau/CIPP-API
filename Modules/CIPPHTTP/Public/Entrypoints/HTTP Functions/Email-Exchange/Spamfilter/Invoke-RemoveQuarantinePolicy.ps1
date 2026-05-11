@@ -20,7 +20,7 @@ Function Invoke-RemoveQuarantinePolicy {
             Identity = ($Identity -eq "00000000-0000-0000-0000-000000000000" ? $PolicyName : $Identity)
         }
 
-        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Remove-QuarantinePolicy' -cmdParams $Params -useSystemMailbox $true
+        $null = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Remove-QuarantinePolicy' -cmdParams $Params -useSystemMailbox $true -AsApp
 
         $Result = "Deleted Quarantine policy '$($PolicyName)'"
         Write-LogMessage -Headers $Headers -API $APIName -tenant $TenantFilter -message $Result -Sev Info

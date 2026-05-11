@@ -19,7 +19,7 @@ function Set-CIPPDBCacheExoTransportRules {
     try {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Transport Rules' -sev Debug
 
-        $TransportRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TransportRule'
+        $TransportRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-TransportRule' -AsApp
 
         if ($TransportRules) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoTransportRules' -Data $TransportRules

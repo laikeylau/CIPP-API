@@ -20,7 +20,7 @@ function Set-CIPPDBCacheExoAntiPhishPolicies {
         Write-LogMessage -API 'CIPPDBCache' -tenant $TenantFilter -message 'Caching Exchange Anti-Phishing policies and rules' -sev Debug
 
         # Get Anti-Phishing policies
-        $AntiPhishPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishPolicy'
+        $AntiPhishPolicies = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishPolicy' -AsApp
         if ($AntiPhishPolicies) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoAntiPhishPolicies' -Data $AntiPhishPolicies
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoAntiPhishPolicies' -Data $AntiPhishPolicies -Count
@@ -29,7 +29,7 @@ function Set-CIPPDBCacheExoAntiPhishPolicies {
         $AntiPhishPolicies = $null
 
         # Get Anti-Phishing rules
-        $AntiPhishRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishRule'
+        $AntiPhishRules = New-ExoRequest -tenantid $TenantFilter -cmdlet 'Get-AntiPhishRule' -AsApp
         if ($AntiPhishRules) {
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoAntiPhishRules' -Data $AntiPhishRules
             Add-CIPPDbItem -TenantFilter $TenantFilter -Type 'ExoAntiPhishRules' -Data $AntiPhishRules -Count
