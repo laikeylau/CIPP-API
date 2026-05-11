@@ -62,7 +62,11 @@ function Get-GraphToken($tenantid, $scope, $AsApp, $AppID, $AppSecret, $refreshT
     #get directtenants directly from table, avoid get-tenants due to performance issues
     $TenantsTable = Get-CippTable -tablename 'Tenants'
     $Filter = "PartitionKey eq 'Tenants' and delegatedPrivilegeStatus eq 'directTenant'"
-    $ClientType = Get-CIPPAzDataTableEntity @TenantsTable -Filter $Filter | Where-Object { $_.customerId -eq $tenantid -or $_.defaultDomainName -eq $tenantid }
+    $ClientType = Get-CIPPAzDataTableEntity @TenantsTable -Filter $Filter | Where-Object { $_.customerId -eq $tenantid -or $_.defaultDomainName -eq $tenantid -or $_.initialDomainName -eq $tenantid }
+    if ($ClientType) {
+        # Always resolve to customerId (GUID) so the token URL uses a valid tenant identifier
+        $tenantid = $ClientType.customerId
+    }
     if ($tenantid -ne $env:TenantID -and $clientType.delegatedPrivilegeStatus -eq 'directTenant') {
         Write-Host "Using direct tenant refresh token for $($clientType.customerId)"
         $ClientRefreshToken = Get-Item -Path "env:\$($clientType.customerId)" -ErrorAction SilentlyContinue
@@ -95,6 +99,11 @@ function Get-GraphToken($tenantid, $scope, $AsApp, $AppID, $AppSecret, $refreshT
         }
 
         $refreshToken = $ClientRefreshToken.Value
+        # If no refresh token available for direct tenant, fall back to app-only (client_credentials)
+        if ([string]::IsNullOrEmpty($refreshToken)) {
+            Write-Host "No refresh token found for direct tenant $($clientType.customerId), falling back to client_credentials (app-only)"
+            $asApp = $true
+        }
     }
 
     $AuthBody = @{

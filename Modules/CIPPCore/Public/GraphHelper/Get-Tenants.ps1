@@ -36,6 +36,7 @@ function Get-Tenants {
     if ($TenantFilter) {
         #Write-Information "Getting tenant $TenantFilter"
         $SafeTenantFilter = ConvertTo-CIPPODataFilterValue -Value $TenantFilter -Type String
+        Write-Host "Get-Tenants: TenantFilter='$TenantFilter' SafeTenantFilter='$SafeTenantFilter' BaseFilter='$Filter'"
 
         if ($SafeTenantFilter -match '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$') {
             $Filter = "{0} and customerId eq '{1}'" -f $Filter, $SafeTenantFilter
@@ -53,9 +54,11 @@ function Get-Tenants {
     }
 
     $IncludedTenantsCache = Get-CIPPAzDataTableEntity @TenantsTable -Filter $Filter
+    Write-Host "Get-Tenants: Table query returned $($IncludedTenantsCache.Count) results for filter '$Filter'"
 
     if (($IncludedTenantsCache | Measure-Object).Count -eq 0 -and $TenantFilter -ne $env:TenantID) {
         $BuildRequired = $true
+        Write-Host "Get-Tenants: BuildRequired=true, TenantFilter='$TenantFilter', env:TenantID='$env:TenantID'"
     }
 
     if ($CleanOld.IsPresent) {
@@ -278,8 +281,15 @@ function Get-Tenants {
     }
 
     # Limit tenant list to allowed tenants if set in script scope from New-CippCoreRequest
+    # Always allow directTenant entries (manually added tenants) regardless of access scope
     if ($script:CippAllowedTenantsStorage -and $script:CippAllowedTenantsStorage.Value) {
-        $IncludedTenantsCache = $IncludedTenantsCache | Where-Object { $script:CippAllowedTenantsStorage.Value -contains $_.customerId }
+        Write-Host "Get-Tenants: CippAllowedTenantsStorage active, count before filter: $($IncludedTenantsCache.Count)"
+        Write-Host "Get-Tenants: Allowed tenants: $($script:CippAllowedTenantsStorage.Value -join ', ')"
+        $IncludedTenantsCache = $IncludedTenantsCache | Where-Object {
+            ($script:CippAllowedTenantsStorage.Value -contains $_.customerId) -or
+            ($_.delegatedPrivilegeStatus -eq 'directTenant')
+        }
+        Write-Host "Get-Tenants: Count after CippAllowedTenantsStorage filter: $($IncludedTenantsCache.Count)"
     }
 
     return $IncludedTenantsCache | Where-Object { ($null -ne $_.defaultDomainName -and ($_.defaultDomainName -notmatch 'Domain Error' -or $IncludeAll.IsPresent)) } | Where-Object $IncludedTenantFilter | Sort-Object -Property displayName
