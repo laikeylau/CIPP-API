@@ -86,7 +86,7 @@ function Push-CIPPStandardsList {
 
                 try {
                     $TrackingTable = Get-CippTable -tablename 'IntunePolicyTypeTracking'
-                    $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -NoPaginateIds @($BulkRequests.id -AsApp $true)
+                    $BulkResults = New-GraphBulkRequest -Requests $BulkRequests -tenantid $TenantFilter -NoPaginateIds @($BulkRequests.id)
                     $PolicyTimestamps = @{}
                     $PolicyNamesByType = @{}
 

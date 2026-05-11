@@ -14,7 +14,7 @@ function Get-CIPPAlertNewRole {
     try {
         $Filter = "PartitionKey eq 'AdminDelta' and RowKey eq '{0}'" -f $TenantFilter
         $AdminDelta = (Get-CIPPAzDataTableEntity @Deltatable -Filter $Filter).delta | ConvertFrom-Json -ErrorAction SilentlyContinue
-        $NewDelta = (New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/directoryRoles?`$expand=members" -tenantid $TenantFilter) -AsApp $true | Select-Object displayName, Members | ForEach-Object {
+        $NewDelta = (New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/directoryRoles?`$expand=members" -tenantid $TenantFilter -AsApp $true) | Select-Object displayName, Members | ForEach-Object {
             @{
                 GroupName = $_.displayName
                 Members   = $_.Members.UserPrincipalName

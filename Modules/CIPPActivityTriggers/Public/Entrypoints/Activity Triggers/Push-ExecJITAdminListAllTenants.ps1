@@ -36,7 +36,7 @@ function Push-ExecJITAdminListAllTenants {
             }
             # Ensure $BulkRequests is not empty or null before making the bulk request
             if ($BulkRequests -and $BulkRequests.Count -gt 0) {
-                $RoleResults = New-GraphBulkRequest -tenantid $DomainName -Requests @($BulkRequests -AsApp $true)
+                $RoleResults = New-GraphBulkRequest -tenantid $DomainName -Requests @($BulkRequests)
 
                 # Format the data
                 $Results = $Users | ForEach-Object {
