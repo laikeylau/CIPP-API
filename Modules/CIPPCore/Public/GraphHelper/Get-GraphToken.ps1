@@ -101,7 +101,6 @@ function Get-GraphToken($tenantid, $scope, $AsApp, $AppID, $AppSecret, $refreshT
         $refreshToken = $ClientRefreshToken.Value
         # If no refresh token available for direct tenant, fall back to app-only (client_credentials)
         if ([string]::IsNullOrEmpty($refreshToken)) {
-            Write-Host "No refresh token found for direct tenant $($clientType.customerId), falling back to client_credentials (app-only)"
             $asApp = $true
         }
     }
