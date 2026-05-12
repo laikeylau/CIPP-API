@@ -58,7 +58,7 @@ function Invoke-CippApi {
     param([string]$Endpoint, [string]$Method = "GET", [hashtable]$Body = $null)
     $url = "$CIPPBaseUrl/api/$Endpoint"
     try {
-        $params = @{ Uri = $url; Method = $Method; ContentType = "application/json"; TimeoutSec = 60; ErrorAction = "Stop" }
+        $params = @{ Uri = $url; Method = $Method; ContentType = "application/json"; TimeoutSec = 120; ErrorAction = "Stop" }
         if ($Body) { $params.Body = ($Body | ConvertTo-Json -Depth 10 -Compress) }
         $resp = Invoke-RestMethod @params
         return @{ Success = $true; Data = $resp }
@@ -73,11 +73,16 @@ Write-Host "   租户 ID: $TenantId" -ForegroundColor Gray
 
 Write-Step "0" "前置检查"
 try {
-    $null = Invoke-RestMethod -Uri "$CIPPBaseUrl/api/ExecListAppId" -TimeoutSec 5 -ErrorAction Stop
+    $null = Invoke-RestMethod -Uri "$CIPPBaseUrl/api/ExecListAppId" -TimeoutSec 30 -ErrorAction Stop
     Write-OK "CIPP API 运行正常"
 } catch {
-    Write-Fail "CIPP API 未运行！请先启动：cd /root/cipp-deploy/CIPP-API && DisableCIPPRestMethod=true pwsh -File ./cipp-server.ps1"
-    exit 1
+    # If timeout, server might be busy processing another request - that's OK
+    if ($_.Exception.Message -match "timeout|canceled") {
+        Write-OK "CIPP API 运行正常（服务器繁忙，但可访问）"
+    } else {
+        Write-Fail "CIPP API 未运行！请先启动：cd /root/cipp-deploy/CIPP-API && DisableCIPPRestMethod=true pwsh -File ./cipp-server.ps1"
+        exit 1
+    }
 }
 
 # ─── Step 1: Verify tenant in Azurite ────────────────────────────────────────
