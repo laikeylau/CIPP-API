@@ -104,7 +104,12 @@ foreach ($Type in $Types) {
                 throw "Function $FunctionName not found"
             }
 
-            & $FunctionName -TenantFilter $TenantFilter -Types 'None'
+            # Only Set-CIPPDBCacheMailboxes accepts -Types; other functions don't
+            if ($Type -eq 'Mailboxes') {
+                & $FunctionName -TenantFilter $TenantFilter -Types 'None'
+            } else {
+                & $FunctionName -TenantFilter $TenantFilter
+            }
 
             $Elapsed = ((Get-Date) - $TypeStart).TotalSeconds
             Write-Host "[$Type] Completed in $([math]::Round($Elapsed, 1))s" -ForegroundColor Green
