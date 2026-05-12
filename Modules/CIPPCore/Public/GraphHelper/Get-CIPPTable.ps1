@@ -11,7 +11,7 @@ function Get-CIPPTable {
         ConnectionString = $env:AzureWebJobsStorage
         TableName        = $tablename
     }
-    $ContextParams['MaxConnectionsPerServer'] = if ($env:AZBOBBY_MAX_CONNECTIONS_PER_SERVER) { [int]$env:AZBOBBY_MAX_CONNECTIONS_PER_SERVER } else { 30 }
+    # $ContextParams['MaxConnectionsPerServer'] = 30 # Disabled - AzBobbyTables 3.5.0 doesn't support this
     $Context = New-AzDataTableContext @ContextParams
     New-AzDataTable -Context $Context | Out-Null
 
