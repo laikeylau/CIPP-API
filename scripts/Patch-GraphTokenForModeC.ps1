@@ -56,33 +56,33 @@ if ($Content -match "per-tenant app registration support") {
 }
 
 # ── Patch: Add per-tenant credential lookup before the auth body construction ──
-$PatchMarker = @"
+$PatchMarker = @'
     # ── [PATCH] Per-tenant app registration support (Mode C) ──
     # Check if this directTenant has its own AppId/AppSecret in DevSecrets
     if ($tenantid -ne $env:TenantID -and $clientType.delegatedPrivilegeStatus -eq 'directTenant') {
-        `$SafeTenantId = $clientType.customerId -replace '-', '_'
-        `$PerTenantAppId = `$null
-        `$PerTenantAppSecret = `$null
+        $SafeTenantId = $clientType.customerId -replace '-', '_'
+        $PerTenantAppId = $null
+        $PerTenantAppSecret = $null
 
-        if (`$env:AzureWebJobsStorage -eq 'UseDevelopmentStorage=true' -or `$env:NonLocalHostAzurite -eq 'true') {
-            `$SecretTable = Get-CIPPTable -tablename 'DevSecrets'
-            `$SecretData = Get-CIPPAzDataTableEntity @`$SecretTable -Filter "PartitionKey eq 'Secret' and RowKey eq 'Secret'" -ErrorAction SilentlyContinue
-            if (`$SecretData) {
-                `$PerTenantAppId = `$SecretData."AppId_`$SafeTenantId"
-                `$PerTenantAppSecret = `$SecretData."AppSecret_`$SafeTenantId"
+        if ($env:AzureWebJobsStorage -eq 'UseDevelopmentStorage=true' -or $env:NonLocalHostAzurite -eq 'true') {
+            $SecretTable = Get-CIPPTable -tablename 'DevSecrets'
+            $SecretData = Get-CIPPAzDataTableEntity @$SecretTable -Filter "PartitionKey eq 'Secret' and RowKey eq 'Secret'" -ErrorAction SilentlyContinue
+            if ($SecretData) {
+                $PerTenantAppId = $SecretData."AppId_$SafeTenantId"
+                $PerTenantAppSecret = $SecretData."AppSecret_$SafeTenantId"
             }
         }
 
-        if (`$PerTenantAppId -and `$PerTenantAppSecret) {
-            Write-Host "Using per-tenant App Registration for `$($clientType.customerId) (AppId: `$PerTenantAppId)"
-            `$AppID = `$PerTenantAppId
-            `$AppSecret = `$PerTenantAppSecret
-            `$asApp = `$true
+        if ($PerTenantAppId -and $PerTenantAppSecret) {
+            Write-Host "Using per-tenant App Registration for $($clientType.customerId) (AppId: $PerTenantAppId)"
+            $AppID = $PerTenantAppId
+            $AppSecret = $PerTenantAppSecret
+            $asApp = $true
         }
     }
     # ── [END PATCH] ──
 
-"@
+'@
 
 # ── Find the insertion point: after the refreshToken fallback to asApp ──
 $InsertAfter = '# If no refresh token available for direct tenant, fall back to app-only (client_credentials)
