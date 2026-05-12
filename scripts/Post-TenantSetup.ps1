@@ -208,15 +208,23 @@ if ($SkipGraphTest) {
     }
 }
 
-# ─── Step 3.5: Trigger mailbox cache sync ────────────────────────────────────
-Write-Step "3.5" "触发邮箱报告数据库同步"
-Write-Info "正在启动 Mailboxes 缓存同步..."
-$cacheResult = Invoke-CippApi -Endpoint "ExecCIPPDBCache?Name=Mailboxes&TenantFilter=$TenantFilter" -Method "POST" -Body @{}
-if ($cacheResult.Success) {
-    Write-OK "邮箱缓存同步已启动 (QueueId: $($cacheResult.Data.Metadata.QueueId))"
-    Write-Info "注意: 同步可能需要几秒到几分钟完成"
+# ─── Step 3.5: Sync mailbox report data ─────────────────────────────────────
+Write-Step "3.5" "同步邮箱报告数据库"
+Write-Info "正在直接同步 Mailboxes 数据..."
+
+# Use Sync-ReportData.ps1 (bypasses orchestrator which doesn't work on Linux standalone)
+$syncScript = Join-Path $PSScriptRoot 'Sync-ReportData.ps1'
+if (Test-Path $syncScript) {
+    $syncOutput = pwsh -File $syncScript -TenantFilter $TenantFilter -Types 'Mailboxes' 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-OK "邮箱数据同步完成"
+    } else {
+        Write-Warn "邮箱数据同步可能失败，请手动运行: pwsh -File $syncScript -TenantFilter $TenantFilter"
+        Write-Info ($syncOutput | Out-String)
+    }
 } else {
-    Write-Warn "邮箱缓存同步启动失败: $($cacheResult.Error)"
+    Write-Warn "Sync-ReportData.ps1 未找到，请手动同步邮箱数据"
+    Write-Info "运行: pwsh scripts/Sync-ReportData.ps1 -TenantFilter '$TenantFilter'"
 }
 
 # ─── Step 4: Test Exchange Online ────────────────────────────────────────────
