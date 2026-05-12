@@ -208,6 +208,17 @@ if ($SkipGraphTest) {
     }
 }
 
+# ─── Step 3.5: Trigger mailbox cache sync ────────────────────────────────────
+Write-Step "3.5" "触发邮箱报告数据库同步"
+Write-Info "正在启动 Mailboxes 缓存同步..."
+$cacheResult = Invoke-CippApi -Endpoint "ExecCIPPDBCache?Name=Mailboxes&TenantFilter=$TenantFilter" -Method "POST" -Body @{}
+if ($cacheResult.Success) {
+    Write-OK "邮箱缓存同步已启动 (QueueId: $($cacheResult.Data.Metadata.QueueId))"
+    Write-Info "注意: 同步可能需要几秒到几分钟完成"
+} else {
+    Write-Warn "邮箱缓存同步启动失败: $($cacheResult.Error)"
+}
+
 # ─── Step 4: Test Exchange Online ────────────────────────────────────────────
 Write-Step "4" "测试 Exchange Online 连接"
 
