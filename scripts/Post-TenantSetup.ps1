@@ -2,7 +2,7 @@
 <#
 .SYNOPSIS
     CIPP 租户添加后一键修复 — 在 OAuth 添加租户（Step 3）后运行此脚本
-    自动完成：验证租户、重置 GraphErrorCount、测试 Graph API
+    自动完成：验证租户、重置 GraphErrorCount、测试 Graph API、测试 Exchange Online
 
 .PARAMETER TenantId
     目标租户的 tenant ID（必填）
@@ -13,23 +13,27 @@
 .PARAMETER SkipGraphTest
     跳过 Graph API 测试
 
+.PARAMETER SkipExoTest
+    跳过 Exchange Online 测试
+
 .EXAMPLE
     ./Post-TenantSetup.ps1 -TenantId "15dc8949-c50b-438d-9a9a-26fe501c5895"
-    ./Post-TenantSetup.ps1 -TenantId "15dc8949-c50b-438d-9a9a-26fe501c5895" -SkipGraphTest
+    ./Post-TenantSetup.ps1 -TenantId "15dc8949-c50b-438d-9a9a-26fe501c5895" -SkipExoTest
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
     [string]$TenantId,
     [string]$TenantFilter = "",
-    [switch]$SkipGraphTest
+    [switch]$SkipGraphTest,
+    [switch]$SkipExoTest
 )
 
 $ErrorActionPreference = 'Stop'
 $CIPPBaseUrl = "http://localhost:7071"
 if (-not $TenantFilter) { $TenantFilter = $TenantId }
 
-# ─── Load AzBobbyTables (same as Add-DirectTenant.ps1) ───────────────────────
+# ─── Load AzBobbyTables ──────────────────────────────────────────────────────
 Import-Module "$PSScriptRoot/../Modules/AzBobbyTables" -Force
 $ConnStr = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNoBnZf6KgBVU4=;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;"
 
@@ -76,7 +80,6 @@ try {
     $null = Invoke-RestMethod -Uri "$CIPPBaseUrl/api/ExecListAppId" -TimeoutSec 30 -ErrorAction Stop
     Write-OK "CIPP API 运行正常"
 } catch {
-    # If timeout, server might be busy processing another request - that's OK
     if ($_.Exception.Message -match "timeout|canceled") {
         Write-OK "CIPP API 运行正常（服务器繁忙，但可访问）"
     } else {
@@ -205,8 +208,54 @@ if ($SkipGraphTest) {
     }
 }
 
-# ─── Step 4: Final status ────────────────────────────────────────────────────
-Write-Step "4" "清理 & 最终状态"
+# ─── Step 4: Test Exchange Online ────────────────────────────────────────────
+Write-Step "4" "测试 Exchange Online 连接"
+
+if ($SkipExoTest) {
+    Write-Info "已跳过（-SkipExoTest）"
+} else {
+    Write-Info "测试 ListMailboxes..."
+    $mailboxResult = Invoke-CippApi -Endpoint "ListMailboxes?TenantFilter=$TenantFilter"
+    if ($mailboxResult.Success) {
+        $data = $mailboxResult.Data
+        if ($data -is [array] -and $data.Count -gt 0) {
+            # Check if first item is an error string
+            if ($data[0] -is [string] -and $data[0] -match "error|forbidden|403|not provisioned") {
+                Write-Fail "ListMailboxes 失败: $($data[0])"
+                Write-Host ""
+                Write-Warn "Exchange Online 需要额外配置："
+                Write-Info "  在目标租户的 Azure Portal 中为 CIPP-SAM 分配 Exchange Administrator 角色："
+                Write-Info "  1. 登录 Azure Portal → 切换到目标租户"
+                Write-Info "  2. Enterprise Applications → 搜索 CIPP-SAM"
+                Write-Info "  3. Users and groups → Add user/group"
+                Write-Info "  4. 选择角色: Exchange Administrator → Assign"
+            } else {
+                $mbxCount = $data.Count
+                Write-OK "ListMailboxes: 返回 $mbxCount 个邮箱"
+                $data | Select-Object -First 3 | ForEach-Object {
+                    $upn = $_.UPN ?? $_.UserPrincipalName ?? "N/A"
+                    $type = $_.recipientTypeDetails ?? "N/A"
+                    Write-Info "  - $upn [$type]"
+                }
+                if ($mbxCount -gt 3) { Write-Info "  ... 还有 $($mbxCount - 3) 个" }
+            }
+        } else {
+            Write-Warn "ListMailboxes: 返回空数据（租户可能没有邮箱）"
+        }
+    } else {
+        Write-Fail "ListMailboxes 失败: $($mailboxResult.Error)"
+        Write-Host ""
+        Write-Warn "Exchange Online 需要额外配置："
+        Write-Info "  在目标租户的 Azure Portal 中为 CIPP-SAM 分配 Exchange Administrator 角色："
+        Write-Info "  1. 登录 Azure Portal → 切换到目标租户"
+        Write-Info "  2. Enterprise Applications → 搜索 CIPP-SAM"
+        Write-Info "  3. Users and groups → Add user/group"
+        Write-Info "  4. 选择角色: Exchange Administrator → Assign"
+    }
+}
+
+# ─── Step 5: Final status ────────────────────────────────────────────────────
+Write-Step "5" "清理 & 最终状态"
 
 # Reset GraphErrorCount one more time (Graph API tests may have incremented it)
 $T = Get-TenantTable
