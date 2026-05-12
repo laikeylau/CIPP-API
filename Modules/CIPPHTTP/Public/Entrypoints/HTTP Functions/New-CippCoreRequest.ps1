@@ -158,7 +158,8 @@ function New-CippCoreRequest {
                     $HttpTimings['InvokeEndpoint'] = $swInvoke.Elapsed.TotalMilliseconds
 
                     # Filter to only return HttpResponseContext objects
-                    $HttpResponse = $Response | Where-Object { $_.PSObject.TypeNames -eq 'Microsoft.Azure.Functions.PowerShellWorker.HttpResponseContext' }
+                    # Accept both Azure Functions PSTypeName and our standalone mock type
+                    $HttpResponse = $Response | Where-Object { $_.PSObject.TypeNames -contains 'Microsoft.Azure.Functions.PowerShellWorker.HttpResponseContext' -or $_.PSObject.TypeNames -eq 'HttpResponseContext' }
                     if ($HttpResponse) {
                         # Return the first valid HttpResponseContext found
                         $HttpTotalStopwatch.Stop()

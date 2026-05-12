@@ -111,7 +111,10 @@ function Get-GraphToken($tenantid, $scope, $AsApp, $AppID, $AppSecret, $refreshT
         refresh_token = $refreshToken
         grant_type    = 'refresh_token'
     }
-    # Skip client_secret for delegated (refresh_token) flow — app is public client
+    # Include client_secret for confidential client delegated flow
+    if ($env:ApplicationSecret) {
+        $AuthBody.client_secret = $env:ApplicationSecret
+    }
     if ($asApp -eq $true) {
         $AuthBody = @{
             client_id     = $env:ApplicationID

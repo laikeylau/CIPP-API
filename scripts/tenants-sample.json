@@ -1,0 +1,16 @@
+{
+  "tenants": [
+    {
+      "tenantId": "1825a9a1-25fc-43d1-991b-21459ac94021",
+      "displayName": "ADMBEK55",
+      "defaultDomain": "admbek55outlook.onmicrosoft.com",
+      "initialDomain": "ADMBEK55.onmicrosoft.com"
+    },
+    {
+      "tenantId": "2b2ccf22-1af7-4ef4-a191-ad9b9a3b5de1",
+      "displayName": "lLatech",
+      "defaultDomain": "llatech.onmicrosoft.com",
+      "initialDomain": "llatech.onmicrosoft.com"
+    }
+  ]
+}
