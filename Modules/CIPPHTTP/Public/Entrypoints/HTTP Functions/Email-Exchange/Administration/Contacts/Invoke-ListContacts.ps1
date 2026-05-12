@@ -88,11 +88,11 @@ function Invoke-ListContacts {
             # Single contact request - keep existing complex formatting
             Write-Host "Getting specific contact: $ContactID"
 
-            $Contact = New-EXORequest -tenantid $TenantFilter -cmdlet 'Get-Contact' -cmdParams @{
+            $Contact = New-EXORequest -tenantid $TenantFilter -cmdlet 'Get-Contact' -AsApp:$true -cmdParams @{
                 Identity = $ContactID
             }
 
-            $MailContact = New-EXORequest -tenantid $TenantFilter -cmdlet 'Get-MailContact' -cmdParams @{
+            $MailContact = New-EXORequest -tenantid $TenantFilter -cmdlet 'Get-MailContact' -AsApp:$true -cmdParams @{
                 Identity = $ContactID
             }
 
@@ -106,13 +106,13 @@ function Invoke-ListContacts {
             # Get all contacts - simplified approach
             Write-Host 'Getting all contacts'
 
-            $ContactResponse = New-EXORequest -tenantid $TenantFilter -cmdlet 'Get-Contact' -cmdParams @{
+            $ContactResponse = New-EXORequest -tenantid $TenantFilter -cmdlet 'Get-Contact' -AsApp:$true -cmdParams @{
                 Filter     = "RecipientTypeDetails -eq 'MailContact'"
                 ResultSize = 'Unlimited'
             } | Select-Object -Property City, Company, Department, DisplayName, FirstName, LastName, IsDirSynced, Guid, WindowsEmailAddress
 
             # Add Graph ID to each contact based on email match
-            $GraphContacts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/contacts' -tenantid $TenantFilter -AsApp $true
+            $GraphContacts = New-GraphGetRequest -uri 'https://graph.microsoft.com/beta/contacts' -tenantid $TenantFilter -AsApp:$true
             foreach ($contact in $ContactResponse) {
                 $GraphMatch = $GraphContacts | Where-Object { $_.mail -eq $contact.WindowsEmailAddress }
                 if ($GraphMatch) {
