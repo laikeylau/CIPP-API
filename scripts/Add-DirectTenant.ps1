@@ -88,6 +88,16 @@ switch ($Action) {
         }
         Add-AzDataTableEntity @T -Entity $Entity -Force
         Write-Host "[OK] Added: $DisplayName ($TenantId)" -ForegroundColor Green
+
+        # Auto-setup all permissions
+        Write-Host "`n[SETUP] Configuring permissions..." -ForegroundColor Cyan
+        $PermScript = "$PSScriptRoot/Setup-TenantPermissions.ps1"
+        if (Test-Path $PermScript) {
+            & $PermScript -TenantId $TenantId
+        } else {
+            Write-Host "[WARN] Setup-TenantPermissions.ps1 not found, skipping auto-setup" -ForegroundColor Yellow
+            Write-Host "  Run manually: pwsh -File scripts/Setup-TenantPermissions.ps1 -TenantId $TenantId" -ForegroundColor Yellow
+        }
     }
 
     'reset' {
