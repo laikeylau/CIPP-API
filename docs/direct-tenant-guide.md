@@ -73,12 +73,14 @@ pwsh -NoProfile -Command "& ./scripts/Post-TenantSetup.ps1 -TenantId '<租户ID>
 | 租户 | TenantId | 状态 |
 |------|----------|------|
 | demfre05outlook.onmicrosoft.com | 15dc8949-c50b-438d-9a9a-26fe501c5895 | ✅ 完全正常 |
+| lenitech.onmicrosoft.com | 2df8b2f9-1714-4246-825d-d655b1577ec3 | ✅ 完全正常 |
 
 ## 脚本清单
 
 | 脚本 | 用途 |
 |------|------|
 | `Post-TenantSetup.ps1` | **推荐** OAuth 后一键修复（Graph + EXO + 权限同步全测试） |
+| `Sync-AllCache.ps1` | **推荐** 全量缓存同步（72 类型，覆盖 Dashboard/Identity/Exchange/SharePoint/Intune/Security/Copilot/PIM/Compliance） |
 | `Sync-ReportData.ps1` | 同步报告数据库（邮箱、权限、日历权限、规则） |
 | `Add-DirectTenant.ps1` | 租户管理（list/add/import/reset） |
 | `Monitor-TenantHealth.ps1` | 健康监控 |
@@ -117,3 +119,40 @@ A: 运行 `./scripts/Sync-ReportData.ps1 -TenantFilter '<租户域名>' -Types '
 - `Permissions` — 邮箱权限（FullAccess、SendAs、SendOnBehalf）
 - `CalendarPermissions` — 日历权限
 - `Rules` — 邮箱规则
+
+### Q: 如何同步所有租户的全量缓存数据？
+A: 运行 `./scripts/Sync-AllCache.ps1`，支持以下参数：
+- `-TenantFilter '<租户ID>'` — 只同步指定租户
+- `-SkipExisting` — 跳过已有数据的租户（增量同步）
+- `-Categories 'Dashboard,Identity,Exchange'` — 只同步指定分类
+
+**示例：**
+```bash
+# 同步所有活跃租户（完整）
+pwsh -File ./scripts/Sync-AllCache.ps1
+
+# 只同步指定租户
+pwsh -File ./scripts/Sync-AllCache.ps1 -TenantFilter '2df8b2f9-1714-4246-825d-d655b1577ec3'
+
+# 增量同步（跳过已有数据）
+pwsh -File ./scripts/Sync-AllCache.ps1 -SkipExisting
+```
+
+**支持的分类：**
+- `Dashboard` — Users, Guests, Groups, Devices, SecureScore, MFA, LicenseOverview
+- `Identity` — RiskyUsers, RiskDetections, CredentialUserRegistrationDetails, ServicePrincipals, Apps
+- `Exchange` — Mailboxes, CASMailboxes, MailboxUsage, TransportRules, AntiSpam/Phish/Malware policies
+- `SharePoint` — SharePointSiteUsage, OneDriveUsage
+- `Intune` — ManagedDevices, DeviceCompliance, DeviceConfigurations, DetectedApps
+- `Security` — ConditionalAccessPolicies, AuthorizationPolicy, CrossTenantAccessPolicy, B2BManagementPolicy
+- `Copilot` — CopilotReadinessActivity, CopilotUsageUserDetail
+- `PIM` — Roles, PIMSettings, RoleAssignmentScheduleInstances, RoleEligibilitySchedules
+- `Compliance` — BitlockerKeys, MDEOnboarding, DirectoryRecommendations
+- `Other` — Domains, Settings, Organization, OfficeActivations
+
+### Q: 如何设置定时任务自动同步？
+A: 使用 Hermes cronjob 设置定时任务，例如每6小时同步一次：
+```bash
+# 创建定时任务
+hermes cronjob create --name "CIPP Full Cache Sync" --schedule "0 */6 * * *" --command "cd /root/cipp-deploy/CIPP-API && pwsh -File scripts/Sync-AllCache.ps1"
+```

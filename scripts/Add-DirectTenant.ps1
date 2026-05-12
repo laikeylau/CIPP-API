@@ -84,6 +84,7 @@ switch ($Action) {
             customerId               = $TenantId
             delegatedPrivilegeStatus = 'directTenant'
             GraphErrorCount          = 0
+            Excluded                 = $false
         }
         Add-AzDataTableEntity @T -Entity $Entity -Force
         Write-Host "[OK] Added: $DisplayName ($TenantId)" -ForegroundColor Green
@@ -135,6 +136,7 @@ switch ($Action) {
                 customerId               = $Tid
                 delegatedPrivilegeStatus = 'directTenant'
                 GraphErrorCount          = 0
+                Excluded                 = $false
             }
             Add-AzDataTableEntity @T -Entity $Entity -Force
             Write-Host "  [OK] $($Tenant.displayName) ($Tid)" -ForegroundColor Green
