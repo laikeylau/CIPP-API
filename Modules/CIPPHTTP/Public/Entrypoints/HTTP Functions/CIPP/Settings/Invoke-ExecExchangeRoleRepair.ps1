@@ -45,7 +45,7 @@ function Invoke-ExecExchangeRoleRepair {
                 }
             }
 
-            $RepairResults = New-GraphBulkRequest -tenantid $Tenant.customerId -Requests @($Requests) -asapp $true -AsApp $true
+            $RepairResults = New-GraphBulkRequest -tenantid $Tenant.customerId -Requests @($Requests) -asapp $true
             $RepairSuccess = $RepairResults.status -eq 201
             if ($RepairSuccess) {
                 $Results = @{

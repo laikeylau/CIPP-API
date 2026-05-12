@@ -131,7 +131,7 @@ function Invoke-ExecAddGDAPRole {
             }
 
             if ($Requests) {
-                $ReturnedData = New-GraphBulkRequest -Requests $Requests -tenantid $env:TenantID -NoAuthCheck $True -asapp $true -AsApp $true
+                $ReturnedData = New-GraphBulkRequest -Requests $Requests -tenantid $env:TenantID -NoAuthCheck $True -asapp $true
                 $NewRoleMappings = foreach ($Return in $ReturnedData) {
                     if ($Return.body.error) {
                         $Results.Add("Could not create GDAP group: $($Return.body.error.message)")

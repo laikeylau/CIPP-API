@@ -83,7 +83,7 @@ function Invoke-ListGroups {
 
     try {
         if ($BulkRequestArrayList.Count -gt 0) {
-            $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantFilter -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequestArrayList) -asapp $true -AsApp $true
+            $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantFilter -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequestArrayList) -asapp $true
             $GraphRequest = [PSCustomObject]@{
                 groupInfo              = ($RawGraphRequest | Where-Object { $_.id -eq 1 }).body | Select-Object *, @{ Name = 'primDomain'; Expression = { $_.mail -split '@' | Select-Object -Last 1 } },
                 @{Name = 'teamsEnabled'; Expression = { if ($_.resourceProvisioningOptions -like '*Team*') { $true } else { $false } } },

@@ -309,7 +309,7 @@ function Invoke-EditGroup {
     if ($BulkRequests.Count -gt 0) {
         #Write-Warning 'EditUser - Executing Graph Bulk Requests'
         #Write-Information ($BulkRequests | ConvertTo-Json -Depth 10)
-        $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantId -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequests) -asapp $true -AsApp $true
+        $RawGraphRequest = New-GraphBulkRequest -tenantid $TenantId -scope 'https://graph.microsoft.com/.default' -Requests @($BulkRequests) -asapp $true
         #Write-Warning 'EditUser - Executing Graph Bulk Requests - Completed'
         #Write-Information ($RawGraphRequest | ConvertTo-Json -Depth 10)
 

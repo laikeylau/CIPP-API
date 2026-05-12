@@ -76,7 +76,7 @@ function Invoke-ListSites {
             }
         )
 
-        $Result = New-GraphBulkRequest -tenantid $TenantFilter -Requests @($BulkRequests) -asapp $true -AsApp $true
+        $Result = New-GraphBulkRequest -tenantid $TenantFilter -Requests @($BulkRequests) -asapp $true
         $Sites = ($Result | Where-Object { $_.id -eq 'listAllSites' }).body.value
         $UsageBase64 = ($Result | Where-Object { $_.id -eq 'usage' }).body
         $UsageJson = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($UsageBase64))
