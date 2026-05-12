@@ -208,23 +208,41 @@ if ($SkipGraphTest) {
     }
 }
 
-# ─── Step 3.5: Sync mailbox report data ─────────────────────────────────────
-Write-Step "3.5" "同步邮箱报告数据库"
-Write-Info "正在直接同步 Mailboxes 数据..."
+# ─── Step 3.5: Sync report database ──────────────────────────────────────────
+Write-Step "3.5" "同步报告数据库（邮箱 + 权限 + 日历权限）"
 
-# Use Sync-ReportData.ps1 (bypasses orchestrator which doesn't work on Linux standalone)
 $syncScript = Join-Path $PSScriptRoot 'Sync-ReportData.ps1'
 if (Test-Path $syncScript) {
+    # Sync mailboxes first (required for permissions sync)
+    Write-Info "正在同步 Mailboxes..."
     $syncOutput = pwsh -File $syncScript -TenantFilter $TenantFilter -Types 'Mailboxes' 2>&1
     if ($LASTEXITCODE -eq 0) {
         Write-OK "邮箱数据同步完成"
     } else {
-        Write-Warn "邮箱数据同步可能失败，请手动运行: pwsh -File $syncScript -TenantFilter $TenantFilter"
+        Write-Warn "邮箱数据同步可能失败"
         Write-Info ($syncOutput | Out-String)
     }
+
+    # Sync mailbox permissions
+    Write-Info "正在同步 MailboxPermissions..."
+    $permOutput = pwsh -File $syncScript -TenantFilter $TenantFilter -Types 'Permissions' 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-OK "邮箱权限同步完成"
+    } else {
+        Write-Warn "邮箱权限同步可能失败（不影响邮箱功能）"
+    }
+
+    # Sync calendar permissions
+    Write-Info "正在同步 CalendarPermissions..."
+    $calOutput = pwsh -File $syncScript -TenantFilter $TenantFilter -Types 'CalendarPermissions' 2>&1
+    if ($LASTEXITCODE -eq 0) {
+        Write-OK "日历权限同步完成"
+    } else {
+        Write-Warn "日历权限同步可能失败（不影响邮箱功能）"
+    }
 } else {
-    Write-Warn "Sync-ReportData.ps1 未找到，请手动同步邮箱数据"
-    Write-Info "运行: pwsh scripts/Sync-ReportData.ps1 -TenantFilter '$TenantFilter'"
+    Write-Warn "Sync-ReportData.ps1 未找到，请手动同步报告数据"
+    Write-Info "运行: pwsh scripts/Sync-ReportData.ps1 -TenantFilter '$TenantFilter' -Types 'All'"
 }
 
 # ─── Step 4: Test Exchange Online ────────────────────────────────────────────

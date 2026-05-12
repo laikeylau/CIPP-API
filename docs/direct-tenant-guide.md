@@ -46,8 +46,9 @@ pwsh -NoProfile -Command "& ./scripts/Post-TenantSetup.ps1 -TenantId '<租户ID>
 2. ✅ 重置 GraphErrorCount
 3. ✅ 验证 refresh token 是否存储
 4. ✅ 测试 Graph API（ListUsers、ListLicenses、ListGraphRequest）
-5. ✅ 测试 Exchange Online（ListMailboxes）
-6. ✅ 最终清理
+5. ✅ **同步报告数据库**（Mailboxes + MailboxPermissions + CalendarPermissions）
+6. ✅ 测试 Exchange Online（ListMailboxes）
+7. ✅ 最终清理
 
 **如果 Exchange Online 测试失败（403 Forbidden）：**
 需要在目标租户为 CIPP-SAM 分配 Exchange Administrator 角色：
@@ -77,7 +78,8 @@ pwsh -NoProfile -Command "& ./scripts/Post-TenantSetup.ps1 -TenantId '<租户ID>
 
 | 脚本 | 用途 |
 |------|------|
-| `Post-TenantSetup.ps1` | **推荐** OAuth 后一键修复（Graph + EXO 全测试） |
+| `Post-TenantSetup.ps1` | **推荐** OAuth 后一键修复（Graph + EXO + 权限同步全测试） |
+| `Sync-ReportData.ps1` | 同步报告数据库（邮箱、权限、日历权限、规则） |
 | `Add-DirectTenant.ps1` | 租户管理（list/add/import/reset） |
 | `Monitor-TenantHealth.ps1` | 健康监控 |
 
@@ -105,3 +107,13 @@ A: 运行 `./scripts/Monitor-TenantHealth.ps1` 或 `./scripts/Add-DirectTenant.p
 
 ### Q: 如何重置某个租户的错误计数？
 A: 运行 `./scripts/Add-DirectTenant.ps1 -Action reset -TenantId '<租户ID>'`
+
+### Q: 日历权限页面显示空数组？
+A: 这是预期行为。`ListCalendarPermissions` 会过滤掉默认权限（Default/Anonymous），只显示自定义权限。如果租户没有自定义日历权限，返回 `[]` 是正确的。
+
+### Q: 如何手动同步报告数据？
+A: 运行 `./scripts/Sync-ReportData.ps1 -TenantFilter '<租户域名>' -Types 'All'`，支持的类型包括：
+- `Mailboxes` — 邮箱列表
+- `Permissions` — 邮箱权限（FullAccess、SendAs、SendOnBehalf）
+- `CalendarPermissions` — 日历权限
+- `Rules` — 邮箱规则
