@@ -31,7 +31,9 @@ function Set-CIPPDBCacheMailboxes {
             tenantid  = $TenantFilter
             cmdlet    = 'Get-Mailbox'
             cmdParams = @{
-            AsApp     = $true}
+                ResultSize          = 'Unlimited'
+                RecipientTypeDetails = 'UserMailbox', 'SharedMailbox', 'EquipmentMailbox', 'RoomMailbox', 'DiscoveryMailbox'
+            }
             Select    = $Select
             AsApp     = $true
         }
