@@ -111,10 +111,11 @@ function Get-GraphToken($tenantid, $scope, $AsApp, $AppID, $AppSecret, $refreshT
         refresh_token = $refreshToken
         grant_type    = 'refresh_token'
     }
-    # Include client_secret for confidential client delegated flow
-    if ($env:ApplicationSecret) {
-        $AuthBody.client_secret = $env:ApplicationSecret
-    }
+    # NOTE: Do NOT add client_secret for delegated (refresh_token) flow.
+    # If the app registration has publicClient set (even with empty redirectUris),
+    # Azure AD rejects client_secret with AADSTS700025. The delegated flow with
+    # refresh_token alone works for both public and confidential client apps.
+    # Client credentials (app-only) flow handles client_secret separately below.
     if ($asApp -eq $true) {
         $AuthBody = @{
             client_id     = $env:ApplicationID

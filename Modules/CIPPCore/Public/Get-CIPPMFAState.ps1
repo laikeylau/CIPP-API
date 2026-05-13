@@ -6,7 +6,7 @@ function Get-CIPPMFAState {
         $Headers
     )
     #$PerUserMFAState = Get-CIPPPerUserMFA -TenantFilter $TenantFilter -AllUsers $true
-    $users = foreach ($user in (New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/users?$top=999&$select=id,UserPrincipalName,DisplayName,accountEnabled,assignedLicenses,perUserMfaState,userType' -tenantid $TenantFilter)) {
+    $users = foreach ($user in (New-GraphGetRequest -uri 'https://graph.microsoft.com/v1.0/users?$top=999&$select=id,UserPrincipalName,DisplayName,accountEnabled,assignedLicenses,perUserMfaState,userType' -tenantid $TenantFilter -AsApp $true)) {
         [PSCustomObject]@{
             UserPrincipalName = $user.UserPrincipalName
             isLicensed        = [boolean]$user.assignedLicenses.Count
@@ -34,7 +34,7 @@ function Get-CIPPMFAState {
     $MFAIndex = @{}
 
     try {
-        $SecureDefaultsState = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/identitySecurityDefaultsEnforcementPolicy' -tenantid $TenantFilter ).IsEnabled
+        $SecureDefaultsState = (New-GraphGetRequest -Uri 'https://graph.microsoft.com/beta/policies/identitySecurityDefaultsEnforcementPolicy' -tenantid $TenantFilter -AsApp $true).IsEnabled
     } catch {
         Write-Host "Secure Defaults not available: $($_.Exception.Message)"
         $Errors.Add(@{Step = 'SecureDefaults'; Message = $_.Exception.Message })
@@ -71,8 +71,8 @@ function Get-CIPPMFAState {
             $ExcludeRolesToResolve = [System.Collections.Generic.HashSet[string]]::new()
 
             # Fetch role assignments and definitions early for role-targeted CA policies
-            $assignments = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?`$expand=principal" -tenantid $TenantFilter -ErrorAction SilentlyContinue
-            $roleDefinitions = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/roleManagement/directory/roleDefinitions?`$select=id,templateId,displayName" -tenantid $TenantFilter -ErrorAction SilentlyContinue
+            $assignments = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?`$expand=principal" -tenantid $TenantFilter -AsApp $true -ErrorAction SilentlyContinue
+            $roleDefinitions = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/roleManagement/directory/roleDefinitions?`$select=id,templateId,displayName" -tenantid $TenantFilter -AsApp $true -ErrorAction SilentlyContinue
 
             # Build lookup tables: CA policies use templateId, assignments use definitionId
             $TemplateToDefinitionId = @{}
@@ -183,8 +183,8 @@ function Get-CIPPMFAState {
                         })
                 }
 
-                $GroupMembersResults = New-GraphBulkRequest -Requests @($GroupMemberRequests) -tenantid $TenantFilter
-                $GroupDetailsResults = New-GraphBulkRequest -Requests @($GroupDetailsRequests) -tenantid $TenantFilter
+                $GroupMembersResults = New-GraphBulkRequest -Requests @($GroupMemberRequests) -tenantid $TenantFilter -asapp $true
+                $GroupDetailsResults = New-GraphBulkRequest -Requests @($GroupDetailsRequests) -tenantid $TenantFilter -asapp $true
 
                 # Build group name lookup
                 $GroupNameLookup = @{}
@@ -324,7 +324,7 @@ function Get-CIPPMFAState {
 
     # Fetch role assignments if not already fetched (e.g., when MFA registration was unavailable)
     if ($null -eq $assignments) {
-        $assignments = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?`$expand=principal" -tenantid $TenantFilter -ErrorAction SilentlyContinue
+        $assignments = New-GraphGetRequest -uri "https://graph.microsoft.com/v1.0/roleManagement/directory/roleAssignments?`$expand=principal" -tenantid $TenantFilter -AsApp $true -ErrorAction SilentlyContinue
     }
 
     $adminObjectIds = $assignments |
